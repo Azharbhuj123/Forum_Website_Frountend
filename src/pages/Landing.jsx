@@ -1,27 +1,15 @@
 import React, { useEffect } from "react";
-import Header from "../header-footer/Header";
-import Footer from "../header-footer/Footer";
-
-
+import AdminDashboardheader from "../components/AdminDashboard_components/AdminDashboardheader";
+import Banner from "../components/main-web/Banner";
+import Features from "../components/main-web/Features/Features";
+import Footer from "../components/main-web/Footer";
 
 const Landing = () => {
-
- 
-
-
-
-
-
   return (
     <>
-    
-
-
-      <Header />
-      <div className="box">
-        
-      </div>
-      <h2>Landing-page</h2>
+      <AdminDashboardheader />
+      <Banner/>
+      <Features/>
       <Footer/>
     </>
   );
