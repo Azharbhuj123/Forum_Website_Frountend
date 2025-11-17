@@ -7,6 +7,7 @@ import Users_svg from "../Svg_components/Users_svg";
 import Overview from "./Overview";
 import Reviews from "./Reviews";
 import Users from "./Users";
+import Reports from "./Reports";
 
 const AdminDashboardbox = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -72,7 +73,7 @@ const AdminDashboardbox = () => {
           )}
 
           {activeTab === "reports" && (
-            <div className="Dashboard-tab-content-box">Reports</div>
+            <Reports/>
           )}
         </div>
       </div>
