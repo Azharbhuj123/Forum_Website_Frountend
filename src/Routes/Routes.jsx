@@ -6,6 +6,7 @@ import Login from "../components/login/Login";
 import Singup from "../components/login/singup";
 import Landing from "../pages/Landing";
 import AdminDashboardPage from "../pages/AdminDashboardPage";
+import SearchBusiness from "../pages/SearchBusiness";
 
 const Routes = () => {
 
@@ -15,6 +16,7 @@ const Routes = () => {
   return useRoutes([
 
     { path: "", element: <Landing />, },
+    { path: "/search-business", element: <SearchBusiness />, },
 
     { path: "/AdminDashboard", element: <AdminDashboardPage />, },
 
