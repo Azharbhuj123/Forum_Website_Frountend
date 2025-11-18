@@ -12,6 +12,15 @@ html {
   scroll-behavior: smooth;
 }
 
+.AdminDashboardheader-menu-toggle {
+    display: none; /* Hide the hamburger menu button on large screens */
+}
+
+.AdminDashboardheader-btn-box {
+    display: flex; /* Normal layout for large screens */
+    /* Other existing styles (gap, alignment, etc.) */
+}
+
 .main-banner {
   width: 100%;
   border-bottom: 1px solid rgba(239, 114, 53, 0.05);
@@ -3695,4 +3704,70 @@ align-self: stretch;
     border-radius: 16.4px;
     background: linear-gradient(180deg, #DF5750 0%, #EE6F38 100%);
     border: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+@media (max-width: 600px) {
+    .Main-AdminDashboardheader {
+        /* Adjust main layout to accommodate changes */
+        display: flex;
+        justify-content: space-between; /* Example adjustment */
+        align-items: center;
+    }
+
+    /* 1. Show the hamburger menu button */
+    .AdminDashboardheader-menu-toggle {
+        display: block; /* Show the menu toggle button */
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        z-index: 100; /* Ensure it's clickable */
+    }
+
+    /* 2. Style the hidden menu container */
+    .AdminDashboardheader-btn-box {
+        /* Designly menu appearance: full width, vertical, fixed position */
+        position: fixed;
+        top: 0; /* Align to the top of the viewport */
+        right: 0;
+        width: 100%; /* Take up full width */
+        height: 100vh; /* Take up full height */
+        background-color: #fff; /* White background for the menu (adjust color) */
+        flex-direction: column; /* Stack items vertically */
+        padding: 80px 20px 20px; /* Add padding from the top/sides */
+        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+        justify-content: flex-start !important;
+        /* Transition/Animate the sliding effect */
+        transform: translateX(100%); /* Start off-screen to the right */
+        transition: transform 0.3s ease-in-out;
+        
+        /* Initially hidden */
+        display: none; 
+    }
+    
+    /* 3. Style the open menu */
+    .AdminDashboardheader-btn-box.open {
+        transform: translateX(0); /* Slide into view */
+        display: flex; /* Show the menu */
+        z-index: 99; /* Below the toggle button */
+    }
+
+    /* Style individual icons/buttons for the vertical menu */
+    .AdminDashboardheader-btn-box > div,
+    .AdminDashboardheader-btn-box > button {
+        width: 100%;
+        padding: 15px 0;
+        border-bottom: 1px solid #eee; /* Visual separation */
+        text-align: center;
+    }
 }
