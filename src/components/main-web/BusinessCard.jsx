@@ -1,8 +1,12 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function BusinessCard() {
+  const navigate = useNavigate();
   return (
-    <div className="restaurant-card">
+    <div className="restaurant-card"
+    onClick={()=>navigate('/business-detail')}
+    >
       <div className="restaurant-card-content">
         {/* Image Section */}
         <div className="restaurant-image">
