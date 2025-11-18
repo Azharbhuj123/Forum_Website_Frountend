@@ -14,9 +14,10 @@ import Chat from "../pages/Chat";
 import Profile from "../pages/Profile";
 import EditProfile from "../pages/EditProfile";
 
+
 const Routes = () => {
 
- 
+
 
 
   return useRoutes([
@@ -31,11 +32,9 @@ const Routes = () => {
     { path: "/edit-profile", element: <EditProfile />, },
 
     { path: "/AdminDashboard", element: <AdminDashboardPage />, },
-
-    { path: "/Login", element: <Login />,  },
-
+   
+    { path: "/Login", element: <Login />, },
     { path: "/Singup", element: <Singup />, },
-
     { path: "/dashboard/*", element: <Dashboard />, },
 
   ]);
