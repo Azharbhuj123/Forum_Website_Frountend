@@ -1,10 +1,11 @@
 import React from "react";
 import dpOr from "../../../assets/Images/dp-or.png";
-import Share_svg2, {
+import  {
   Reply_Svg,
   Share_svg,
   Thumb_Svg,
   View_svg,
+  Share_svg2
 } from "../../Svg_components/Svgs";
 
 export default function SectionOne() {

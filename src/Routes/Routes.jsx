@@ -11,6 +11,8 @@ import BusinessDetail from "../pages/BusinessDetail";
 import Discussions from "../pages/Discussions";
 import DiscussionsDetail from "../pages/DiscussionsDetail";
 import Chat from "../pages/Chat";
+import Profile from "../pages/Profile";
+import EditProfile from "../pages/EditProfile";
 
 const Routes = () => {
 
@@ -25,6 +27,8 @@ const Routes = () => {
     { path: "/discussions-detail", element: <DiscussionsDetail />, },
     { path: "/business-detail", element: <BusinessDetail />, },
     { path: "/chat", element: <Chat />, },
+    { path: "/profile", element: <Profile />, },
+    { path: "/edit-profile", element: <EditProfile />, },
 
     { path: "/AdminDashboard", element: <AdminDashboardPage />, },
 
