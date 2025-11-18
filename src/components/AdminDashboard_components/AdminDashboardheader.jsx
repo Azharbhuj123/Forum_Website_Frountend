@@ -5,7 +5,10 @@ import Message_svg from "../Svg_components/Message_svg";
 import Chart_svg from "../Svg_components/Chart_svg";
 import Bell_svg from "../Svg_components/Bell_svg";
 import logo from "../../assets/Images/logo.png";
+import { useNavigate } from "react-router-dom";
 const AdminDashboardheader = () => {
+
+  const navigate = useNavigate();
   return (
     <>
       <header className="AdminDashboardheader">
@@ -20,9 +23,9 @@ const AdminDashboardheader = () => {
           </div>
 
           <div className="AdminDashboardheader-btn-box">
-            <div className="AdminDashboardheader-icon"><Home_svg /></div>
-            <div className="AdminDashboardheader-icon"><Chart_svg /></div>
-            <div className="AdminDashboardheader-icon"><Message_svg /></div>
+            <div className="AdminDashboardheader-icon" onClick={() =>navigate('/')}><Home_svg /></div>
+            <div className="AdminDashboardheader-icon" onClick={() =>navigate('/discussions')}><Chart_svg /></div>
+            <div className="AdminDashboardheader-icon"onClick={() =>navigate('/chat')}><Message_svg /></div>
             <div className="AdminDashboardheader-icon"><Bell_svg /></div>
             <button>Sign In</button>
           </div>
