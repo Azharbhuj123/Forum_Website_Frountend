@@ -2186,4 +2186,54 @@ header.AdminDashboardheader {
 }
 }
 
-@media screen and (max-width: 768px) {}
+@media screen and (max-width: 600px) {
+    .Dashboard-title {
+    flex-direction: column;
+    gap: 15px;
+}
+
+.Dashboard-title span {
+    width: 100%;
+    text-align: center;
+}
+
+.Dashboard-tab-box {
+    flex-wrap: wrap;
+    gap: 10px 0px;
+}
+
+.Dashboard-tab-box button {
+    width: 48%;
+}
+
+.Overview-Users-card {
+    width: 100%;
+}
+
+.Reviews-box-list {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.Reviews-box-list-title {
+    width: 100%;
+}
+
+.Reviews-box-list-btn {
+    width: 100%;
+}
+
+.Management-box-list-btn {
+    width: 100%;
+}
+
+.Pending-Reports-list {
+    flex-direction: column-reverse;
+    gap: 20px;
+}
+
+.AdminDashboardheader-Search {
+    width: 68%;
+}
+}
