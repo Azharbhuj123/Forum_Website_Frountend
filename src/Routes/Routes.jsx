@@ -7,6 +7,10 @@ import Singup from "../components/login/singup";
 import Landing from "../pages/Landing";
 import AdminDashboardPage from "../pages/AdminDashboardPage";
 import SearchBusiness from "../pages/SearchBusiness";
+import BusinessDetail from "../pages/BusinessDetail";
+import Discussions from "../pages/Discussions";
+import DiscussionsDetail from "../pages/DiscussionsDetail";
+import Chat from "../pages/Chat";
 
 const Routes = () => {
 
@@ -17,6 +21,10 @@ const Routes = () => {
 
     { path: "", element: <Landing />, },
     { path: "/search-business", element: <SearchBusiness />, },
+    { path: "/discussions", element: <Discussions />, },
+    { path: "/discussions-detail", element: <DiscussionsDetail />, },
+    { path: "/business-detail", element: <BusinessDetail />, },
+    { path: "/chat", element: <Chat />, },
 
     { path: "/AdminDashboard", element: <AdminDashboardPage />, },
 
