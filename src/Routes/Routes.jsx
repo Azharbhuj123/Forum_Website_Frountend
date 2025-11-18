@@ -12,9 +12,10 @@ import Discussions from "../pages/Discussions";
 import DiscussionsDetail from "../pages/DiscussionsDetail";
 import Chat from "../pages/Chat";
 
+
 const Routes = () => {
 
- 
+
 
 
   return useRoutes([
@@ -27,11 +28,9 @@ const Routes = () => {
     { path: "/chat", element: <Chat />, },
 
     { path: "/AdminDashboard", element: <AdminDashboardPage />, },
-
-    { path: "/Login", element: <Login />,  },
-
+   
+    { path: "/Login", element: <Login />, },
     { path: "/Singup", element: <Singup />, },
-
     { path: "/dashboard/*", element: <Dashboard />, },
 
   ]);
