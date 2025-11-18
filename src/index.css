@@ -26,8 +26,8 @@
 
 /* width */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 0px;
+  height: 0px;
 }
 
 /* Track */
@@ -57,7 +57,8 @@
 
 header.AdminDashboardheader {
     width: 100%;
-    border-bottom: 1px solid #E5D9F2;
+ border-bottom: 1px solid rgba(239, 114, 53, 0.05);
+background: rgba(255, 255, 255, 0.80);
     padding: 15px 40px;
     height: 100%;
 }
@@ -81,17 +82,19 @@ header.AdminDashboardheader {
 }
 
 .AdminDashboardheader-Search input {
-    border-radius: 16px;
-    border: 1px solid #E5D9F2;
-    background: #FFF;
+ 
     width: 100%;
     padding: 12px 12px 12px 60px;
-    color: rgba(94, 43, 151, 0.50);
+    color: rgba(239, 114, 53, 0.50);
     font-family: Inter;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+
+    border-radius: 16px;
+border: 1px solid rgba(239, 114, 53, 0.50);
+background: #FFF;
 }
 
 .AdminDashboardheader-Search button {
@@ -100,8 +103,16 @@ header.AdminDashboardheader {
     background: transparent;
     border: none;
 }
+.AdminDashboardheader-logo {
+    width: 50px;
+    height: 50px;
+}
 
-.AdminDashboardheader-Search input::placeholder {color: rgba(94, 43, 151, 0.50);font-family: Inter;font-size: 16px;font-style: normal;font-weight: 400;line-height: normal;}
+.AdminDashboardheader-logo img {
+    width: 100%;
+    height: 100%;
+}
+.AdminDashboardheader-Search input::placeholder {  color: rgba(239, 114, 53, 0.50);;font-family: Inter;font-size: 16px;font-style: normal;font-weight: 400;line-height: normal;}
 
 .AdminDashboardheader-Search button svg {
     width: 20px;
@@ -128,7 +139,7 @@ header.AdminDashboardheader {
 }
 
 .AdminDashboardheader-icon:hover {
-    background: #F3EBFF;
+background: rgba(239, 114, 53, 0.10);
 }
 
 .AdminDashboardheader-icon svg {
@@ -138,7 +149,7 @@ header.AdminDashboardheader {
 
 .AdminDashboardheader-btn-box button {
     border-radius: 20px;
-    background: linear-gradient(180deg, #8B5CF6 0%, #A855F7 100%);
+    background: linear-gradient(180deg, #DD5253 0%, #F07433 100%);
     color: #FFF;
     font-family: Montserrat;
     font-size: 14px;
@@ -202,7 +213,7 @@ button {
 
 .Dashboard-title button {
     border-radius: 15.395px;
-    background: linear-gradient(180deg, #8B5CF6 0%, #A855F7 100%);
+    background: linear-gradient(180deg, #DD5253 0%, #F07433 100%);
     border: none;
     display: flex;
     align-items: center;
@@ -253,7 +264,7 @@ button {
 .Dashboard-tab-box button.active {
     border-radius: 9.387px;
     border: 0.939px solid rgba(0, 0, 0, 0.00);
-    background: linear-gradient(180deg, #8B5CF6 0%, #A855F7 100%);
+    background: linear-gradient(180deg, #DD5253 0%, #F07433 100%);
 }
 
 .Dashboard-tab-box button.active svg path {stroke: #fff;}
@@ -293,7 +304,7 @@ button {
     width: 45px;
     height: 45px;
     border-radius: 31498264px;
-    background: #F3E8FF;
+background: rgba(239, 114, 53, 0.10);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -398,14 +409,16 @@ span.red-color h3 {
 
 .Recent-Activity-icon {
     border-radius: 31498264px;
-    background: #F3E8FF;
+background: rgba(239, 114, 53, 0.10);
     width: 35px;
     height: 35px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
-
+button.Remove {
+    color: #ec6d3a !important;
+}
 .Recent-Activity-icon svg {
     width: 15px;
     height: 15px;
@@ -479,7 +492,7 @@ span.red-color h3 {
     font-weight: 600;
     line-height: 22.529px; /* 160.924% */
     border-radius: 31498264px;
-    background: linear-gradient(180deg, #8B5CF6 0%, #A855F7 100%);
+    background: linear-gradient(180deg, #DD5253 0%, #F07433 100%);
     width: 30px;
     height: 30px;
     display: flex;
@@ -639,7 +652,7 @@ span.red-color h3 {
 }
 
 .Reviews-box-list-dp span h4 {
-    color: #5E2B97;
+   color: #EF7235;
     font-family: Inter;
     font-size: 16px;
     font-style: normal;
@@ -764,7 +777,7 @@ span.red-color h3 {
     cursor: pointer;
 }
 
-button.Add-User {background: linear-gradient(180deg, #8B5CF6 0%, #A855F7 100%) !important;color: #fff !important;}
+button.Add-User {background: linear-gradient(180deg, #DD5253 0%, #F07433 100%) !important;color: #fff !important;}
 
 
 li.red {
@@ -772,12 +785,12 @@ li.red {
 }
 
 li.verify{
-    color: #00A63E;
+    color: #00A63E !important;
 }
 
 
 button.View-btn {
-    color: #5E2B97;
+    color: #EF7235;
 }
 
 .Pending-Reports-box {
@@ -838,7 +851,7 @@ button.View-btn {
     border-radius: 9.387px;
     border: 0.939px solid #EAEAEA;
     background: #FFF;
-    padding: 10px;
+        padding: 8px 12px;
     color: #555;
     font-family: Montserrat;
     font-size: 14px;
@@ -874,4 +887,214 @@ button.Dismiss {
     font-style: normal;
     font-weight: 500;
     line-height: 15.02px; /* 133.333% */
+}
+
+
+@media screen and (max-width: 1024px) {
+.AdminDashboardheader-logo {
+    width: 50px;
+    height: 50px;
+}
+
+.AdminDashboardheader-logo img {
+    width: 100%;
+    height: 100%;
+}
+
+header.AdminDashboardheader {
+    padding: 12px 20px;
+}
+
+.AdminDashboardheader-Search input {
+    border-radius: 8px;
+}
+
+.AdminDashboardheader-Search {
+    width: 45%;
+}
+
+.AdminDashboardheader-Search input::placeholder {
+    font-size: 13px;
+}
+
+.AdminDashboardheader-btn-box {
+    width: 35%;
+    gap: 10px;
+}
+
+.Dashboard-box {
+    padding-top: 35px;
+}
+
+.Dashboard-container {
+    max-width: 100%;
+    padding: 0px 3%;
+}
+
+.Dashboard-title span h2 {
+    font-size: 22px;
+}
+
+.Dashboard-title span p {
+    font-size: 14px;
+}
+
+.Dashboard-title button {
+    font-size: 14px;
+}
+
+.Dashboard-tab-box button p {
+    font-size: 14px;
+}
+
+.Dashboard-tab-box button {
+    gap: 10px;
+}
+
+.Overview-Users-box {
+    padding-top: 20px;
+}
+
+.Overview-Users-card {
+    padding: 18px;
+    border-radius: 10px;
+}
+
+.Overview-user-title h2 {
+    font-size: 20px;
+    padding: 5px 0px;
+}
+
+.Overview-user-title span h3 {
+    font-size: 12px;
+}
+
+.Overview-user-icon {
+    width: 40px;
+    height: 40px;
+}
+
+.Overview {
+    gap: 20px 0px;
+}
+
+.Recent-box h1 {
+    font-size: 18px;
+    padding-bottom: 25px;
+}
+
+.Recent-Activity-title span h2 {
+    font-size: 13px;
+}
+
+.Recent-Activity-list {
+    padding: 14px 0px;
+}
+
+.Reviewers-Month-title span h2 {
+    font-size: 14px;
+}
+
+.Reviewers-Month-title h4 {
+    font-size: 12px;
+}
+
+.AdminDashboardPage {
+}
+
+.AdminDashboard-box {
+    overflow: auto;
+}
+
+.Recent-box {
+    height: 390px;
+    padding: 18px;
+    border-radius: 8px;
+}
+
+
+
+.Main-Reviews-box {
+    padding: 20px;
+}
+
+.Reviews-box-list-dp span h2 {
+    font-size: 14px;
+}
+
+.Reviews-box-list-dp span h3 {
+    font-size: 14px;
+}
+
+.Reviews-box-list-dp span h4 {
+    font-size: 14px;
+}
+
+.Reviews-box-list-dp {
+    gap: 8px;
+}
+
+.Reviews-box-list-title {
+    gap: 5px;
+}
+
+.Reviews-box-list {
+    padding: 14px 0px;
+}
+
+.Pending-Reports-title p {
+    font-size: 12px;
+}
+
+.Pending-Reports-btn-box button {
+    font-size: 12px;
+    padding: 6px 12px;
+}
+}
+
+@media screen and (max-width: 768px) {
+    .AdminDashboardheader-Search {
+    width: 35%;
+}
+
+.AdminDashboardheader-Search input {
+    padding: 10px 10px 10px 46px;
+}
+
+.AdminDashboardheader-Search button {
+    left: 15px;
+}
+
+.AdminDashboardheader-btn-box {
+    width: 40%;
+    gap: 10px;
+}
+
+.AdminDashboardheader-btn-box button {
+    padding: 6px 20px;
+    font-size: 12px;
+}
+
+.Dashboard-tab-box button {}
+
+.Dashboard-tab-box button {
+    padding: 10px;
+}
+
+.Dashboard-tab-box button.active p {
+    font-size: 12px;
+}
+
+.Overview-Users-card {
+    width: 48%;
+}
+
+.Overview-Users-box {
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.Recent-box {
+    width: 100%;
+}
 }
