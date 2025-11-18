@@ -11,6 +11,8 @@ import Inappropriate_svg from "../Svg_components/Inappropriate_svg";
 import DeleteAccount_Svg from "../Svg_components/DeleteAccount_Svg";
 import IssueWarning_svg from "../Svg_components/IssueWarning_svg";
 import SuspendUser_svg from "../Svg_components/SuspendUser_svg";
+import DismissReport_svg from "../Svg_components/DismissReport_svg";
+import ActionImpact_svg from "../Svg_components/ActionImpact_svg";
 const Take_Action_Report_popup = () => {
   return (
     <>
@@ -82,16 +84,26 @@ const Take_Action_Report_popup = () => {
                 </div>
               </div>
 
-                            <div className="Select-Action-list">
+              <div className="Select-Action-list">
                 <div className="Select-Action-input">
                   <input type="radio" />
                 </div>
                 <div className="Select-Action-title">
-                  <span><SuspendUser_svg /><h2>Dismiss Report</h2> </span>
+                  <span><DismissReport_svg /><h2>Dismiss Report</h2> </span>
                   <p>Mark report as reviewed with no action needed</p>
                 </div>
               </div>
             </div>
+          </div>
+
+          <div className="Action-Impact-box">
+            <span><ActionImpact_svg/> <h2>Action Impact </h2></span>
+
+            <ul>
+              <li>• The content will be permanently removed from the platform</li>
+              <li>• The author will be notified about the removal</li>
+              <li>• This action will be logged in the moderation history</li>
+            </ul>
           </div>
         </div>
 
