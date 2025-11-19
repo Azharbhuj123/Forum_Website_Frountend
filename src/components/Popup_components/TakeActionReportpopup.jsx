@@ -9,7 +9,8 @@ import ActionImpact_svg from "../Svg_components/ActionImpact_svg";
 import TotalReviews_svg from "../Svg_components/TotalReviews_svg";
 import Submitter_svg from "../Svg_components/Submitter_svg";
 import BanPermanently_svg from "../Svg_components/BanPermanently_svg";
-const TakeActionReportpopup = () => {
+import Close_svg from "../Svg_components/Close_svg";
+const TakeActionReportpopup = ({ closePopup }) => {
   return (
     <>
       <div className="popup-overly-box">
@@ -19,6 +20,9 @@ const TakeActionReportpopup = () => {
               <h2>Take Action on Report</h2>
               <p>Select an appropriate action to resolve this report</p>
             </span>
+            <div className="close-btn" onClick={closePopup}>
+  <Close_svg />
+</div>
           </div>
 
           <div className="Take-Action-Report-box">
@@ -120,12 +124,12 @@ const TakeActionReportpopup = () => {
               <div className="Additional-Options-box">
 
                 <div className="Additional-Options-list">
-                  <input type="checkbox " />
+                  <input type="checkbox" />
                   <span><h3>Send Email Notification</h3> <p>Notify the affected user about this action via email</p></span>
                 </div>
 
                 <div className="Additional-Options-list">
-                  <input type="checkbox " />
+                  <input type="checkbox" />
                   <span><h3>Block Future Content Submission</h3> <p>Prevent user from posting new reviews until action is resolved</p></span>
                 </div>
               </div>
