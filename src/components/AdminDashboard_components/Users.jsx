@@ -12,9 +12,12 @@ import VerifyUser_svg from "../Svg_components/VerifyUser_svg";
 import SuspendAccount_svg from "../Svg_components/SuspendAccount_svg";
 import BanUser_svg from "../Svg_components/BanUser_svg";
 import DeleteAccount_Svg from "../Svg_components/DeleteAccount_Svg";
+import AddNewUserpopup from "../Popup_components/AddNewUserpopup";
+
 
 const Users = () => {
   const [openMenu, setOpenMenu] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
 
   const users = [
     { name: "Sarah Mitchell", reviews: 147, joined: "2024-01-15" },
@@ -29,8 +32,14 @@ const Users = () => {
         <div className="Main-Reviews-box">
           <div className="Reviews-heading">
             <h1>User Management</h1>
+
             <span>
-              <button className="Add-User">Add User</button>
+              <button
+                className="Add-User"
+                onClick={() => setShowPopup(true)}
+              >
+                Add User
+              </button>
             </span>
           </div>
 
@@ -55,7 +64,6 @@ const Users = () => {
                     <ViewProfile_svg /> View Profile
                   </button>
 
-                  {/* ACTION BUTTON */}
                   <button
                     onClick={() =>
                       setOpenMenu(openMenu === index ? null : index)
@@ -64,7 +72,6 @@ const Users = () => {
                     Actions <Actions_svg />
                   </button>
 
-                  {/* DROPDOWN MENU */}
                   {openMenu === index && (
                     <div className="actions-dropdown">
                       <ul>
@@ -73,9 +80,9 @@ const Users = () => {
                         <li><SendEmail_svg /> Send Email</li>
                         <li><ResetPassword_svg /> Reset Password</li>
                         <li className="verify"> <VerifyUser_svg /> Verify User</li>
-                        <li className="red"><SuspendAccount_svg /> Suspend Account</li>
-                        <li className="red"><BanUser_svg />  Ban User</li>
-                        <li className="red"><DeleteAccount_Svg /> Delete Account</li>
+                        <li className="red"><SuspendAccount_svg /> Suspend</li>
+                        <li className="red"><BanUser_svg /> Ban</li>
+                        <li className="red"><DeleteAccount_Svg /> Delete</li>
                       </ul>
                     </div>
                   )}
@@ -85,6 +92,11 @@ const Users = () => {
           </div>
         </div>
       </div>
+
+      {/* SHOW POPUP */}
+{showPopup && (
+  <AddNewUserpopup closePopup={() => setShowPopup(false)} />
+)}
     </>
   );
 };

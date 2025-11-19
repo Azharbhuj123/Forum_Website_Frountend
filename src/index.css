@@ -890,19 +890,28 @@ button.Dismiss {
 }
 
 .popup-overly-box {
+      top: 0px;
     background: rgba(0, 0, 0, 0.50);
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100vh;
+    position: fixed;
+    right: 0px;
+    width: 100%;
 }
-
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
 .popup-box {
     border-radius: 10px;
     border: 1px solid #EAEAEA;
     background: #FFF;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.10), 0 4px 6px -4px rgba(0, 0, 0, 0.10);
     width: 895px;
+    position: relative;
     padding: 30px;
 }
 
@@ -969,7 +978,7 @@ button.no-bg {
 
 .Add-New-User-box {
     width: 100%;
-    height: 600px;
+    height: 60vh;
     overflow: auto;
 }
 
@@ -1115,7 +1124,7 @@ button.no-bg {
 
 .Report_Details_box {
     width: 100%;
-    height: 600px;
+    height:60vh;
     overflow: auto;
 }
 
@@ -1617,7 +1626,7 @@ button.Dismiss_Report_btn {
 
 .Take-Action-Report-box {
     width: 100%;
-    height: 650px;
+    height: 60vh;
     overflow: auto;
 }
 
@@ -2162,7 +2171,42 @@ header.AdminDashboardheader {
     font-size: 12px;
 }
 
-.Dashboard-tab-box button {}
+.popup-heading span h2 {
+    font-size: 20px;
+}
+
+.popup-heading span p {
+    font-size: 12px;
+}
+
+.Inappropriate-Content-title span h2 {
+    font-size: 14px;
+}
+
+.Inappropriate-Content-title p {
+    font-size: 12px;
+}
+
+.Inappropriate-Content-title span h6 {
+    padding: 5px 7px;
+    font-size: 10px;
+}
+
+.Select-Action-title {
+    padding-bottom: 12px;
+}
+
+.Select-Action-list {
+    padding: 15px;
+}
+
+.Select-Action-title span h2 {
+    font-size: 14px;
+}
+
+.popup-overly-box {
+    padding: 0px 5%;
+}
 
 .Dashboard-tab-box button {
     padding: 10px;
@@ -2235,5 +2279,142 @@ header.AdminDashboardheader {
 
 .AdminDashboardheader-Search {
     width: 68%;
+}
+
+
+.popup-box {
+    padding: 20px;
+}
+
+.Profile-Photo-dp-box {
+    height: 50px;
+    width: 50px;
+}
+
+.Profile-Photo-icon-uplode {
+    width: 20px;
+    height: 20px;
+}
+
+.Profile-Photo span p {
+    font-size: 12px;
+}
+
+.Profile-Photo span h2 {
+    font-size: 14px;
+}
+
+.Add-New-User-group-box {
+    width: 100%;
+}
+
+.Add-New-User-group.Haf-width {
+    width: 100%;
+}
+
+.Add-New-User-group input {
+    padding: 12px;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
+.Add-New-User-group p {
+    font-size: 12px;
+}
+
+.Add-New-User-group textarea {
+    border-radius: 5px;
+    padding: 12px;
+    font-size: 12px;
+}
+
+.Profile-Photo {
+    gap: 15px;
+}
+
+.popup-btn-box button {
+    font-size: 12px;
+    border-radius: 10px;
+    padding: 8px 20px;
+}
+
+.Add-New-User-group span label {
+    font-size: 12px;
+}
+
+.popup-heading span h2 {
+    font-size: 18px;
+}
+
+.Inappropriate-Content-box {
+    flex-direction: column;
+}
+
+.Reported-By-box-list {
+    flex-direction: column;
+    gap: 10px;
+    padding:  0px 0px 20px 0px;
+}
+
+.ReportedContent-box-head {
+    gap: 10px;
+    padding-bottom: 14px;
+}
+
+.Review-box {
+    width: 100%;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.ReportedContent-note h3 {
+    font-size: 12px;
+}
+
+.ReportedContent-note p {
+    font-size: 12px;
+}
+
+.Reported-By-heading h2 {
+    font-size: 14px;
+}
+
+.PreviousReportsAgainst-list {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+}
+
+.Evidence_Attachments_box {
+    flex-direction: column;
+    gap: 20px;
+}
+
+.Evidence_Attachments_list {
+    width: 100%;
+}
+
+.popup-btn-box {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.Content-id {
+    flex-direction: column;
+}
+
+.Content-title {
+    width: 100%;
+}
+
+.Content-title span h3 {
+    font-size: 12px;
+}
+
+.Content-title span h4 {
+    font-size: 12px;
 }
 }
