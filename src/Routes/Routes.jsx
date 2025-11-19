@@ -23,7 +23,7 @@ const Routes = () => {
   return useRoutes([
 
     { path: "", element: <Landing />, },
-    { path: "/search-business", element: <SearchBusiness />, },
+    { path: "/search-rental", element: <SearchBusiness />, },
     { path: "/discussions", element: <Discussions />, },
     { path: "/discussions-detail", element: <DiscussionsDetail />, },
     { path: "/business-detail", element: <BusinessDetail />, },

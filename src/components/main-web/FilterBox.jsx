@@ -12,53 +12,38 @@ export default function FilterBox() {
       <div className="filter-items">
         <div className="filter-item">
           <h2>Rating</h2>
-          <div className="option">
-            <input type="checkbox" />
-            <label>
-              <Star_Svg />
-              4+ Stars
-            </label>
-          </div>
+          {[4, 3, 2].map((star) => (
+            <div className="option" key={star}>
+              <input type="checkbox" />
+              <label>
+                <Star_Svg />
+                {star}+ Stars
+              </label>
+            </div>
+          ))}
         </div>
 
         <div className="filter-item">
-          <h2>Price</h2>
-          <div className="option">
-            <input type="checkbox" />
-            <label>$</label>
-          </div>
-
-          <div className="option">
-            <input type="checkbox" />
-            <label>$$</label>
-          </div>
-
-          <div className="option">
-            <input type="checkbox" />
-            <label>$$$</label>
-          </div>
-
-          <div className="option">
-            <input type="checkbox" />
-            <label>$$$$</label>
-          </div>
+          <h2>Apartments</h2>
+          {[5, 10, 15, 20].map((apar) => (
+            <div className="option" key={apar}>
+              <input type="checkbox" />
+              <label>{apar}+</label>
+            </div>
+          ))}
         </div>
 
         <div className="filter-item">
-          <h2>Availability</h2>
+          <h2>Location</h2>
           <div className="option">
-            <input type="checkbox" />
-            <label>Open Now</label>
+            <input type="text" placeholder="Please enter location" className="location-inp" />
+            
           </div>
 
-          <div className="option">
-            <input type="checkbox" />
-            <label>With Photos</label>
-          </div>
+           
         </div>
 
-
-         <div className="filter-item">
+        <div className="filter-item">
           <h2>Distance</h2>
           <div className="option">
             <input type="checkbox" />

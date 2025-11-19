@@ -38,7 +38,7 @@ const AdminDashboardheader = () => {
     <>
       <header className="AdminDashboardheader">
         <div className="Main-AdminDashboardheader">
-          <div className="AdminDashboardheader-logo">
+          <div onClick={() => navigate("/")} className="AdminDashboardheader-logo">
             <img src={logo} alt="" />
           </div>
 
