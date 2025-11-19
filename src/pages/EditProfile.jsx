@@ -1,12 +1,17 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import AdminDashboardheader from "../components/AdminDashboard_components/AdminDashboardheader";
 import Footer from "../components/main-web/Footer";
 import profile from "../assets/Images/profile.png";
 import { Location_Svg, Webiste_SVg } from "../components/Svg_components/Svgs";
 import toggle from "../assets/Images/toggle.png";
+import Switch from "react-switch";
+
 export default function EditProfile() {
   const coverPhotoInputRef = useRef(null);
   const profilePhotoInputRef = useRef(null);
+  const [publicProfile, setPublicProfile] = useState(false); 
+  const [showEmailPublic, setShowEmailPublic] = useState(false);
+  const [notifyByEmail, SetNotifyByEmail] = useState(false);
 
   // Dummy handler for file selection
   const handleFileChange = (event) => {
@@ -21,291 +26,347 @@ export default function EditProfile() {
   const triggerFileInput = (ref) => {
     ref.current.click();
   };
+
+  const handleChange = (value, state) => {
+    state(value);
+  };
   return (
-   <div>
-  <AdminDashboardheader />
-  <div className="feautures-main Dashboard-container">
-    <div className="smitchell-edit-container">
-      <h1 className="smitchell-edit-title">Edit Profile</h1>
-      <div className="cover-contianer">
-        <h2 className="smitchell-edit-section-header">
-          Profile & Cover Photos
-        </h2>
+    <div>
+      <AdminDashboardheader />
+      <div className="feautures-main Dashboard-container">
+        <div className="smitchell-edit-container">
+          <h1 className="smitchell-edit-title">Edit Profile</h1>
+          <div className="cover-contianer">
+            <h2 className="smitchell-edit-section-header">
+              Profile & Cover Photos
+            </h2>
 
-        {/* --- Cover Photo Section --- */}
-        <div className="smitchell-edit-cover-photo-section">
-          <p className="smitchell-edit-label">Cover Photo</p>
+            {/* --- Cover Photo Section --- */}
+            <div className="smitchell-edit-cover-photo-section">
+              <p className="smitchell-edit-label">Cover Photo</p>
 
-          <div
-            className="smitchell-edit-drag-drop-area"
-            onClick={() => triggerFileInput(coverPhotoInputRef)}
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={(e) => {
-              e.preventDefault();
-              console.log("File Dropped:", e.dataTransfer.files[0]?.name);
-            }}
-          >
-            <div className="smitchell-edit-upload-icon">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="48"
-                height="48"
-                viewBox="0 0 48 48"
-                fill="none"
+              <div
+                className="smitchell-edit-drag-drop-area"
+                onClick={() => triggerFileInput(coverPhotoInputRef)}
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  console.log("File Dropped:", e.dataTransfer.files[0]?.name);
+                }}
               >
-                <path
-                  d="M24 6V30"
-                  stroke="#EF7235"
-                  stroke-width="4"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                <div className="smitchell-edit-upload-icon">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="48"
+                    height="48"
+                    viewBox="0 0 48 48"
+                    fill="none"
+                  >
+                    <path
+                      d="M24 6V30"
+                      stroke="#EF7235"
+                      stroke-width="4"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M34 16L24 6L14 16"
+                      stroke="#EF7235"
+                      stroke-width="4"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M42 30V38C42 39.0609 41.5786 40.0783 40.8284 40.8284C40.0783 41.5786 39.0609 42 38 42H10C8.93913 42 7.92172 41.5786 7.17157 40.8284C6.42143 40.0783 6 39.0609 6 38V30"
+                      stroke="#EF7235"
+                      stroke-width="4"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+                <p className="smitchell-edit-drag-text">
+                  Drag and drop photos here
+                </p>
+                <p className="smitchell-edit-recommended-size">
+                  Recommended size: 1500 × 500px
+                </p>
+                <p className="smitchell-edit-or-text">or click to browse</p>
+
+                <button className="smitchell-edit-choose-button" type="button">
+                  Choose Files
+                </button>
+
+                <input
+                  type="file"
+                  ref={coverPhotoInputRef}
+                  onChange={handleFileChange}
+                  className="smitchell-edit-hidden-input"
+                  accept="image/*"
                 />
-                <path
-                  d="M34 16L24 6L14 16"
-                  stroke="#EF7235"
-                  stroke-width="4"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M42 30V38C42 39.0609 41.5786 40.0783 40.8284 40.8284C40.0783 41.5786 39.0609 42 38 42H10C8.93913 42 7.92172 41.5786 7.17157 40.8284C6.42143 40.0783 6 39.0609 6 38V30"
-                  stroke="#EF7235"
-                  stroke-width="4"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
+              </div>
             </div>
-            <p className="smitchell-edit-drag-text">Drag and drop photos here</p>
-            <p className="smitchell-edit-recommended-size">
-              Recommended size: 1500 × 500px
-            </p>
-            <p className="smitchell-edit-or-text">or click to browse</p>
 
-            <button className="smitchell-edit-choose-button" type="button">
-              Choose Files
-            </button>
+            {/* --- Profile Photo Section --- */}
+            <h2 className="smitchell-edit-section-header">Profile Photo</h2>
 
+            <div className="smitchell-edit-profile-upload">
+              <div
+                className="smitchell-edit-profile-avatar-wrapper"
+                onClick={() => triggerFileInput(profilePhotoInputRef)}
+              >
+                <img
+                  src={profile}
+                  alt="Profile"
+                  className="smitchell-edit-profile-avatar"
+                />
+                <div className="smitchell-edit-camera-icon-overlay">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="6"
+                    height="6"
+                    viewBox="0 0 6 6"
+                    fill="none"
+                  >
+                    <path
+                      d="M2.66699 4.66669C3.77156 4.66669 4.66699 3.77126 4.66699 2.66669C4.66699 1.56212 3.77156 0.666687 2.66699 0.666687C1.56242 0.666687 0.666992 1.56212 0.666992 2.66669C0.666992 3.77126 1.56242 4.66669 2.66699 4.66669Z"
+                      stroke="white"
+                      stroke-width="1.33333"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+              </div>
+
+              <div className="smitchell-edit-profile-text-group">
+                <p className="smitchell-edit-upload-text">
+                  Upload a new profile photo
+                </p>
+                <p className="smitchell-edit-recommended-size">
+                  Recommended size: 400 × 400px
+                </p>
+              </div>
+
+              <input
+                type="file"
+                ref={profilePhotoInputRef}
+                onChange={handleFileChange}
+                className="smitchell-edit-hidden-input"
+                accept="image/*"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* BASIC INFO */}
+        <div className="basic-info-form-container unique-form-wrapper">
+          <h2 className="basic-info-form-title custom-section-title">
+            Basic Information
+          </h2>
+
+          <div className="form-field-group">
+            <label htmlFor="displayName" className="form-label custom-label">
+              Display Name
+            </label>
             <input
-              type="file"
-              ref={coverPhotoInputRef}
-              onChange={handleFileChange}
-              className="smitchell-edit-hidden-input"
-              accept="image/*"
+              type="text"
+              id="displayName"
+              className="form-input unique-display-name-input"
+              placeholder="Enter your display name"
+            />
+          </div>
+
+          <div className="form-field-group">
+            <label htmlFor="bio" className="form-label custom-label">
+              Bio
+            </label>
+            <textarea
+              id="bio"
+              className="form-textarea unique-bio-textarea"
+              placeholder="Tell us about yourself..."
+            ></textarea>
+          </div>
+
+          <div className="form-field-group">
+            <label htmlFor="location" className="form-label custom-label">
+              <Location_Svg /> Location
+            </label>
+            <input
+              type="text"
+              id="location"
+              className="form-input unique-location-input"
+              placeholder="Enter your location"
+            />
+          </div>
+
+          <div className="form-field-group">
+            <label htmlFor="website" className="form-label custom-label">
+              <Webiste_SVg /> Website
+            </label>
+            <input
+              type="text"
+              id="website"
+              className="form-input unique-website-input"
+              placeholder="Enter your website URL"
             />
           </div>
         </div>
 
-        {/* --- Profile Photo Section --- */}
-        <h2 className="smitchell-edit-section-header">Profile Photo</h2>
+        {/* CONTACT INFO */}
+        <div className="basic-info-form-container unique-form-wrapper">
+          <h2 className="basic-info-form-title custom-section-title">
+            Contact Information
+          </h2>
 
-        <div className="smitchell-edit-profile-upload">
-          <div
-            className="smitchell-edit-profile-avatar-wrapper"
-            onClick={() => triggerFileInput(profilePhotoInputRef)}
-          >
-            <img
-              src={profile}
-              alt="Profile"
-              className="smitchell-edit-profile-avatar"
+          <div className="form-field-group">
+            <label htmlFor="email" className="form-label custom-label">
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              className="form-input unique-display-name-input"
+              placeholder="Enter your email address"
             />
-            <div className="smitchell-edit-camera-icon-overlay">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="6"
-                height="6"
-                viewBox="0 0 6 6"
-                fill="none"
-              >
-                <path
-                  d="M2.66699 4.66669C3.77156 4.66669 4.66699 3.77126 4.66699 2.66669C4.66699 1.56212 3.77156 0.666687 2.66699 0.666687C1.56242 0.666687 0.666992 1.56212 0.666992 2.66669C0.666992 3.77126 1.56242 4.66669 2.66699 4.66669Z"
-                  stroke="white"
-                  stroke-width="1.33333"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
+          </div>
+
+          <div className="form-field-group">
+            <label htmlFor="phone" className="form-label custom-label">
+              Phone Number (Optional)
+            </label>
+            <input
+              type="text"
+              id="phone"
+              className="form-input unique-location-input"
+              placeholder="Enter your phone number"
+            />
+          </div>
+        </div>
+
+        {/* PRIVACY SETTINGS */}
+        <div className="basic-info-form-container unique-form-wrapper">
+          <h2 className="basic-info-form-title custom-section-title">
+            Privacy Settings
+            <div className="title-box">
+              <div className="head">
+                <h3>Public Profile</h3>
+                <p>Allow others to view your profile and reviews</p>
+              </div>
+              <Switch
+                onChange={(checked) => handleChange(checked, setPublicProfile)}
+                checked={publicProfile}
+                uncheckedIcon={false}
+                checkedIcon={false}
+                onColor={`#DF5750`} // Green when ON
+                offColor="#ccc" // Light grey when OFF
+                onHandleColor="#fff" // White circle when ON
+                offHandleColor="#fff" // Black circle when OFF
+              />
             </div>
-          </div>
-
-          <div className="smitchell-edit-profile-text-group">
-            <p className="smitchell-edit-upload-text">
-              Upload a new profile photo
-            </p>
-            <p className="smitchell-edit-recommended-size">
-              Recommended size: 400 × 400px
-            </p>
-          </div>
-
-          <input
-            type="file"
-            ref={profilePhotoInputRef}
-            onChange={handleFileChange}
-            className="smitchell-edit-hidden-input"
-            accept="image/*"
-          />
-        </div>
-      </div>
-    </div>
-
-    {/* BASIC INFO */}
-    <div className="basic-info-form-container unique-form-wrapper">
-      <h2 className="basic-info-form-title custom-section-title">
-        Basic Information
-      </h2>
-
-      <div className="form-field-group">
-        <label htmlFor="displayName" className="form-label custom-label">
-          Display Name
-        </label>
-        <input
-          type="text"
-          id="displayName"
-          className="form-input unique-display-name-input"
-          placeholder="Enter your display name"
-        />
-      </div>
-
-      <div className="form-field-group">
-        <label htmlFor="bio" className="form-label custom-label">Bio</label>
-        <textarea
-          id="bio"
-          className="form-textarea unique-bio-textarea"
-          placeholder="Tell us about yourself..."
-        ></textarea>
-      </div>
-
-      <div className="form-field-group">
-        <label htmlFor="location" className="form-label custom-label">
-          <Location_Svg /> Location
-        </label>
-        <input
-          type="text"
-          id="location"
-          className="form-input unique-location-input"
-          placeholder="Enter your location"
-        />
-      </div>
-
-      <div className="form-field-group">
-        <label htmlFor="website" className="form-label custom-label">
-          <Webiste_SVg /> Website
-        </label>
-        <input
-          type="text"
-          id="website"
-          className="form-input unique-website-input"
-          placeholder="Enter your website URL"
-        />
-      </div>
-    </div>
-
-    {/* CONTACT INFO */}
-    <div className="basic-info-form-container unique-form-wrapper">
-      <h2 className="basic-info-form-title custom-section-title">
-        Contact Information
-      </h2>
-
-      <div className="form-field-group">
-        <label htmlFor="email" className="form-label custom-label">
-          Email
-        </label>
-        <input
-          type="email"
-          id="email"
-          className="form-input unique-display-name-input"
-          placeholder="Enter your email address"
-        />
-      </div>
-
-      <div className="form-field-group">
-        <label htmlFor="phone" className="form-label custom-label">
-          Phone Number (Optional)
-        </label>
-        <input
-          type="text"
-          id="phone"
-          className="form-input unique-location-input"
-          placeholder="Enter your phone number"
-        />
-      </div>
-    </div>
-
-    {/* PRIVACY SETTINGS */}
-    <div className="basic-info-form-container unique-form-wrapper">
-      <h2 className="basic-info-form-title custom-section-title">
-        Privacy Settings
-
-        <div className="title-box">
-          <div className="head">
-            <h3>Public Profile</h3>
-            <p>Allow others to view your profile and reviews</p>
-          </div>
-          <img src={toggle} alt="" />
+            <div className="title-box">
+              <div className="head">
+                <h3>Show Email to Public</h3>
+                <p>Display your email address on your public profile</p>
+              </div>
+              <Switch
+                onChange={(checked) => handleChange(checked, setShowEmailPublic)}
+                checked={showEmailPublic}
+                uncheckedIcon={false}
+                checkedIcon={false}
+                onColor={`#DF5750`} // Green when ON
+                offColor="#ccc" // Light grey when OFF
+                onHandleColor="#fff" // White circle when ON
+                offHandleColor="#fff" // Black circle when OFF
+              />
+            </div>
+            <div className="title-box">
+              <div className="head">
+                <h3>Email Notifications</h3>
+                <p>
+                  Receive notifications about reviews, messages, and activity
+                </p>
+              </div>
+              <Switch
+                onChange={(checked) => handleChange(checked, SetNotifyByEmail)}
+                checked={notifyByEmail}
+                uncheckedIcon={false}
+                checkedIcon={false}
+                onColor={`#DF5750`} // Green when ON
+                offColor="#ccc" // Light grey when OFF
+                onHandleColor="#fff" // White circle when ON
+                offHandleColor="#fff" // Black circle when OFF
+              />
+            </div>
+          </h2>
         </div>
 
-        <div className="title-box">
-          <div className="head">
-            <h3>Show Email to Public</h3>
-            <p>Display your email address on your public profile</p>
+        {/* ACCOUNT SETTINGS */}
+        <div className="basic-info-form-container unique-form-wrapper">
+          <h2 className="basic-info-form-title custom-section-title">
+            Account Settings
+          </h2>
+
+          <div className="form-field-group">
+            <input
+              type="password"
+              id="password"
+              placeholder="Change Password"
+              className="form-input unique-display-name-input"
+            />
           </div>
-          <img src={toggle} alt="" />
+
+          <div className="form-field-group">
+            <input
+              type="text"
+              id="twofactor"
+              placeholder="Two-Factor Authentication"
+              className="form-input unique-location-input"
+            />
+          </div>
+
+          <div className="deactivate-account">
+            <button>Deactivate Account</button>
+          </div>
         </div>
 
-        <div className="title-box">
-          <div className="head">
-            <h3>Email Notifications</h3>
-            <p>Receive notifications about reviews, messages, and activity</p>
-          </div>
-          <img src={toggle} alt="" />
+        <div className="actions-button-pro">
+          <button className="close">Close</button>
+          <button className="save">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+            >
+              <path
+                d="M10.1333 2C10.485 2.00501 10.8205 2.14878 11.0667 2.4L13.6 4.93333C13.8512 5.17951 13.995 5.51497 14 5.86667V12.6667C14 13.0203 13.8595 13.3594 13.6095 13.6095C13.3594 13.8595 13.0203 14 12.6667 14H3.33333C2.97971 14 2.64057 13.8595 2.39052 13.6095C2.14048 13.3594 2 13.0203 2 12.6667V3.33333C2 2.97971 2.14048 2.64057 2.39052 2.39052C2.64057 2.14048 2.97971 2 3.33333 2H10.1333Z"
+                stroke="white"
+                stroke-width="1.33333"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M11.3337 14.0001V9.33341C11.3337 9.1566 11.2634 8.98703 11.1384 8.86201C11.0134 8.73699 10.8438 8.66675 10.667 8.66675H5.33366C5.15685 8.66675 4.98728 8.73699 4.86225 8.86201C4.73723 8.98703 4.66699 9.1566 4.66699 9.33341V14.0001"
+                stroke="white"
+                stroke-width="1.33333"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M4.66699 2V4.66667C4.66699 4.84348 4.73723 5.01305 4.86225 5.13807C4.98728 5.2631 5.15685 5.33333 5.33366 5.33333H10.0003"
+                stroke="white"
+                stroke-width="1.33333"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            Save Changes
+          </button>
         </div>
-      </h2>
-    </div>
-
-    {/* ACCOUNT SETTINGS */}
-    <div className="basic-info-form-container unique-form-wrapper">
-      <h2 className="basic-info-form-title custom-section-title">
-        Account Settings
-      </h2>
-
-      <div className="form-field-group">
-        <input
-          type="password"
-          id="password"
-          placeholder="Change Password"
-          className="form-input unique-display-name-input"
-        />
       </div>
-
-      <div className="form-field-group">
-        <input
-          type="text"
-          id="twofactor"
-          placeholder="Two-Factor Authentication"
-          className="form-input unique-location-input"
-        />
-      </div>
-
-      <div className="deactivate-account">
-        <button>
-            Deactivate Account
-        </button>
-      </div>
+      <Footer />
     </div>
-
-
-    <div className="actions-button-pro">
-        <button className="close">Close</button>
-        <button className="save">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-  <path d="M10.1333 2C10.485 2.00501 10.8205 2.14878 11.0667 2.4L13.6 4.93333C13.8512 5.17951 13.995 5.51497 14 5.86667V12.6667C14 13.0203 13.8595 13.3594 13.6095 13.6095C13.3594 13.8595 13.0203 14 12.6667 14H3.33333C2.97971 14 2.64057 13.8595 2.39052 13.6095C2.14048 13.3594 2 13.0203 2 12.6667V3.33333C2 2.97971 2.14048 2.64057 2.39052 2.39052C2.64057 2.14048 2.97971 2 3.33333 2H10.1333Z" stroke="white" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M11.3337 14.0001V9.33341C11.3337 9.1566 11.2634 8.98703 11.1384 8.86201C11.0134 8.73699 10.8438 8.66675 10.667 8.66675H5.33366C5.15685 8.66675 4.98728 8.73699 4.86225 8.86201C4.73723 8.98703 4.66699 9.1566 4.66699 9.33341V14.0001" stroke="white" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M4.66699 2V4.66667C4.66699 4.84348 4.73723 5.01305 4.86225 5.13807C4.98728 5.2631 5.15685 5.33333 5.33366 5.33333H10.0003" stroke="white" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
-            Save Changes</button>
-    </div>
-  </div>
-</div>
-
   );
 }

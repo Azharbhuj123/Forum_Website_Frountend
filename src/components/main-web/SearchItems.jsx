@@ -11,7 +11,7 @@ export default function SearchItems() {
       </div>
       <div className="search-items-center">
         <p className="para-status">Showing 1-6 of 1,234 results</p>
-        {[1, 2, 3, 4, 5, 6].map(() => (
+        {[1, 2, 3].map(() => (
           <BusinessCard />
         ))}
          

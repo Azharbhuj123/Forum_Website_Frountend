@@ -10,7 +10,11 @@ export default function BusinessDetail() {
         <AdminDashboardheader /> 
         <div className="feautures-main Dashboard-container business-detail-main ">
           <SectionOne/>
+          <div className="res786">
+
           <SectionTwo/>
+          </div>
+
         </div>
 
         <Footer/>

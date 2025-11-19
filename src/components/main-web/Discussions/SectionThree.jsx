@@ -20,6 +20,9 @@ import Guidelines from '../Business_Components/Guidelines';
   return (
     <div className="c-community-widgets-container">
       {/* Trending Topics Card */}
+
+      <Sponser/>
+
       <div className="c-trending-card">
         <div className="c-trending-header">
           <Chart2_Svg/>
@@ -40,7 +43,6 @@ import Guidelines from '../Business_Components/Guidelines';
       {/* Community Guidelines Card */}
      <Guidelines/>
 
-      <Sponser/>
     </div>
   );
 };

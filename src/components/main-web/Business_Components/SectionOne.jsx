@@ -12,6 +12,7 @@ import {
 } from "../../Svg_components/Svgs";
 import CommentsSection from "./Comments";
 import { useNavigate } from "react-router-dom";
+import SectionTwo from "./SectionTwo";
 
 export default function SectionOne() {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
@@ -50,6 +51,7 @@ export default function SectionOne() {
         </button>
 
         {/* Hero Section */}
+
         <div className="hero-section">
           <div className="hero-image">
             <img src={fakeRes} alt="Restaurant interior" />
@@ -101,8 +103,10 @@ export default function SectionOne() {
             </div>
 
             <div className="secondary-buttons">
-              
-              <button className="btn btn-tertiary" onClick={()=>navigate('/chat')}>
+              <button
+                className="btn btn-tertiary"
+                onClick={() => navigate("/chat")}
+              >
                 <span className="btn-icon">
                   <Chat2_svg />
                 </span>
@@ -111,7 +115,9 @@ export default function SectionOne() {
             </div>
           </div>
         </div>
-
+        <div className="res786Done">
+        <SectionTwo />
+</div>
         {/* Photos Section */}
         <div className="photos-section">
           <h2 className="section-title">Photos</h2>
