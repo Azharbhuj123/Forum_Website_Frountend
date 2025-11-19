@@ -105,7 +105,7 @@ function TopCategory() {
   ];
   return (
     <div className="top-category">
-      <div className="top-cat-head">
+      {/* <div className="top-cat-head">
         <Chart2_Svg />
         <h1> Top Categories</h1>
       </div>
@@ -118,7 +118,7 @@ function TopCategory() {
             <p>{item.value}</p>
           </div>
         ))}
-      </div>
+      </div> */}
 
       <div className="top-cat-two-head">
         <div className="heading">

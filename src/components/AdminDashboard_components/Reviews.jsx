@@ -8,7 +8,7 @@ const Reviews = () => {
     {
       name: "Sarah Mitchell",
       restaurant: "La Cocina Mexicana",
-      text: "Best Mexican Food in Town!",
+      text: "Best Properties in Town!",
       date: "2024-11-01",
     },
     {

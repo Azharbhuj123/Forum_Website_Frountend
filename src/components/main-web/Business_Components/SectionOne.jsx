@@ -11,10 +11,11 @@ import {
   Share_svg,
 } from "../../Svg_components/Svgs";
 import CommentsSection from "./Comments";
+import { useNavigate } from "react-router-dom";
 
 export default function SectionOne() {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
-
+  const navigate = useNavigate();
   const photos = [photo, photo, photo];
 
   const dishes = [
@@ -55,7 +56,7 @@ export default function SectionOne() {
           </div>
 
           <div className="restaurant-info1">
-            <h1 className="restaurant-name1">La Cocina Mexicana</h1>
+            <h1 className="restaurant-name1">Sunny Apartment</h1>
 
             <div className="rating-section">
               <div className="stars0">
@@ -70,7 +71,7 @@ export default function SectionOne() {
             </div>
 
             <div className="restaurant-type">
-              <span className="type-text">Mexican Restaurant</span>
+              <span className="type-text">Apartments, Luxury Apartments</span>
               <span className="badge-claimed">Claimed</span>
             </div>
 
@@ -81,12 +82,18 @@ export default function SectionOne() {
                 </span>
                 Write a Review
               </button>
-              <button className="btn btn-secondary">
+              <button className="btn btn-tertiary">
+                <span className="btn-icon">
+                  <Share_svg />
+                </span>
+                Share
+              </button>
+              {/* <button className="btn btn-secondary">
                 <span className="btn-icon">
                   <Camera_svg />
                 </span>
                 Add Photo
-              </button>
+              </button> */}
               <button className="btn btn-secondary">
                 <Save_svgs />
                 Save
@@ -94,13 +101,8 @@ export default function SectionOne() {
             </div>
 
             <div className="secondary-buttons">
-              <button className="btn btn-tertiary">
-                <span className="btn-icon">
-                  <Share_svg />
-                </span>
-                Share
-              </button>
-              <button className="btn btn-tertiary">
+              
+              <button className="btn btn-tertiary" onClick={()=>navigate('/chat')}>
                 <span className="btn-icon">
                   <Chat2_svg />
                 </span>

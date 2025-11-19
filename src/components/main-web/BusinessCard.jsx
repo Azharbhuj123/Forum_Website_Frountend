@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-
+import rental from "../../assets/Images/rental.png";
 export default function BusinessCard() {
   const navigate = useNavigate();
   return (
@@ -11,7 +11,7 @@ export default function BusinessCard() {
         {/* Image Section */}
         <div className="restaurant-image">
           <img
-            src="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=400&h=400&fit=crop"
+            src={rental}
             alt="La Cocina Mexicana"
           />
           <button className="favorite-btn">
@@ -30,7 +30,7 @@ export default function BusinessCard() {
 
         {/* Info Section */}
         <div className="restaurant-info">
-          <h3 className="restaurant-name">La Cocina Mexicana</h3>
+          <h3 className="restaurant-name">Sunny Apartment</h3>
 
           {/* Rating */}
           <div className="restaurant-rating">
@@ -41,24 +41,23 @@ export default function BusinessCard() {
               <span className="star filled">★</span>
               <span className="star">★</span>
             </div>
-            <span className="rating-text">4.5 (328 reviews)</span>
+            <span className="rating-text-2">4.5 (328 reviews)</span>
           </div>
 
           {/* Description */}
           <p className="restaurant-description">
-            Authentic Mexican street-tacos, handmade tortillas, late-night
-            dining
+           Welcome to our sunny New York apartment—a bright, clean, and cozy space...
           </p>
 
           {/* Meta Info */}
           <div className="restaurant-meta">
-            <span className="category">Mexican Restaurant</span>
-            <span className="separator">•</span>
+            <span className="category">Apartments, Luxury Apartments</span>
+            {/* <span className="separator">•</span>
             <span className="price">$$</span>
             <span className="separator">•</span>
             <span className="distance">0.8 mi</span>
             <span className="separator">•</span>
-            <span className="status open">Open Now</span>
+            <span className="status open">Open Now</span> */}
           </div>
 
           {/* Address */}

@@ -21,7 +21,7 @@ export default function MiddleSection() {
                 <span class="smitchell-review-date">2024-11-01</span>
             </div>
             
-            <h4 class="smitchell-review-title">Best Mexican Food in Town!</h4>
+            <h4 class="smitchell-review-title">Best Properties in Town!</h4>
             
             <p class="smitchell-review-body">
                 I've been coming to La Cocina Mexicana for months now, and every visit is better than the last. The carne asada tacos are absolutely incredible – perfectly seasoned and cooked to perfection. The ambiance is perfect for both family dinners and casual meetups. The staff is incredibly attentive and friendly. The salsa verde is to die for! Highly recommend trying their weekend brunch menu as well.

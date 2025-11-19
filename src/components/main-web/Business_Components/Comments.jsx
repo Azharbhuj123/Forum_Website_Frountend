@@ -60,7 +60,7 @@ export default function CommentsSection() {
             <button className="flag-button">⚑</button>
           </div>
 
-          <h4 className="review-title">Best Mexican Food in Town!</h4>
+          <h4 className="review-title">Best Properties in Town!</h4>
 
           <p className="review-text">
             I've been coming to La Cocina Mexicana for months now, and every
