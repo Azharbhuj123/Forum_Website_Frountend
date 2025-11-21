@@ -13,6 +13,8 @@ import DiscussionsDetail from "../pages/DiscussionsDetail";
 import Chat from "../pages/Chat";
 import Profile from "../pages/Profile";
 import EditProfile from "../pages/EditProfile";
+import PropertyForm from "../pages/PropertyForm";
+import PropertyDetail from "../pages/PropertyDetail";
 
 
 const Routes = () => {
@@ -26,12 +28,14 @@ const Routes = () => {
     { path: "/search-rental", element: <SearchBusiness />, },
     { path: "/discussions", element: <Discussions />, },
     { path: "/discussions-detail", element: <DiscussionsDetail />, },
-    { path: "/business-detail", element: <BusinessDetail />, },
+    { path: "/rental-detail", element: <BusinessDetail />, },
     { path: "/chat", element: <Chat />, },
     { path: "/profile", element: <Profile />, },
     { path: "/edit-profile", element: <EditProfile />, },
 
     { path: "/AdminDashboard", element: <AdminDashboardPage />, },
+    { path: "/property-form", element: <PropertyForm />, },
+    { path: "/property-detail/:id", element: <PropertyDetail />, },
    
     { path: "/Login", element: <Login />, },
     { path: "/Singup", element: <Singup />, },

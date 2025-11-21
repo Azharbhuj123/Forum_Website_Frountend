@@ -5,7 +5,7 @@ export default function BusinessCard() {
   const navigate = useNavigate();
   return (
     <div className="restaurant-card"
-    onClick={()=>navigate('/business-detail')}
+    onClick={()=>navigate('/rental-detail')}
     >
       <div className="restaurant-card-content">
         {/* Image Section */}

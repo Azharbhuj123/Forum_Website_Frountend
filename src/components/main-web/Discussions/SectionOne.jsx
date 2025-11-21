@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {Plus_Svg} from '../../Svg_components/Svgs'
+import Discussion from '../../Modals/Discussion';
 
 export default function SectionOne() {
+  const [showPopup, setShowPopup] = useState(false);
   return (
     <div className=''>
         <button className="back-button" onClick={() => window.history.back()}>
@@ -13,7 +15,8 @@ export default function SectionOne() {
                     <h1>Community Discussions</h1>
                     <p>Join the conversation and connect with the community</p>
                 </div>
-                    <button><Plus_Svg /> Start Discussion</button>
+                    <button onClick={()=>setShowPopup(true)}><Plus_Svg /> Start Discussion</button>
+                    <Discussion setIsOpen={setShowPopup} isOpen={showPopup} />
         </div>
     </div>
   )

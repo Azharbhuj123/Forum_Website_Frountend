@@ -6,6 +6,7 @@ import Chart_svg from "../Svg_components/Chart_svg";
 import Bell_svg from "../Svg_components/Bell_svg";
 import logo from "../../assets/Images/logo.png";
 import { useNavigate } from "react-router-dom";
+import { Location_Svg } from "../Svg_components/Svgs";
 
 // For now, we'll just use text for the button
 const MenuIcon = () => (
@@ -34,22 +35,37 @@ const AdminDashboardheader = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const handleNavigate = () =>{
+    navigate('/search-rental')
+  }
+
   return (
     <>
       <header className="AdminDashboardheader">
         <div className="Main-AdminDashboardheader">
-          <div onClick={() => navigate("/")} className="AdminDashboardheader-logo">
+          <div
+            onClick={() => navigate("/")}
+            className="AdminDashboardheader-logo"
+          >
             <img src={logo} alt="" />
           </div>
 
           <div className="AdminDashboardheader-Search">
-            <input
-              type="text"
-              placeholder="Search businesses, reviews, or users..."
-            />
-            <button>
-              <Search_Svg />
-            </button>
+            <div className="SearchBar">
+              <div className="SearchBar-section">
+                <Search_Svg />
+                <input type="text" placeholder="Search rentals, rooms…" />
+              </div>
+
+              <div className="divider"></div>
+
+              <div className="SearchBar-section">
+                <Location_Svg />
+                <input type="text" placeholder="Enter city or location" />
+              </div>
+
+              <button onClick={handleNavigate} className="search-btn">Search</button>
+            </div>
           </div>
 
           {/* New Hamburger Button: Visible only on small screens via CSS */}

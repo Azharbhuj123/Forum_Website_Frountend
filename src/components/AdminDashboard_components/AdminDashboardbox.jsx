@@ -8,6 +8,7 @@ import Overview from "./Overview";
 import Reviews from "./Reviews";
 import Users from "./Users";
 import Reports from "./Reports";
+import Listings from "./Listings";
 
 const AdminDashboardbox = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -37,6 +38,13 @@ const AdminDashboardbox = () => {
             </button>
 
             <button
+              className={activeTab === "listings" ? "active" : ""}
+              onClick={() => setActiveTab("listings")}
+            >
+              <Reviews_svg /><p>Listings</p>
+            </button>
+
+             <button
               className={activeTab === "reviews" ? "active" : ""}
               onClick={() => setActiveTab("reviews")}
             >
@@ -62,6 +70,9 @@ const AdminDashboardbox = () => {
           {/* TAB CONTENTS */}
           {activeTab === "overview" && (
             <Overview/>
+          )}
+          {activeTab === "listings" && (
+           <Listings/>
           )}
 
           {activeTab === "reviews" && (
