@@ -6,11 +6,11 @@ export default function FeaturedCard({ listings }) {
    
   return (
     <div className="listings-grid">
-      {listings.map((listing) => (
-        <div key={listing.id} className="listing-card">
+      {listings?.map((listing) => (
+        <div key={listing._id} className="listing-card">
           <div className="card-image-wrapper">
             <img
-              src={listing.image}
+              src={listing?.photos[0]}
               alt={listing.title}
               className="card-image"
             />
@@ -18,7 +18,7 @@ export default function FeaturedCard({ listings }) {
           </div>
 
           <div className="card-content">
-            <h3 className="card-title">{listing.title}</h3>
+            <h3 className="card-title">{listing.listingTitle}</h3>
             <p className="card-description">{listing.description}</p>
 
             <div className="card-rating">
@@ -37,17 +37,17 @@ export default function FeaturedCard({ listings }) {
                 ))}
               </div>
               <span className="rating-text">
-                {listing.rating} ({listing.reviews} reviews)
+                {listing.rating} ({listing.total_review} reviews)
               </span>
             </div>
 
             <div className="card-footer">
               <div className="price-section">
                 <span className="price-from">From </span>
-                <span className="price-amount">${listing.price}</span>
+                <span className="price-amount">${listing.monthlyRent}</span>
                 <span className="price-period">/ month</span>
               </div>
-              <button onClick={()=>navigate("/rental-detail")} className="view-details-btn">View Details</button>
+              <button onClick={()=>navigate(`/rental-detail/${listing._id}`)} className="view-details-btn">View Details</button>
             </div>
           </div>
         </div>

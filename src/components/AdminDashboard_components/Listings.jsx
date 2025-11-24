@@ -82,9 +82,9 @@ export default function Listings() {
             </Button>
           </Dropdown>
 
-          <button onClick={() => navigate("/property-form")}>
+          {/* <button onClick={() => navigate("/property-form")}>
             + Add Listings
-          </button>
+          </button> */}
         </div>
       </div>
       <PropertyTable

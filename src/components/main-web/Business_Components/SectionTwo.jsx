@@ -7,8 +7,10 @@ import {
 } from "../../Svg_components/Svgs";
 import photo from "../../../assets/Images/photo.png";
 import Sponser from "../Sponser";
+import { useNavigate } from "react-router-dom";
 
-export default function SectionTwo() {
+export default function SectionTwo({ rental_data, otherProperties }) {
+  const navigate = useNavigate();
   const relatedBusinesses = [
     { name: "The Purple Garden", rating: 5, reviews: 285 },
     { name: "The Purple Garden", rating: 5, reviews: 285 },
@@ -66,17 +68,18 @@ export default function SectionTwo() {
         </div>
 
         {/* Related Businesses Card */}
+        {otherProperties?.slice(3, 6)?.length > 0 && (
         <div className="info-card">
           <h3 className="card-title">Related Businesses</h3>
 
           <div className="related-businesses">
-            {relatedBusinesses.map((business, index) => (
-              <div key={index} className="business-item">
+            {otherProperties?.slice(3, 6)?.map((data, index) => (
+              <div onClick={()=>navigate(`/rental-detail/${data?._id}`)} key={index} className="business-item">
                 <div className="business-image">
-                  <img src={photo} alt={business.name} />
+                  <img src={data?.photos[0]} alt={data.listingTitle} />
                 </div>
                 <div className="business-details">
-                  <h4 className="business-name">{business.name}</h4>
+                  <h4 className="business-name">{data.listingTitle}</h4>
                   <div className="business-rating">
                     <div className="stars1">
                       <span className="star0">★</span>
@@ -86,7 +89,7 @@ export default function SectionTwo() {
                       <span className="star0">★</span>
                     </div>
                     <span className="review-count">
-                      {business.reviews} reviews
+                      {data?.total_review} reviews
                     </span>
                   </div>
                 </div>
@@ -94,7 +97,8 @@ export default function SectionTwo() {
             ))}
           </div>
         </div>
-        <Sponser/>
+        )}
+        <Sponser />
       </div>
     </>
   );

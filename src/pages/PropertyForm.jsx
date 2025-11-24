@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -6,7 +6,9 @@ import AdminDashboardheader from "../components/AdminDashboard_components/AdminD
 import Location_svg from "../components/Svg_components/Location_svg";
 import { Upload_Svg } from "../components/Svg_components/Svgs";
 import useActionMutation from "../queryFunctions/useActionMutation";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { fetchData } from "../queryFunctions/queryFunctions";
 
 // Yup validation schema
 const schema = yup.object().shape({
@@ -14,8 +16,12 @@ const schema = yup.object().shape({
   category: yup.string().required("Category is required"),
   description: yup.string().required("Description is required"),
   tags: yup.string(),
-  country: yup.string().required("Country is required"),
+  zipcode: yup.string().required("Zipcode is required"),
   fullAddress: yup.string().required("Full Address is required"),
+   rooms: yup
+    .number()
+    .typeError("Must be a number")
+    .required("Rooms required"),
   bedrooms: yup
     .number()
     .typeError("Must be a number")
@@ -25,7 +31,6 @@ const schema = yup.object().shape({
     .typeError("Must be a number")
     .required("Bathrooms required"),
   yearBuilt: yup.number().typeError("Must be a number"),
-  furnishing: yup.string(),
   areaSize: yup.number().typeError("Must be a number"),
   roomSize: yup.string(),
   monthlyRent: yup.number().typeError("Must be a number"),
@@ -33,14 +38,17 @@ const schema = yup.object().shape({
   maintenanceCharges: yup.number().typeError("Must be a number"),
   amenities: yup.array().of(yup.string()),
 
-  photos: yup
+ photos: yup
     .array()
-    .min(4, "Please upload at least 4 image")
+    .min(4, "Please upload at least 4 images")
     .max(4, "You can upload up to 4 images")
     .test("fileType", "Only PNG or JPG images are allowed", (files) => {
-      return files
-        ? files.every((file) => ["image/jpeg", "image/png"].includes(file.type))
-        : true;
+      if (!files) return true;
+      return files.every((file) => {
+        // file can be a File object OR a string (url) when editing
+        if (typeof file === "string") return true;
+        return ["image/jpeg", "image/png"].includes(file.type);
+      });
     }),
 });
 
@@ -63,6 +71,7 @@ export default function PropertyForm() {
     register,
     handleSubmit,
     control,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
@@ -71,13 +80,12 @@ export default function PropertyForm() {
       category: "",
       description: "",
       tags: "",
-      country: "",
+      zipcode: "",
       fullAddress: "",
       amenities: [],
       bedrooms: "",
       bathrooms: "",
       yearBuilt: "",
-      furnishing: "",
       time: "",
       areaSize: "",
       roomSize: "",
@@ -89,54 +97,72 @@ export default function PropertyForm() {
       maintenanceCharges: "",
     },
   });
-
+  const location = useLocation();
   const navigate = useNavigate();
+
+  const property_id = location?.search?.split("=")[1];
+
+
+   const { data, isLoading, refetch } = useQuery({
+      queryKey: ["admin-property", property_id],
+      queryFn: () => fetchData(`/property/${property_id}`),
+      keepPreviousData: true,
+      enabled: !!property_id,
+    });
+
+    useEffect(() => {
+    if (property_id && data?.data) {
+      console.log("API Data received:", data.data);
+      
+      // Reset form with API data
+      reset({
+        ...data.data,
+        // Ensure photos array is properly handled
+        photos: data.data.photos || []
+      });
+    }
+  }, [property_id, data?.data]);
 
   const { triggerMutation, loading } = useActionMutation({
     onSuccessCallback: (data) => {
-      navigate("/property-detail");
+      navigate(`/property-detail/${property_id}`);
     },
     onErrorCallback: (errmsg) => {
-       
+        alert(errmsg)
     },
   });
 
   const onSubmit = (data, type) => {
     const formData = new FormData();
 
-    // Append photos correctly as photos[]
+    // Append only real File objects
     if (data.photos && data.photos.length) {
-      data.photos.forEach((file) => {
-        if (file instanceof File) {
-          formData.append("photos[]", file); // always use photos[]
+      data.photos.forEach((item) => {
+        if (item instanceof File) {
+          formData.append("photos[]", item);
         }
       });
     }
 
-    // Append amenities
+    // Amenities
     if (data.amenities && data.amenities.length) {
-      data.amenities.forEach((amenity) => {
-        formData.append("amenities[]", amenity);
-      });
+      data.amenities.forEach((a) => formData.append("amenities[]", a));
     }
 
-    // Append other fields
+    // Other fields
     Object.keys(data).forEach((key) => {
-      if (key !== "photos" && key !== "amenities" && data[key] !== undefined) {
+      if (key !== "photos" && key !== "amenities" && data[key] !== undefined && data[key] !== null) {
         formData.append(key, data[key]);
       }
     });
-    if (type == "draft") {
-      formData.append("is_publish", false);
-    } else {
-      formData.append("is_publish", true);
+    if(!property_id){
+    formData.append("is_publish", type === "publish");
     }
 
-    // Send FormData
     triggerMutation({
-      endPoint: "/property/",
+      endPoint: property_id ? `/property/${property_id}` : "/property/" ,
       body: formData,
-      method: "post",
+      method: property_id ? "put" : "post",
     });
   };
 
@@ -203,14 +229,14 @@ export default function PropertyForm() {
 
             <div className="two-column-grid">
               <div className="input-field-wrapper">
-                <label className="input-field-label">Country</label>
+                <label className="input-field-label">Zipcode</label>
                 <input
                   type="text"
                   className="form-text-input"
                   placeholder="Zip Code"
-                  {...register("country")}
+                  {...register("zipcode")}
                 />
-                <p className="error-text">{errors.country?.message}</p>
+                <p className="error-text">{errors.zipcode?.message}</p>
               </div>
 
               <div className="input-field-wrapper">
@@ -241,9 +267,18 @@ export default function PropertyForm() {
 
             <div className="three-column-grid">
               <div className="input-field-wrapper">
+                <label className="input-field-label">Numbers Of Rooms</label>
+                <input
+                  type="number"
+                  className="form-text-input"
+                  {...register("rooms")}
+                />
+                <p className="error-text">{errors.rooms?.message}</p>
+              </div>
+              <div className="input-field-wrapper">
                 <label className="input-field-label">Bedrooms</label>
                 <input
-                  type="text"
+                  type="number"
                   className="form-text-input"
                   {...register("bedrooms")}
                 />
@@ -253,14 +288,19 @@ export default function PropertyForm() {
               <div className="input-field-wrapper">
                 <label className="input-field-label">Bathrooms</label>
                 <input
-                  type="text"
+                  type="number"
                   className="form-text-input"
                   {...register("bathrooms")}
                 />
                 <p className="error-text">{errors.bathrooms?.message}</p>
               </div>
 
-              <div className="input-field-wrapper">
+             
+            </div>
+
+            <div className="three-column-grid">
+              
+ <div className="input-field-wrapper">
                 <label className="input-field-label">Year Built</label>
                 <input
                   type="text"
@@ -269,19 +309,6 @@ export default function PropertyForm() {
                 />
                 <p className="error-text">{errors.yearBuilt?.message}</p>
               </div>
-            </div>
-
-            <div className="three-column-grid">
-              <div className="input-field-wrapper">
-                <label className="input-field-label">Furnishing</label>
-                <input
-                  type="text"
-                  className="form-text-input"
-                  placeholder="Default (owner)"
-                  {...register("furnishing")}
-                />
-              </div>
-
               <div className="input-field-wrapper">
                 <label className="input-field-label">Area Size</label>
                 <input
@@ -378,7 +405,7 @@ export default function PropertyForm() {
                 <label className="input-field-label">
                   Maintenance Charges (Inclusive)
                 </label>
-                <div className="price-input-wrapper">
+                <div aclassName="price-input-wrapper">
                   <span className="currency-symbol">$</span>
                   <input
                     type="text"
@@ -394,22 +421,42 @@ export default function PropertyForm() {
           </section>
 
           {/* Upload Photos Section */}
-          <section className="form-section-block">
+         <section className="form-section-block">
             <h2 className="section-heading-title">Upload Photos</h2>
 
             <Controller
               name="photos"
               control={control}
-              defaultValue={[]}
               render={({ field }) => {
                 const files = field.value || [];
 
                 const removeFile = (indexToRemove) => {
-                  const updatedFiles = files.filter(
-                    (_, i) => i !== indexToRemove
-                  );
-                  field.onChange(updatedFiles);
+                  const updated = files.filter((_, i) => i !== indexToRemove);
+                  field.onChange(updated);
                 };
+
+                // Helper to get correct src for preview
+                const getPreviewUrl = (item) => {
+                  if (typeof item === "string") {
+                    // item is already a URL from the server
+                    return item;
+                  }
+                  if (item instanceof File || item instanceof Blob) {
+                    return URL.createObjectURL(item);
+                  }
+                  return ""; // fallback
+                };
+
+                // Cleanup object URLs when component unmounts or files change
+                useEffect(() => {
+                  return () => {
+                    files.forEach((f) => {
+                      if ((f instanceof File || f instanceof Blob) && f.previewUrl) {
+                        URL.revokeObjectURL(f.previewUrl);
+                      }
+                    });
+                  };
+                }, [files]);
 
                 return (
                   <label htmlFor="upload-input" className="upload-label">
@@ -421,8 +468,8 @@ export default function PropertyForm() {
                         style={{ display: "none" }}
                         id="upload-input"
                         onChange={(e) => {
-                          const selectedFiles = Array.from(e.target.files);
-                          field.onChange([...files, ...selectedFiles]);
+                          const newFiles = Array.from(e.target.files || []);
+                          field.onChange([...files, ...newFiles]);
                         }}
                       />
 
@@ -439,8 +486,8 @@ export default function PropertyForm() {
                           {files.map((file, index) => (
                             <div key={index} className="preview-image-wrapper">
                               <img
-                                src={URL.createObjectURL(file)}
-                                alt={`Preview ${index}`}
+                                src={getPreviewUrl(file)}
+                                alt={`Preview ${index + 1}`}
                                 className="preview-image"
                               />
                               <button
@@ -460,13 +507,26 @@ export default function PropertyForm() {
               }}
             />
 
-            {errors.photos && (
-              <p className="error-text">{errors.photos.message}</p>
-            )}
+            {errors.photos && <p className="error-text">{errors.photos.message}</p>}
           </section>
 
           {/* Action Buttons */}
-          <div className="form-actions-footer">
+          {
+            property_id ? (
+              <div className="form-actions-footer">
+            
+
+            <button
+              disabled={loading}
+              type="button"
+              className="btn-submit-action"
+              onClick={handleSubmit((data) => onSubmit(data, "publish"))}
+            >
+              {loading ? "Submitting..." : "Save Changes"}
+            </button>
+          </div>
+            ):(
+<div className="form-actions-footer">
             <button
               disabled={loading}
               type="button"
@@ -485,6 +545,9 @@ export default function PropertyForm() {
               {loading ? "Submitting..." : "Publish"}
             </button>
           </div>
+            )
+          }
+          
         </div>
       </div>
     </>

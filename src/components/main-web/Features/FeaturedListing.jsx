@@ -1,19 +1,31 @@
 import React, { useState } from "react";
 import FeaturedCard from "./FeaturedCard";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { fetchData } from "../../../queryFunctions/queryFunctions";
 
 export default function FeaturedListings() {
   const [activeTab, setActiveTab] = useState("All");
+
+const { data, isLoading } = useQuery({
+    queryKey: ["user-property",activeTab],
+    queryFn: () => fetchData(`/property?page=1&limit=6&status=published&activeTab=${activeTab}`),
+    keepPreviousData: true,
+  });
+
+
+  console.log(data?.data,"data");
+
 
   const navigate = useNavigate();
 
   const tabs = [
     "All",
-    "Houses",
-    "Rooms",
-    "Shared Spaces",
-    "Offices",
-    "Short-Term",
+    "Balcony",
+    "Parking",
+    "Nearby Market",
+    "Security Guard",
+    "Gym",
   ];
 
   const listings = [
@@ -81,6 +93,8 @@ export default function FeaturedListings() {
 
   return (
     <div className="featured-container">
+     
+
       <div className="featured-header">
         <h1 className="featured-title">Featured Listings</h1>
         <p className="featured-subtitle">
@@ -99,8 +113,13 @@ export default function FeaturedListings() {
           </button>
         ))}
       </div>
-
-      <FeaturedCard listings={listings} />
+        {data?.data?.length > 0 ? (
+      <FeaturedCard listings={data?.data} />
+        ):(
+          <div className="no-property">
+            <p>No Property Found!</p>
+          </div>
+        )}
 
       <div className="explore-all-section">
         <button onClick={()=>navigate('/search-rental')} className="explore-all-btn">
@@ -129,6 +148,9 @@ export default function FeaturedListings() {
           </svg>
         </button>
       </div>
+    
+   
+
     </div>
   );
 }

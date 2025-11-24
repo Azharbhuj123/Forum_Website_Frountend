@@ -31,12 +31,14 @@ import { fetchData } from "../queryFunctions/queryFunctions";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "../components/Loader";
 import useActionMutation from "../queryFunctions/useActionMutation";
+import DeleteSure from "../components/Modals/DeleteSure";
 
 const PropertyDetail = () => {
   const params = useParams();
   const [mainImage, setMainImage] = useState(null);
+  const [deleteModal, setDeleteModal] = useState(false);
 
-  const { data, isLoading ,refetch} = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ["admin-property", params.id],
     queryFn: () => fetchData(`/property/${params.id}`),
     keepPreviousData: true,
@@ -51,25 +53,21 @@ const PropertyDetail = () => {
     }
   }, [property]);
 
- const { triggerMutation, loading } = useActionMutation({
+  const { triggerMutation, loading } = useActionMutation({
     onSuccessCallback: (data) => {
-       refetch();
+      refetch();
     },
     onErrorCallback: (errmsg) => {
       console.log(errmsg);
-      alert(errmsg)
+      alert(errmsg);
     },
   });
-  const handleToogle = ()=>{
-
-
-     triggerMutation({
+  const handleToogle = () => {
+    triggerMutation({
       endPoint: `/property/publish-toogle/${params.id}`,
       method: "put",
     });
-  }
-
-
+  };
 
   if (isLoading) return <Loader />;
 
@@ -78,7 +76,7 @@ const PropertyDetail = () => {
       <AdminDashboardheader />
 
       <div className="property-listing-container Dashboard-container">
-        <button className="back-button" onClick={() => window.history.back()}>
+        <button className="back-button" onClick={() => navigate('/')}>
           <span className="back-arrow">‹</span> Back
         </button>
 
@@ -91,20 +89,21 @@ const PropertyDetail = () => {
             </h1>
 
             <div className="property-meta">
-              Host: User · Created: {new Date(property?.createdAt).toDateString()} · Updated:{" "}
+              Host: User · Created:{" "}
+              {new Date(property?.createdAt).toDateString()} · Updated:{" "}
               {new Date(property?.updatedAt).toDateString()}
             </div>
           </div>
 
           <div className="property-actions">
-            <button className="action-btn save-btn">
+            <button onClick={() => navigate(`/property-form?id=${params.id}`)} className="action-btn save-btn">
               <FaEdit size={18} />
               Edit
             </button>
             <button onClick={handleToogle} className="action-btn">
               {property?.is_publish ? "Unpublish" : "Publish"}
             </button>
-            <button className="action-btn">
+            <button  className="action-btn">
               <MdDelete size={18} />
               Delete
             </button>
@@ -121,7 +120,11 @@ const PropertyDetail = () => {
 
           <div className="thumbnail-grid">
             {property?.photos?.map((img, idx) => (
-              <div key={idx} className="thumbnail" onClick={() => setMainImage(img)}>
+              <div
+                key={idx}
+                className="thumbnail"
+                onClick={() => setMainImage(img)}
+              >
                 <img src={img} alt={`Property view ${idx}`} />
               </div>
             ))}
@@ -141,14 +144,17 @@ const PropertyDetail = () => {
 
             {/* Coordinates */}
             <p>
-              Lat: {property?.property_location?.coordinates[1]} — Lng:{" "}
-              {property?.property_location?.coordinates[0]}
-            </p>
+  Lat: {Array.isArray(property?.property_location?.coordinates) ? property.property_location.coordinates[1] : ""} — Lng:{" "}
+  {Array.isArray(property?.property_location?.coordinates) ? property.property_location.coordinates[0] : ""}
+</p>
+
           </div>
         </div>
 
         <div className="map-placeholder-section">
-          <div className="map-icon-container"><Location_svg /></div>
+          <div className="map-icon-container">
+            <Location_svg />
+          </div>
           <p className="map-placeholder-text">Map preview will appear here</p>
         </div>
 
@@ -156,12 +162,36 @@ const PropertyDetail = () => {
         <h2 className="section-title">Property Details</h2>
 
         <div className="property-details-grid">
-          <DetailCard icon={<FaBed />} title="Bedrooms" value={property?.bedrooms} />
-          <DetailCard icon={<FaBath />} title="Bathrooms" value={property?.bathrooms} />
-          <DetailCard icon={<FaRulerCombined />} title="Area Size" value={`${property?.areaSize} sqft`} />
-          <DetailCard icon={<FaTags />} title="Category" value={property?.category} />
-          <DetailCard icon={<FaCalendarAlt />} title="Year Built" value={property?.yearBuilt} />
-          <DetailCard icon={<FaCouch />} title="Furnishing" value={property?.furnishing} />
+          <DetailCard
+            icon={<FaBed />}
+            title="Bedrooms"
+            value={property?.bedrooms}
+          />
+          <DetailCard
+            icon={<FaBath />}
+            title="Bathrooms"
+            value={property?.bathrooms}
+          />
+          <DetailCard
+            icon={<FaRulerCombined />}
+            title="Area Size"
+            value={`${property?.areaSize} sqft`}
+          />
+          <DetailCard
+            icon={<FaTags />}
+            title="Category"
+            value={property?.category}
+          />
+          <DetailCard
+            icon={<FaCalendarAlt />}
+            title="Year Built"
+            value={property?.yearBuilt}
+          />
+          {/* <DetailCard
+            icon={<FaCouch />}
+            title="Furnishing"
+            value={property?.furnishing}
+          /> */}
         </div>
 
         {/* AMENITIES */}
@@ -170,7 +200,9 @@ const PropertyDetail = () => {
         <div className="amenities-grid">
           {property?.amenities?.map((item, idx) => (
             <div key={idx} className="amenity-item">
-              <div className="amenity-icon"><FaWifi size={18} /></div>
+              <div className="amenity-icon">
+                <FaWifi size={18} />
+              </div>
               <span>{item}</span>
             </div>
           ))}
@@ -180,15 +212,29 @@ const PropertyDetail = () => {
         <h2 className="section-title">Pricing</h2>
 
         <div className="pricing-section">
-          <PriceCard icon={<FaMoneyBillWave />} label="Monthly Rent" amount={property?.monthlyRent} />
-          <PriceCard icon={<FaLock />} label="Security Deposit" amount={property?.securityDeposit} />
-          <PriceCard icon={<FaTools />} label="Maintenance" amount={property?.maintenanceCharges} />
+          <PriceCard
+            icon={<FaMoneyBillWave />}
+            label="Monthly Rent"
+            amount={property?.monthlyRent}
+          />
+          <PriceCard
+            icon={<FaLock />}
+            label="Security Deposit"
+            amount={property?.securityDeposit}
+          />
+          <PriceCard
+            icon={<FaTools />}
+            label="Maintenance"
+            amount={property?.maintenanceCharges}
+          />
         </div>
       </div>
+      {deleteModal && (
+        <DeleteSure open={deleteModal} onCancel={() => setDeleteModal(false)} />
+      )}
     </>
   );
 };
-
 
 // Small reusable components
 const DetailCard = ({ icon, title, value }) => (
@@ -208,6 +254,5 @@ const PriceCard = ({ icon, label, amount }) => (
     <div className="price-amount">${amount}</div>
   </div>
 );
-
 
 export default PropertyDetail;

@@ -15,6 +15,7 @@ import Profile from "../pages/Profile";
 import EditProfile from "../pages/EditProfile";
 import PropertyForm from "../pages/PropertyForm";
 import PropertyDetail from "../pages/PropertyDetail";
+import AuthPages from "../pages/SignUp";
 
 
 const Routes = () => {
@@ -25,10 +26,11 @@ const Routes = () => {
   return useRoutes([
 
     { path: "", element: <Landing />, },
+    { path: "/register", element: <AuthPages />, },
     { path: "/search-rental", element: <SearchBusiness />, },
     { path: "/discussions", element: <Discussions />, },
     { path: "/discussions-detail", element: <DiscussionsDetail />, },
-    { path: "/rental-detail", element: <BusinessDetail />, },
+    { path: "/rental-detail/:id", element: <BusinessDetail />, },
     { path: "/chat", element: <Chat />, },
     { path: "/profile", element: <Profile />, },
     { path: "/edit-profile", element: <EditProfile />, },

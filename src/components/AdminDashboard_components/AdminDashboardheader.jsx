@@ -28,6 +28,12 @@ const MenuIcon = () => (
 );
 const AdminDashboardheader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const userToken = localStorage.getItem("token");
+  const userData = JSON.parse(localStorage.getItem("userData"));
+  const [searchQuery, setSearchQuery] = useState({
+    rooms: null,
+    location: null,
+  });
   const navigate = useNavigate();
 
   // Function to toggle the menu state
@@ -35,9 +41,12 @@ const AdminDashboardheader = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const handleNavigate = () =>{
-    navigate('/search-rental')
-  }
+  const handleNavigate = () => {
+
+    navigate("/search-rental",{
+      state:searchQuery
+    });
+  };
 
   return (
     <>
@@ -54,17 +63,31 @@ const AdminDashboardheader = () => {
             <div className="SearchBar">
               <div className="SearchBar-section">
                 <Search_Svg />
-                <input type="text" placeholder="Search rentals, rooms…" />
+                <input
+                  type="text"
+                  onChange={(e) =>
+                    setSearchQuery({ ...searchQuery, business_name: e.target.value })
+                  }
+                  placeholder="Search listing by name.."
+                />
               </div>
 
               <div className="divider"></div>
 
               <div className="SearchBar-section">
                 <Location_Svg />
-                <input type="text" placeholder="Enter city or location" />
+                <input
+                  type="text"
+                  onChange={(e) =>
+                    setSearchQuery({ ...searchQuery, location: e.target.value })
+                  }
+                  placeholder="Enter city or location"
+                />
               </div>
 
-              <button onClick={handleNavigate} className="search-btn">Search</button>
+              <button onClick={handleNavigate} className="search-btn">
+                Search
+              </button>
             </div>
           </div>
 
@@ -114,7 +137,16 @@ const AdminDashboardheader = () => {
             <div className="AdminDashboardheader-icon">
               <Bell_svg />
             </div>
-            <button>Sign In</button>
+            {userToken ? (
+              <div
+                onClick={() => navigate("/profile")}
+                className="user-profile"
+              >
+                <img src={userData?.profile_img} alt="" />
+              </div>
+            ) : (
+              <button onClick={() => navigate("/register")}>Sign In</button>
+            )}
           </div>
         </div>
       </header>

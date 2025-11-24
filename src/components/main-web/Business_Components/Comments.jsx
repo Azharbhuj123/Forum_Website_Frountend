@@ -5,7 +5,7 @@ import { Like_Svg, Like_Svg2, White_Chat_Svg } from "../../Svg_components/Svgs";
 
  
 
-export default function CommentsSection() {
+export default function CommentsSection({sectionTwoRef}) {
   const [commentText, setCommentText] = useState("");
   const [likes, setLikes] = useState({
     helpful: 234,
@@ -33,7 +33,7 @@ export default function CommentsSection() {
         </div>
 
         {/* Review Card */}
-        <div className="review-card">
+        <div ref={sectionTwoRef}  className="review-card">
           <div className="review-header">
             <div className="reviewer-info">
               <div className="reviewer-avatar">
@@ -95,7 +95,7 @@ export default function CommentsSection() {
           <h3 className="comments-title">Comments (2)</h3>
 
           {/* Comment Input */}
-          <div className="comment-input-wrapper">
+          <div   sclassName="comment-input-wrapper">
             <textarea
               className="comment-input"
               placeholder="Share your thoughts..."

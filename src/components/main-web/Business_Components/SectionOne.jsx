@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import fakeRes from "../../../assets/Images/fakeRes.png";
 import photo from "../../../assets/Images/photo.png";
 import Star_Svg from "../../Svg_components/Star_Svg";
@@ -14,10 +14,10 @@ import CommentsSection from "./Comments";
 import { useNavigate } from "react-router-dom";
 import SectionTwo from "./SectionTwo";
 
-export default function SectionOne() {
+export default function SectionOne({ rental_data, otherProperties }) {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const navigate = useNavigate();
-  const photos = [photo, photo, photo];
+  const photos = rental_data?.photos;
 
   const dishes = [
     { name: "Carne Asada Tacos", reviews: 127 },
@@ -41,6 +41,12 @@ export default function SectionOne() {
   const prevPhoto = () => {
     setCurrentPhotoIndex((prev) => (prev - 1 + photos.length) % photos.length);
   };
+  const sectionTwoRef = useRef(null);
+
+  const gotoReview = () => {
+    // Scroll to the div smoothly
+    sectionTwoRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
     <>
@@ -54,11 +60,11 @@ export default function SectionOne() {
 
         <div className="hero-section">
           <div className="hero-image">
-            <img src={fakeRes} alt="Restaurant interior" />
+            <img src={rental_data?.photos[0]} alt="Restaurant interior" />
           </div>
 
           <div className="restaurant-info1">
-            <h1 className="restaurant-name1">Sunny Apartment</h1>
+            <h1 className="restaurant-name1">{rental_data?.listingTitle}</h1>
 
             <div className="rating-section">
               <div className="stars0">
@@ -68,17 +74,21 @@ export default function SectionOne() {
                 <span className="star1 filled">★</span>
                 <span className="star1 half">★</span>
               </div>
-              <span className="rating-text">4.5</span>
-              <span className="reviews-count">(328 reviews)</span>
+              <span className="rating-text">
+                {rental_data?.rating || "N/A"}
+              </span>
+              <span className="reviews-count">
+                ({rental_data?.total_review || "N/A"} reviews)
+              </span>
             </div>
 
             <div className="restaurant-type">
-              <span className="type-text">Apartments, Luxury Apartments</span>
+              <span className="type-text">{rental_data?.category}</span>
               <span className="badge-claimed">Claimed</span>
             </div>
 
             <div className="action-buttons">
-              <button className="btn btn-primary">
+              <button onClick={gotoReview} className="btn btn-primary">
                 <span className="btn-icon">
                   <Star2 />
                 </span>
@@ -116,8 +126,8 @@ export default function SectionOne() {
           </div>
         </div>
         <div className="res786Done">
-        <SectionTwo />
-</div>
+          <SectionTwo />
+        </div>
         {/* Photos Section */}
         <div className="photos-section">
           <h2 className="section-title">Photos</h2>
@@ -139,29 +149,37 @@ export default function SectionOne() {
         </div>
 
         {/* Popular Dishes Section */}
+        {otherProperties?.length > 0&& (
+          
         <div className="dishes-section">
-          <h2 className="section-title">Popular Dishes</h2>
+          <h2 className="section-title">Popular Properties</h2>
           <div className="dishes-grid">
-            {dishes.map((dish, index) => (
-              <div key={index} className="dish-card">
+            {otherProperties?.slice(0, 3)?.map((data, index) => (
+              <div
+                onClick={() => navigate(`/rental-detail/${data?._id}`)}
+                key={index}
+                className="dish-card"
+              >
                 <div className="dish-image">
-                  <img src={photo} alt={dish.name} />
+                  <img src={data?.photos[0]} alt={data.listingTitle} />
                 </div>
                 <div className="dish-info">
-                  <h3 className="dish-name">{dish.name}</h3>
+                  <h3 className="dish-name">{data.listingTitle}</h3>
                   <p className="dish-reviews">
-                    Mentioned in {dish.reviews} reviews
+                    Mentioned in {data.total_review} reviews
                   </p>
                 </div>
               </div>
             ))}
           </div>
         </div>
+        )}
+
 
         <div className="dishes-section ameinities-section">
           <h2 className="section-title">Amenties</h2>
           <div className="amenities-grid">
-            {amenities.map((item, index) => (
+            {rental_data?.amenities.map((item, index) => (
               <div key={index} className="amenities-card">
                 <div className="amenities-info">
                   <h3 className="amenities-name">
@@ -173,7 +191,7 @@ export default function SectionOne() {
           </div>
         </div>
 
-        <CommentsSection />
+        <CommentsSection sectionTwoRef={sectionTwoRef} />
       </div>
     </>
   );

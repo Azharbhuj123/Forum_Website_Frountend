@@ -1,19 +1,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import rental from "../../assets/Images/rental.png";
-export default function BusinessCard() {
+export default function BusinessCard({ item }) {
   const navigate = useNavigate();
   return (
-    <div className="restaurant-card"
-    onClick={()=>navigate('/rental-detail')}
-    >
+    <div className="restaurant-card" onClick={() => navigate(`/rental-detail/${item?._id}`)}>
       <div className="restaurant-card-content">
         {/* Image Section */}
         <div className="restaurant-image">
-          <img
-            src={rental}
-            alt="La Cocina Mexicana"
-          />
+          <img src={item?.photos[0]} alt="La Cocina Mexicana" />
           <button className="favorite-btn">
             <svg
               width="20"
@@ -30,28 +25,32 @@ export default function BusinessCard() {
 
         {/* Info Section */}
         <div className="restaurant-info">
-          <h3 className="restaurant-name">Sunny Apartment</h3>
+          <h3 className="restaurant-name">{item?.listingTitle}</h3>
 
           {/* Rating */}
           <div className="restaurant-rating">
             <div className="stars">
-              <span className="star filled">★</span>
-              <span className="star filled">★</span>
-              <span className="star filled">★</span>
-              <span className="star filled">★</span>
-              <span className="star">★</span>
+              {Array.from({ length: item?.rating }, (_, i) => (
+                <span key={i} className="star filled">
+                  ★
+                </span>
+              ))}
             </div>
-            <span className="rating-text-2">4.5 (328 reviews)</span>
+            <span className="rating-text-2">
+              {item?.rating || "N/A"} ({item?.total_review || "N/A"} reviews)
+            </span>
           </div>
 
           {/* Description */}
           <p className="restaurant-description">
-           Welcome to our sunny New York apartment—a bright, clean, and cozy space...
+            {item?.description?.length > 90
+              ? item?.description?.slice(0, 90) + "..."
+              : item?.description}
           </p>
 
           {/* Meta Info */}
           <div className="restaurant-meta">
-            <span className="category">Apartments, Luxury Apartments</span>
+            <span className="category">{item?.category}</span>
             {/* <span className="separator">•</span>
             <span className="price">$$</span>
             <span className="separator">•</span>
@@ -73,7 +72,7 @@ export default function BusinessCard() {
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
               <circle cx="12" cy="10" r="3"></circle>
             </svg>
-            <span>123 Main St, Downtow</span>
+            <span>{item?.fullAddress}</span>
           </div>
 
           {/* Action Buttons */}
