@@ -32,6 +32,7 @@ import { useQuery } from "@tanstack/react-query";
 import Loader from "../components/Loader";
 import useActionMutation from "../queryFunctions/useActionMutation";
 import DeleteSure from "../components/Modals/DeleteSure";
+import { showError } from "../components/Toaster";
 
 const PropertyDetail = () => {
   const params = useParams();
@@ -55,11 +56,15 @@ const PropertyDetail = () => {
 
   const { triggerMutation, loading } = useActionMutation({
     onSuccessCallback: (data) => {
+      if(data?.delete){
+         navigate('/profile') 
+        return;
+      }
       refetch();
     },
     onErrorCallback: (errmsg) => {
       console.log(errmsg);
-      alert(errmsg);
+      showError(errmsg);
     },
   });
   const handleToogle = () => {
@@ -68,6 +73,16 @@ const PropertyDetail = () => {
       method: "put",
     });
   };
+
+
+
+
+  const  handleDelete = ()=>{
+      triggerMutation({
+      endPoint: `/property/${params.id}`,
+      method: "delete",
+    });
+  }
 
   if (isLoading) return <Loader />;
 
@@ -103,7 +118,7 @@ const PropertyDetail = () => {
             <button onClick={handleToogle} className="action-btn">
               {property?.is_publish ? "Unpublish" : "Publish"}
             </button>
-            <button  className="action-btn">
+            <button onClick={()=>setDeleteModal(true)}  className="action-btn">
               <MdDelete size={18} />
               Delete
             </button>
@@ -230,7 +245,7 @@ const PropertyDetail = () => {
         </div>
       </div>
       {deleteModal && (
-        <DeleteSure open={deleteModal} onCancel={() => setDeleteModal(false)} />
+        <DeleteSure open={deleteModal} onCancel={() => setDeleteModal(false)} onConfirm={handleDelete} loading={loading} />
       )}
     </>
   );

@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function DeleteSure({ open, onConfirm, onCancel }) {
+export default function DeleteSure({ open, onConfirm, onCancel , loading }) {
   if (!open) return null;
 
   return (
@@ -11,7 +11,7 @@ export default function DeleteSure({ open, onConfirm, onCancel }) {
 
         <div className="ds-buttons">
           <button className="ds-btn ds-cancel" onClick={onCancel}>Cancel</button>
-          <button className="ds-btn ds-delete" onClick={onConfirm}>Delete</button>
+          <button className="ds-btn ds-delete" onClick={onConfirm}>{loading ? "Deleting...":"Delete"}</button>
         </div>
       </div>
     </div>

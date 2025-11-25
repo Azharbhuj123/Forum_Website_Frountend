@@ -8,39 +8,40 @@ import { fetchData } from "../../queryFunctions/queryFunctions";
 import { useQuery } from "@tanstack/react-query";
 import fake1 from "../../assets/Images/fake1.png";
 
-export default function Listings() {
+export default function Listings({ forme = "" }) {
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState(1);
   const navigate = useNavigate();
-  const [status,setStatus] = useState('')
-  const [search,setSearch] = useState('')
-  const [statusTitle,setStatusTitle] = useState("Filter by Status")
+  const [status, setStatus] = useState("");
+  const [search, setSearch] = useState("");
+  const [statusTitle, setStatusTitle] = useState("Filter by Status");
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["admin-property", page,status,search],
-    queryFn: () => fetchData(`/property?page=${page}&limit=3&status=${status}&search=${search}`),
+  const { data, isLoading,refetch } = useQuery({
+    queryKey: ["admin-property", page, status, search],
+    queryFn: () =>
+      fetchData(
+        `/property?page=${page}&limit=3&status=${status}&search=${search}&forme=${forme}`
+      ),
     keepPreviousData: true,
   });
 
-   const items = [
+  const items = [
     {
       label: "Published",
-      key: 'published',
+      key: "published",
     },
     {
       label: "Not Published",
-      key: 'notpublished',
+      key: "notpublished",
     },
-    
   ];
 
   const handleMenuClick = (e) => {
     console.log("click", e);
-    const find_arr = items.find((item) => item.key == e.key)
-    setStatus(e.key)
-    setStatusTitle(find_arr?.label)
+    const find_arr = items.find((item) => item.key == e.key);
+    setStatus(e.key);
+    setStatusTitle(find_arr?.label);
   };
- 
 
   const properties =
     data?.data?.map((property, index) => ({
@@ -65,13 +66,15 @@ export default function Listings() {
     setPage(newPage);
   };
 
- 
-
   return (
     <div className="main-list-div">
       <div className="filter-search">
         <Search_Svg className="search-icon" />
-        <input onChange={(e)=>setSearch(e.target.value)} type="text" placeholder="Search listings..." />
+        <input
+          onChange={(e) => setSearch(e.target.value)}
+          type="text"
+          placeholder="Search listings..."
+        />
         <div className="filter-box">
           <Dropdown menu={{ items, onClick: handleMenuClick }}>
             <Button>
@@ -82,18 +85,19 @@ export default function Listings() {
             </Button>
           </Dropdown>
 
-          {/* <button onClick={() => navigate("/property-form")}>
+          {forme &&<button onClick={() => navigate("/property-form")}>
             + Add Listings
-          </button> */}
+          </button>}
         </div>
       </div>
       <PropertyTable
         properties={properties}
-          totalListings={data?.totalItems}
-  totalPages={data?.totalPages}     // <-- ADD THIS
+        totalListings={data?.totalItems}
+        totalPages={data?.totalPages} // <-- ADD THIS
         currentPage={page}
         listingsPerPage={listingsPerPage}
         onPageChange={onPageChange}
+        refetch={refetch}
       />
     </div>
   );

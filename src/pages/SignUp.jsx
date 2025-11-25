@@ -6,6 +6,7 @@ import { MdEmail } from "react-icons/md";
 import { IoMdLock, IoMdPerson } from "react-icons/io";
 import useActionMutation from "../queryFunctions/useActionMutation";
 import { useNavigate } from "react-router-dom";
+import { showError } from "../components/Toaster";
 
 // Yup schemas
 const signInSchema = yup.object().shape({
@@ -61,7 +62,7 @@ const AuthPages = () => {
        signInReset();
       },
       onErrorCallback: (errmsg) => {
-          alert(errmsg)
+          showError(errmsg)
       },
     });
 

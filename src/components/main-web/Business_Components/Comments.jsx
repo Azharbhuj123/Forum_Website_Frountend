@@ -1,12 +1,52 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import dpOr from "../../../assets/Images/dp-or.png";
 import photo from "../../../assets/Images/photo.png";
 import { Like_Svg, Like_Svg2, White_Chat_Svg } from "../../Svg_components/Svgs";
+import ReactStars from "react-rating-stars-component";
+import useActionMutation from "../../../queryFunctions/useActionMutation";
+import { showError } from "../../Toaster";
+import useStore from "../../../stores/store";
+import { useQuery } from "@tanstack/react-query";
+import { fetchData } from "../../../queryFunctions/queryFunctions";
+import { Skeleton } from "antd";
 
- 
-
-export default function CommentsSection({sectionTwoRef}) {
+export default function CommentsSection({ sectionTwoRef, property }) {
   const [commentText, setCommentText] = useState("");
+  const [rating, setRating] = useState(0);
+  const [comment_id, setComment_id] = useState(null);
+  const [reply_review, setReply_review] = useState("");
+
+  const [reply_reviews, setReply_reviews] = useState([]);
+  const [reply_reviews_limit, setReply_reviews_limit] = useState(3);
+  const [reviews_limit, setReviews_limit] = useState(3);
+  const { login_required } = useStore();
+
+  const token = localStorage.getItem("token");
+
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["property-reviews", property?._id, reviews_limit],
+    queryFn: () => fetchData(`/review/${property?._id}?limit=${reviews_limit}`),
+    keepPreviousData: true,
+  });
+  const { data: commentData, isLoading: commentLoading } = useQuery({
+    queryKey: ["property-comment", comment_id, reply_reviews_limit],
+    queryFn: () =>
+      fetchData(
+        `/review/reply-review?property=${property?._id}&review_id=${comment_id}&limit=${reply_reviews_limit}`
+      ),
+    keepPreviousData: true,
+    enabled: !!comment_id,
+  });
+
+  useEffect(() => {
+    if (commentData?.reply?.length > 0) {
+      setReply_reviews(commentData.reply);
+    } else {
+      setReply_reviews([]); // agar koi reply nahi hai, empty array set kar do
+      setReply_reviews_limit(3); // agar koi reply nahi hai, empty array set kar do
+    }
+  }, [commentData, comment_id]);
+
   const [likes, setLikes] = useState({
     helpful: 234,
     ownerResponse: 12,
@@ -20,12 +60,81 @@ export default function CommentsSection({sectionTwoRef}) {
     }));
   };
 
+  const ratingChanged = (newRating) => {
+    console.log(newRating, "newRating");
+    setRating(newRating);
+  };
+
+  const { triggerMutation, loading } = useActionMutation({
+    onSuccessCallback: (data) => {
+      if (data?.reply) {
+        setReply_review("");
+        setRating(0);
+        setReply_reviews(data?.reply_reviews);
+      }
+      if (data?.status) {
+        refetch();
+        setCommentText("");
+      }
+    },
+    onErrorCallback: (errmsg) => {
+      console.log(errmsg);
+      showError(errmsg);
+    },
+  });
+
+  const handlePostReview = () => {
+    if (!commentText) {
+      showError("Please enter a comment");
+      return;
+    }
+    if (!token) {
+      showError(login_required);
+      return;
+    }
+
+    const reviewData = {
+      property: property?._id,
+      review: commentText,
+      rating,
+    };
+
+    triggerMutation({
+      endPoint: `/review/`,
+      body: reviewData,
+      method: "post",
+    });
+
+    console.log(reviewData);
+  };
+
+  const handleReply = () => {
+    if (!reply_review) {
+      showError("Please enter a reply");
+      return;
+    }
+
+    const review_rep_Data = {
+      property: property?._id,
+      review_id: comment_id,
+      reply_review,
+    };
+
+    triggerMutation({
+      endPoint: `/review/reply-review`,
+      body: review_rep_Data,
+      method: "post",
+    });
+  };
+
   return (
     <>
       <div className="reviews-container">
         {/* Reviews Header */}
         <div className="reviews-header">
-          <h2 className="reviews-title">Reviews (1)</h2>
+          <h2 className="reviews-title">
+            Reviews ({data?.totalCount?.toLocaleString()})
+          </h2>
           <div className="sort-dropdown">
             <span>Newest</span>
             <span>▼</span>
@@ -33,108 +142,164 @@ export default function CommentsSection({sectionTwoRef}) {
         </div>
 
         {/* Review Card */}
-        <div ref={sectionTwoRef}  className="review-card">
-          <div className="review-header">
-            <div className="reviewer-info">
-              <div className="reviewer-avatar">
-                <img src={dpOr} alt="Sarah Mitchell" />
-              </div>
-              <div className="reviewer-details">
-                <div className="reviewer-name-row">
-                  <h3 className="reviewer-name">Sarah Mitchell</h3>
-                  <span className="badge badge-top">Top Reviewer</span>
-                  <span className="badge badge-local">Local Guide</span>
-                </div>
-                <div className="review-meta">
-                  <div className="stars">
-                    <span className="star">★</span>
-                    <span className="star">★</span>
-                    <span className="star">★</span>
-                    <span className="star">★</span>
-                    <span className="star">★</span>
+        {data?.data?.length > 0
+          ? data?.data?.map((item, index) => (
+              <div ref={sectionTwoRef} key={index} className="review-card">
+                <div className="review-header">
+                  <div className="reviewer-info">
+                    <div className="reviewer-avatar">
+                      <img src={item?.user?.profile_img} alt="Sarah Mitchell" />
+                    </div>
+                    <div className="reviewer-details">
+                      <div className="reviewer-name-row">
+                        <h3 className="reviewer-name">{item?.user?.name}</h3>
+                        {/* <span className="badge badge-top">Top Reviewer</span> */}
+                        {/* <span className="badge badge-local">Local Guide</span> */}
+                      </div>
+                      <div className="review-meta">
+                        <div className="stars">
+                          { item?.rating == 0 ? (
+                            'N/A'
+                          ):(
+ Array.from({ length: item?.rating }, (_, i) => (
+                            <span key={i} className="star">
+                              ★
+                            </span>
+                          ))
+                          )}
+                         
+                        </div>
+                        <span className="review-date">
+                          {item?.createdAt?.split("T")[0]}
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <span className="review-date">2024-11-01</span>
+                  <button className="flag-button">⚑</button>
                 </div>
-              </div>
-            </div>
-            <button className="flag-button">⚑</button>
-          </div>
 
-          <h4 className="review-title">Best Properties in Town!</h4>
+                {/* <h4 className="review-title">Best Properties in Town!</h4> */}
 
-          <p className="review-text">
-            I've been coming to La Cocina Mexicana for months now, and every
-            visit is better than the last. The carne asada tacos are absolutely
-            incredible - perfectly seasoned and cooked to perfection. The
-            ambiance is perfect for both family dinners and casual meetups. The
-            staff is incredibly attentive and friendly. The salsa verde is to
-            die for! Highly recommend trying their weekend brunch menu as well.
-          </p>
+                <p className="review-text">{item?.review}</p>
 
-          <div className="review-image">
+                {/* <div className="review-image">
             <img src={photo} alt="Food" />
-          </div>
+          </div> */}
 
-          <div className="review-actions">
-            <button
-              className="action-button"
-              onClick={() => handleLike("helpful")}
-            >
-              <Like_Svg />
-              <span>Helpful ({likes.helpful})</span>
-            </button>
-            <button className="action-button">
-              <White_Chat_Svg />
-              <span>Comment (2)</span>
+                <div className="review-actions">
+                  <button
+                    className="action-button"
+                    onClick={() => handleLike("helpful")}
+                  >
+                    <Like_Svg />
+                    <span>Helpful ({item?.likesCount})</span>
+                  </button>
+                  <button
+                    onClick={() =>
+                      setComment_id(comment_id === item?._id ? null : item?._id)
+                    }
+                    className="action-button"
+                  >
+                    <White_Chat_Svg />
+                    <span>Comment ({item?.reply_reviews?.length})</span>
+                  </button>
+                </div>
+                {comment_id === item?._id && (
+                  <>
+                    <div className="reply-comment-div">
+                      <input
+                        type="text"
+                        value={reply_review}
+                        placeholder="Add a comment"
+                        onChange={(e) => setReply_review(e.target.value)}
+                      />
+                      <button disabled={loading} onClick={handleReply}>
+                        {loading ? "Loading..." : "Reply"}
+                      </button>
+                    </div>
+                    {commentLoading ? (
+                      <Skeleton
+                        active
+                        paragraph={{ rows: 0 }}
+                        className="custom-skeleton"
+                      />
+                    ) : (
+                      <div className="replies-wrapper">
+                        {reply_reviews?.map((rev) => (
+                          <div className="comment-card owner-response">
+                            <div className="comment-header">
+                              <div className="commenter-info">
+                                <div className="commenter-details">
+                                  {rev?.user?._id?.toString() ===
+                                    property?.user?.toString() && (
+                                    <div className="reviewer-name-row">
+                                      <span className="badge badge-owner">
+                                        Owner Response
+                                      </span>
+                                    </div>
+                                  )}
+
+                                  <span className="comment-date">
+                                    {rev?.createdAt?.split("T")[0]}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                            <p className="comment-text">{rev?.review}</p>
+                          </div>
+                        ))}
+                        {commentData?.totalReplies > reply_reviews_limit && (
+                          <div className="see-more-btn">
+                            <button
+                              onClick={() =>
+                                setReply_reviews_limit(reply_reviews_limit + 3)
+                              }
+                            >
+                              See More
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            ))
+          : ""}
+
+        {data?.totalCount > reviews_limit && (
+          <div className="see-more-btn">
+            <button onClick={() => setReviews_limit(reviews_limit + 3)}>
+              See More
             </button>
           </div>
-        </div>
+        )}
 
         {/* Comments Section */}
         <div className="comments-section">
-          <h3 className="comments-title">Comments (2)</h3>
-
-          {/* Comment Input */}
-          <div   sclassName="comment-input-wrapper">
+          <h3 className="comments-title">Comments</h3>
+          <div style={{ marginBottom: "20px" }}>
+            <ReactStars
+              count={5}
+              onChange={ratingChanged}
+              size={24}
+              activeColor="#E66448"
+            />
+          </div>
+          <div sclassName="comment-input-wrapper">
             <textarea
               className="comment-input"
               placeholder="Share your thoughts..."
               value={commentText}
               onChange={(e) => setCommentText(e.target.value)}
             />
-            <button className="post-button">Post Comment</button>
+            <button onClick={handlePostReview} className="post-button">
+              {loading ? "Posting..." : "Post Comment"}
+            </button>
           </div>
-
-          {/* Owner Response */}
-          <div className="comment-card owner-response">
-            <div className="comment-header">
-              <div className="commenter-info">
-                <div className="commenter-avatar">
-                  <img src={dpOr} alt="Owner" />
-                </div>
-                <div className="commenter-details">
-                  <div className="reviewer-name-row">
-                    <span className="badge badge-owner">Owner Response</span>
-                  </div>
-                  <span className="comment-date">2024-11-02</span>
-                </div>
-              </div>
-              <button
-                className="like-button"
-                onClick={() => handleLike("ownerResponse")}
-              >
-                <Like_Svg2 />
-
-                <span>{likes.ownerResponse}</span>
-              </button>
-            </div>
-            <p className="comment-text">
-              Thank you so much, Sarah! We're thrilled you enjoyed your
-              experience. Can't wait to see you again!
-            </p>
-          </div>
-
-          {/* User Comment */}
+          {/* Owner Response
+        
+          User Comment
           <div className="comment-card">
             <div className="comment-header">
               <div className="commenter-info">
@@ -158,7 +323,7 @@ export default function CommentsSection({sectionTwoRef}) {
               Great review! I completely agree about the ambiance. Have you
               tried their weekend brunch?
             </p>
-          </div>
+          </div> */}
         </div>
       </div>
     </>

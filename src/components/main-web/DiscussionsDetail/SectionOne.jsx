@@ -1,14 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import dpOr from "../../../assets/Images/dp-or.png";
-import  {
+import {
   Reply_Svg,
   Share_svg,
   Thumb_Svg,
   View_svg,
-  Share_svg2
+  Share_svg2,
 } from "../../Svg_components/Svgs";
+import { showError } from "../../Toaster";
+import useActionMutation from "../../../queryFunctions/useActionMutation";
+import useStore from "../../../stores/store";
+import { useQuery } from "@tanstack/react-query";
+import { fetchData } from "../../../queryFunctions/queryFunctions";
 
-export default function SectionOne() {
+export default function SectionOne({ data, refetch }) {
+  const userData = JSON.parse(localStorage.getItem("userData"));
+  const [my_comment, setMyComment] = useState("");
+  const [activeReplyId, setActiveReplyId] = useState(null);
+  const [replyText, setReplyText] = useState("");
+  const [repLoading, setRepLoading] = useState(false);
+
+  const { login_required } = useStore();
   const comments = [
     {
       name: "Alex Johnson",
@@ -43,6 +55,82 @@ export default function SectionOne() {
       replies: 3,
     },
   ];
+
+  const handleReplyClick = (commentId) => {
+    console.log(commentId);
+    console.log(activeReplyId);
+
+    if (activeReplyId === commentId) {
+      setActiveReplyId(null); // toggle off
+    } else {
+      setActiveReplyId(commentId);
+    }
+  };
+
+  const discussion_data = data?.discussion;
+
+  const { triggerMutation, loading } = useActionMutation({
+    onSuccessCallback: (data) => {
+      if (data?.reply_sent) {
+        setRepLoading(false);
+        setReplyText("");
+      }
+      refetch();
+    },
+    onErrorCallback: (errmsg) => {
+      console.log(errmsg);
+      setRepLoading(false);
+
+      showError(errmsg);
+    },
+  });
+
+  const handlePostComment = () => {
+    if (!my_comment) {
+      showError("Please enter a comment");
+      return;
+    }
+
+    if (!userData) {
+      showError(login_required);
+      return;
+    }
+    setRepLoading(true);
+    const reviewData = {
+      message: my_comment,
+    };
+
+    triggerMutation({
+      endPoint: `/discussion/${discussion_data?._id}/comment`,
+      body: reviewData,
+      method: "post",
+    });
+  };
+
+  const handleReplySubmit = (commentId) => {
+    console.log("Reply submitted for comment:", commentId, replyText);
+
+    if (!replyText) {
+      showError("Please enter a comment");
+      return;
+    }
+
+    if (!userData) {
+      showError(login_required);
+      return;
+    }
+    setRepLoading(true);
+    const reviewData = {
+      message: replyText,
+    };
+    triggerMutation({
+      endPoint: `/discussion/${commentId}/reply`,
+      body: reviewData,
+      method: "post",
+    });
+
+    // TODO: call API to save reply
+  };
   return (
     <div>
       <button className="back-button" onClick={() => window.history.back()}>
@@ -50,27 +138,23 @@ export default function SectionOne() {
       </button>
 
       <div className="main-discussion">
-        <p className="category">Food & Dining</p>
-        <h3>Best hidden gem restaurants in Downtown?</h3>
+        <p className="category">{discussion_data?.category}</p>
+        <h3>{discussion_data?.title}</h3>
 
         <div className="user-data-prof">
-          <img src={dpOr} alt="" />
+          <img src={discussion_data?.user?.profile_img} alt="" />
 
           <div className="user-data">
-            <p>Maruc Chen</p>
+            <p>{discussion_data?.user?.name}</p>
             <p>
-              2024-11-05 • <View_svg /> 1,234 views
+              {discussion_data?.createdAt?.split("T")[0]} • <View_svg />{" "}
+              {discussion_data?.viewsCount?.toLocaleString()} views
             </p>
           </div>
         </div>
 
-        <div className="dis-para">
-          I've been living in the downtown area for about 6 months now, and
-          while I've tried some of the popular spots that everyone talks about,
-          I'm really looking for those hidden gems that locals know about but
-          tourists haven't discovered yet.
-        </div>
-        <div className="dis-para-2">
+        <div className="dis-para">{discussion_data?.description}</div>
+        {/* <div className="dis-para-2">
           <p>What I'm looking for:</p>
           <ul>
             <li>- Authentic, local cuisine (any type!)</li>
@@ -93,15 +177,16 @@ export default function SectionOne() {
             Would love to hear your recommendations and what dishes you'd
             suggest trying!
           </p>
-        </div>
+        </div> */}
 
         <div className="dis-meta-div">
           <span>
-            <Thumb_Svg /> 256 Upvotes
+            <Thumb_Svg /> {discussion_data?.likesCount?.toLocaleString()}{" "}
+            Upvotes
           </span>
 
           <span>
-            <Reply_Svg /> 47 Comments
+            <Reply_Svg /> {discussion_data?.comments?.length} Comments
           </span>
 
           <span>
@@ -115,44 +200,135 @@ export default function SectionOne() {
         <p>Add your Comment</p>
 
         <div className="user-comment">
-          <img src={dpOr} alt="" />
-          <textarea placeholder="Share your thoughts..." />
+          <img src={userData?.profile_img} alt="" />
+          <textarea
+            placeholder="Share your thoughts..."
+            onChange={(e) => setMyComment(e.target.value)}
+          />
         </div>
         <div className="user-cmt-btn">
-          <button>Post Comment</button>
+          <button disabled={loading} onClick={handlePostComment}>
+            {loading ? "Posting..." : "Post Comment"}
+          </button>
         </div>
       </div>
 
       <div className="comment-show">
-        <p className="cmt-count">47 Comments</p>
+        <p className="cmt-count">{data?.totalCount} Comments</p>
         <div className="comment-show-box">
-          {comments?.map((cmt, index) => (
+          {discussion_data?.nestedComments?.map((cmt, index) => (
             <div
               className="commenter-div"
               style={{
                 borderBottom:
-                  index < comments?.length - 1 ? "1px solid #EAEAEA" : "none",
+                  index < discussion_data.nestedComments.length - 1
+                    ? "1px solid #EAEAEA"
+                    : "1px solid #EAEAEA",
               }}
-              key={index}
+              key={cmt._id}
             >
-              <img src={dpOr} alt="" />
+              <img
+                src={cmt.userId?.profile_img || dpOr}
+                alt={cmt.userId?.name || "User"}
+                className="commenter-avatar"
+              />
               <div className="commenter-data">
                 <div className="commenter-head">
-                  <p className="commenter-fullname">{cmt.name}</p>
-
+                  <p className="commenter-fullname">{cmt.userId?.name}</p>
                   <p className="commenter-where">•</p>
-                  <p className="comment-where">{cmt.date}</p>
+                  <p className="comment-where">
+                    {new Date(cmt.createdAt).toLocaleString()}
+                  </p>
                 </div>
-                <p className="user-comment-show">{cmt.comment}</p>
+                <p className="user-comment-show">{cmt.message}</p>
 
                 <div className="meta-cmt-detail">
                   <div>
-                    <Thumb_Svg /> {cmt.likes}
-                  </div>{" "}
-                  <div>
-                    <Reply_Svg /> Reply
+                    <Thumb_Svg /> {cmt.parent_likes}
+                  </div>
+                  <div
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handleReplyClick(cmt._id)}
+                  >
+                    <Reply_Svg /> ({cmt.replies?.length}) Reply
                   </div>
                 </div>
+
+                {/* Show Replies and Reply Input if active */}
+                {activeReplyId === cmt._id && (
+                  <>
+                    {/* Replies */}
+                    {cmt.replies?.length > 0 && (
+                      <div
+                        className="replies-container"
+                        style={{ marginLeft: "40px", marginTop: "8px" }}
+                      >
+                        {cmt.replies.map((rep) => (
+                          <div
+                            key={rep._id}
+                            className="commenter-div"
+                            style={{
+                              borderBottom: "1px solid #EAEAEA",
+                              padding: "6px 0",
+                            }}
+                          >
+                            <img
+                              src={rep.userId?.profile_img || dpOr}
+                              alt={rep.userId?.name || "User"}
+                              className="commenter-avatar"
+                            />
+                            <div className="commenter-data">
+                              <div className="commenter-head">
+                                <p className="commenter-fullname">
+                                  {rep.userId?.name}
+                                </p>
+                                <p className="commenter-where">•</p>
+                                <p className="comment-where">
+                                  {new Date(rep.createdAt).toLocaleString()}
+                                </p>
+                              </div>
+                              <p className="user-comment-show">{rep.message}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Reply Input */}
+                    <div
+                      className="reply-comment-div"
+                      style={{ marginTop: "8px" }}
+                    >
+                      <input
+                        type="text"
+                        value={replyText}
+                        placeholder="Write your reply..."
+                        onChange={(e) => setReplyText(e.target.value)}
+                        style={{
+                          width: "70%",
+                          padding: "6px 8px",
+                          borderRadius: "6px",
+                          border: "1px solid #ccc",
+                          marginRight: "6px",
+                        }}
+                      />
+                      <button
+                        disabled={repLoading}
+                        onClick={() => handleReplySubmit(cmt._id)}
+                        style={{
+                          padding: "6px 12px",
+                          borderRadius: "6px",
+                          border: "none",
+                          backgroundColor: "#FF7A00",
+                          color: "#fff",
+                          cursor: "pointer",
+                        }}
+                      >
+                        {repLoading ? "Loading..." : "Reply"}
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           ))}

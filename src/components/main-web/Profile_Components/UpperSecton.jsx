@@ -1,5 +1,8 @@
 import React from "react";
 import profile from "../../../assets/Images/profile.png";
+
+import { useQuery } from "@tanstack/react-query";
+
 import {
   Calendar_svg2,
   Followers_Svg,
@@ -7,7 +10,15 @@ import {
   Thumb_Svg_OR,
 } from "../../../components/Svg_components/Svgs";
 import { useNavigate } from "react-router-dom";
+import { fetchData } from "../../../queryFunctions/queryFunctions";
+import { Skeleton } from "antd";
 export default function UpperSecton() {
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["user-profile"],
+    queryFn: () => fetchData(`/auth/my-detail`),
+    keepPreviousData: true,
+  });
+
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -17,6 +28,10 @@ export default function UpperSecton() {
       navigate("/");
     }, 500);
   };
+
+  if (isLoading) {
+    return <Skeleton active paragraph={{ rows: 0 }} />;
+  }
   return (
     <>
       <button className="back-button" onClick={() => window.history.back()}>
@@ -28,7 +43,7 @@ export default function UpperSecton() {
           <div class="smitchell-profile-info-container">
             <div class="smitchell-profile-avatar-wrapper">
               <img
-                src={profile}
+                src={data?.profile_img}
                 alt="Sarah Mitchell"
                 class="smitchell-profile-avatar"
               />
@@ -36,7 +51,7 @@ export default function UpperSecton() {
             </div>
 
             <div class="smitchell-profile-name-section">
-              <h1 class="smitchell-profile-name">Sarah Mitchell</h1>
+              <h1 class="smitchell-profile-name">{data?.name}</h1>
               <div className="action-btns">
                 <button
                   class="smitchell-profile-edit-button"
@@ -53,37 +68,37 @@ export default function UpperSecton() {
               </div>
             </div>
 
-            <div class="smitchell-profile-badges">
+            {/* <div class="smitchell-profile-badges">
               <span class="smitchell-profile-badge smitchell-profile-badge-top-reviewer">
                 Top Reviewer
               </span>
               <span class="smitchell-profile-badge smitchell-profile-badge-top-reviewer">
                 Local Guide
               </span>
-            </div>
+            </div> */}
 
             <div class="smitchell-profile-meta">
               <span class="smitchell-profile-joined">
-                <Calendar_svg2 /> Joined 2024-01-15
+                <Calendar_svg2 /> Joined {data?.createdAt?.split("T")[0]}
               </span>
             </div>
 
             <div class="smitchell-profile-stats">
               <div class="smitchell-profile-stat-item">
                 <span class="smitchell-profile-stat-value">
-                  <Star_OR_Svg /> 147
+                  <Star_OR_Svg /> {data?.rating}
                 </span>
                 <span class="smitchell-profile-stat-label">Reviews</span>
               </div>
               <div class="smitchell-profile-stat-item">
                 <span class="smitchell-profile-stat-value">
-                  <Followers_Svg /> 2,340
+                  <Followers_Svg /> {data?.followersCount || 0}
                 </span>
                 <span class="smitchell-profile-stat-label">Followers</span>
               </div>
               <div class="smitchell-profile-stat-item">
                 <span class="smitchell-profile-stat-value">
-                  <Thumb_Svg_OR /> 1,234
+                  <Thumb_Svg_OR /> {data?.likesCount}
                 </span>
                 <span class="smitchell-profile-stat-label">Helpful Votes</span>
               </div>

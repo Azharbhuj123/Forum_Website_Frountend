@@ -1,22 +1,34 @@
 import React, { useState } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { showError } from "../Toaster";
+import useActionMutation from "../../queryFunctions/useActionMutation";
+import useStore from "../../stores/store";
 
 export default function Discussion({ isOpen, setIsOpen }) {
-  const [formData, setFormData] = useState({
-    title: "",
-    category: "",
-    location: "",
-    description: "",
-    selectedTags: [],
-  });
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm();
+  const token = localStorage.getItem('token')
+const {login_required} =useStore()
+  const [filePreviews, setFilePreviews] = useState([]);
 
   const categories = [
-    "General Discussion",
-    "Housing",
-    "Jobs & Career",
-    "Events",
-    "Buy & Sell",
-    "Services",
-    "Community",
+    "Apartment",
+    "House",
+    "Room",
+    "Studio",
+    "Office",
+    "Shop",
+    "Warehouse",
+    "Hostel",
+    "Vacation Home",
+    "Luxury Property",
   ];
 
   const availableTags = [
@@ -30,18 +42,67 @@ export default function Discussion({ isOpen, setIsOpen }) {
     "Parking",
   ];
 
-  const handleTagToggle = (tag) => {
-    setFormData((prev) => ({
-      ...prev,
-      selectedTags: prev.selectedTags.includes(tag)
-        ? prev.selectedTags.filter((t) => t !== tag)
-        : [...prev.selectedTags, tag],
-    }));
+  const selectedTags = watch("tags") || [];
+
+  const toggleTag = (tag) => {
+    if (selectedTags.includes(tag)) {
+      setValue(
+        "tags",
+        selectedTags.filter((t) => t !== tag)
+      );
+    } else {
+      setValue("tags", [...selectedTags, tag]);
+    }
   };
 
-  const handleSubmit = () => {
-    console.log("Discussion submitted:", formData);
-    setIsOpen(false);
+  const handleFileSelect = (e) => {
+    const files = Array.from(e.target.files);
+    setValue("photos", files);
+
+    const previewURLs = files.map((file) => URL.createObjectURL(file));
+    setFilePreviews(previewURLs);
+  };
+
+  const { triggerMutation, loading } = useActionMutation({
+    onSuccessCallback: (data) => {
+      reset();
+      setIsOpen(false);
+      setFilePreviews([])
+    },
+    onErrorCallback: (errmsg) => {
+      console.log(errmsg);
+      showError(errmsg);
+    },
+  });
+
+  const onSubmit = (data) => {
+    if(!token){
+      showError(login_required)
+      return
+    }
+    const formData = new FormData();
+
+    formData.append("title", data.title);
+    formData.append("category", data.category);
+    formData.append("description", data.description);
+
+    data.tags?.forEach((tag) => {
+      formData.append("tags[]", tag);
+    });
+
+    if (data.photos && data.photos.length > 0) {
+      data.photos.forEach((file) => {
+        formData.append("photos[]", file); // MULTIPLE FILES
+      });
+    }
+
+    console.log("FINAL FORMDATA:", [...formData]);
+
+    triggerMutation({
+      endPoint: `/discussion/`,
+      body: formData,
+      method: "post",
+    });
   };
 
   if (!isOpen) return null;
@@ -50,7 +111,7 @@ export default function Discussion({ isOpen, setIsOpen }) {
     <>
       <div className="modal-backdrop" onClick={() => setIsOpen(false)}></div>
 
-      <div className="discussion-modal">
+      <form className="discussion-modal" onSubmit={handleSubmit(onSubmit)}>
         <div className="modal-header-section">
           <div className="header-content">
             <h2 className="modal-main-title">Start a Discussion</h2>
@@ -71,110 +132,55 @@ export default function Discussion({ isOpen, setIsOpen }) {
             <path
               d="M18 6L6 18"
               stroke="#4A5565"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
             <path
               d="M6 6L18 18"
               stroke="#4A5565"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
-          {/* <button className="close-modal-btn" >
-       
-          </button> */}
         </div>
 
         <div className="modal-body-content">
-          {/* Discussion Title */}
+          {/* Title */}
           <div className="form-field-group">
             <label className="field-label">Discussion Title</label>
             <input
-              type="text"
               className="text-input-field"
               placeholder="What would you like to discuss?"
-              value={formData.title}
-              onChange={(e) =>
-                setFormData({ ...formData, title: e.target.value })
-              }
+              {...register("title", { required: true })}
             />
+            {errors.title && <p className="error-text">Title is required</p>}
           </div>
 
           {/* Category */}
           <div className="form-field-group">
             <label className="field-label">Category</label>
-            <div className="select-wrapper">
-              <select
-                className="select-input-field"
-                value={formData.category}
-                onChange={(e) =>
-                  setFormData({ ...formData, category: e.target.value })
-                }
-              >
-                <option value="">Select a category</option>
-                {categories.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
-                ))}
-              </select>
-              <svg
-                className="select-arrow-icon"
-                width="12"
-                height="8"
-                viewBox="0 0 12 8"
-              >
-                <path
-                  d="M1 1L6 6L11 1"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  fill="none"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </div>
-          </div>
 
-          {/* Location */}
-          <div className="form-field-group">
-            <label className="field-label">Location (Optional)</label>
-            <div className="location-input-wrapper">
-              <svg
-                className="location-icon"
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-              >
-                <path
-                  d="M16.6666 8.33333C16.6666 12.4942 12.0508 16.8275 10.5008 18.1658C10.3564 18.2744 10.1806 18.3331 9.99998 18.3331C9.81931 18.3331 9.64354 18.2744 9.49915 18.1658C7.94915 16.8275 3.33331 12.4942 3.33331 8.33333C3.33331 6.56522 4.03569 4.86953 5.28593 3.61929C6.53618 2.36905 8.23187 1.66667 9.99998 1.66667C11.7681 1.66667 13.4638 2.36905 14.714 3.61929C15.9643 4.86953 16.6666 6.56522 16.6666 8.33333Z"
-                  stroke="#FF7A00"
-                  stroke-width="1.66667"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M10 10.8333C11.3807 10.8333 12.5 9.71404 12.5 8.33333C12.5 6.95262 11.3807 5.83333 10 5.83333C8.61929 5.83333 7.5 6.95262 7.5 8.33333C7.5 9.71404 8.61929 10.8333 10 10.8333Z"
-                  stroke="#FF7A00"
-                  stroke-width="1.66667"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-              <input
-                type="text"
-                className="location-input-field"
-                placeholder="Add location (optional)"
-                value={formData.location}
-                onChange={(e) =>
-                  setFormData({ ...formData, location: e.target.value })
-                }
-              />
-            </div>
+            <Controller
+              name="category"
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <select {...field} className="select-input-field">
+                  <option value="">Select a category</option>
+                  {categories.map((cat) => (
+                    <option value={cat} key={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                </select>
+              )}
+            />
+
+            {errors.category && (
+              <p className="error-text">Category is required</p>
+            )}
           </div>
 
           {/* Description */}
@@ -182,44 +188,29 @@ export default function Discussion({ isOpen, setIsOpen }) {
             <label className="field-label">Description</label>
             <textarea
               className="textarea-input-field"
-              placeholder="Write your question, review, or discussion details..."
+              placeholder="Write your discussion details..."
               rows="4"
-              value={formData.description}
-              onChange={(e) =>
-                setFormData({ ...formData, description: e.target.value })
-              }
+              {...register("description", { required: true })}
             ></textarea>
+            {errors.description && (
+              <p className="error-text">Description is required</p>
+            )}
           </div>
 
           {/* Tags */}
           <div className="form-field-group">
-            <label className="field-label">Add Tags (Optional)</label>
+            <label className="field-label">Tags (Optional)</label>
+
             <div className="tags-container">
               {availableTags.map((tag) => (
                 <button
+                  type="button"
                   key={tag}
                   className={`tag-btn ${
-                    formData.selectedTags.includes(tag) ? "tag-selected" : ""
+                    selectedTags.includes(tag) ? "tag-selected" : ""
                   }`}
-                  onClick={() => handleTagToggle(tag)}
+                  onClick={() => toggleTag(tag)}
                 >
-                  <svg
-                    className="tag-icon"
-                    width="14"
-                    height="14"
-                    viewBox="0 0 14 14"
-                    fill="none"
-                  >
-                    <path
-                      d="M12 7.5L7 12.5L2 7.5V2.5H7L12 7.5Z"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      fill="none"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <circle cx="4.5" cy="4.5" r="0.5" fill="currentColor" />
-                  </svg>
                   {tag}
                 </button>
               ))}
@@ -229,52 +220,118 @@ export default function Discussion({ isOpen, setIsOpen }) {
           {/* Attachments */}
           <div className="form-field-group">
             <label className="field-label">Attachments (Optional)</label>
-            <div className="upload-area">
-              <svg
-                className="upload-icon"
-                width="40"
-                height="40"
-                viewBox="0 0 40 40"
-                fill="none"
-              >
-                <rect
-                  x="8"
-                  y="12"
-                  width="24"
-                  height="20"
-                  rx="2"
-                  stroke="#CBD5E0"
-                  strokeWidth="2"
-                  fill="none"
-                />
-                <circle cx="15" cy="18" r="2" fill="#CBD5E0" />
-                <path
-                  d="M8 26L14 20L18 24L26 16L32 22"
-                  stroke="#CBD5E0"
-                  strokeWidth="2"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              <p className="upload-text">+ Add Photos</p>
-            </div>
+
+            <Controller
+              name="photos"
+              control={control}
+              defaultValue={[]}
+              render={({ field }) => {
+                const fileInputRef = React.useRef(null);
+
+                const handleFileChange = (e) => {
+                  const selectedFiles = Array.from(e.target.files);
+
+                  // LIMIT TO MAX 4 IMAGES
+                  if (selectedFiles.length > 4) {
+                    showError("You can upload a maximum of 4 images.");
+                    return;
+                  }
+
+                  field.onChange(selectedFiles);
+
+                  const previews = selectedFiles.map((f) =>
+                    URL.createObjectURL(f)
+                  );
+                  setFilePreviews(previews);
+                };
+
+                return (
+                  <>
+                    {/* Hidden Input */}
+                    <input
+                      ref={(el) => {
+                        field.ref(el);
+                        fileInputRef.current = el;
+                      }}
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      style={{ display: "none" }}
+                      onChange={handleFileChange}
+                    />
+
+                    {/* Upload UI */}
+                    <div
+                      className="upload-area"
+                      onClick={() => fileInputRef.current.click()}
+                    >
+                      <svg
+                        className="upload-icon"
+                        width="40"
+                        height="40"
+                        viewBox="0 0 40 40"
+                        fill="none"
+                      >
+                        <rect
+                          x="8"
+                          y="12"
+                          width="24"
+                          height="20"
+                          rx="2"
+                          stroke="#CBD5E0"
+                          strokeWidth="2"
+                        />
+                        <circle cx="15" cy="18" r="2" fill="#CBD5E0" />
+                        <path
+                          d="M8 26L14 20L18 24L26 16L32 22"
+                          stroke="#CBD5E0"
+                          strokeWidth="2"
+                          fill="none"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+
+                      <p className="upload-text">+ Add Photos (Max 4)</p>
+                    </div>
+
+                    {/* Preview */}
+                    <div className="preview-container">
+                      {filePreviews.map((src, i) => (
+                        <img
+                          key={i}
+                          src={src}
+                          alt="preview"
+                          className="preview-img"
+                        />
+                      ))}
+                    </div>
+                  </>
+                );
+              }}
+            />
           </div>
         </div>
 
         {/* Footer */}
         <div className="modal-footer-section">
           <button
+            type="button"
             className="cancel-action-btn"
             onClick={() => setIsOpen(false)}
           >
             Cancel
           </button>
-          <button className="submit-action-btn" onClick={handleSubmit}>
-            Start Discussion
+
+          <button
+            disabled={loading}
+            className="submit-action-btn"
+            type="submit"
+          >
+            {loading ? "Posting..." : "Start Discussion"}
           </button>
         </div>
-      </div>
+      </form>
     </>
   );
 }

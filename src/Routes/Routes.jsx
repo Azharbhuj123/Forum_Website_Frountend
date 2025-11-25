@@ -29,7 +29,7 @@ const Routes = () => {
     { path: "/register", element: <AuthPages />, },
     { path: "/search-rental", element: <SearchBusiness />, },
     { path: "/discussions", element: <Discussions />, },
-    { path: "/discussions-detail", element: <DiscussionsDetail />, },
+    { path: "/discussions-detail/:id", element: <DiscussionsDetail />, },
     { path: "/rental-detail/:id", element: <BusinessDetail />, },
     { path: "/chat", element: <Chat />, },
     { path: "/profile", element: <Profile />, },

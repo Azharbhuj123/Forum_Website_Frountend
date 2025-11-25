@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaEye, FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 import fake1 from "../../assets/Images/fake1.png";
 import { useNavigate } from "react-router-dom";
+import DeleteSure from "../Modals/DeleteSure";
+import useActionMutation from "../../queryFunctions/useActionMutation";
 
 const PropertyTable = ({
   properties,
@@ -10,8 +12,12 @@ const PropertyTable = ({
   totalPages,
   listingsPerPage,
   onPageChange,
+  refetch
 }) => {
   const navigate = useNavigate();
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+
   // Assuming the data in the image: totalListings = 8, currentPage = 1, listingsPerPage = 6
   const startListing = (currentPage - 1) * listingsPerPage + 1;
   const endListing = Math.min(currentPage * listingsPerPage, totalListings);
@@ -23,6 +29,28 @@ const PropertyTable = ({
     if (page > 0 && page <= totalPages) {
       onPageChange(page);
     }
+  };
+
+  const { triggerMutation, loading } = useActionMutation({
+    onSuccessCallback: (data) => {
+      if (data?.delete) {
+      refetch();
+      setDeleteModal(false)
+setDeleteId(null)
+        return;
+      }
+    },
+    onErrorCallback: (errmsg) => {
+      console.log(errmsg);
+      showError(errmsg);
+    },
+  });
+
+  const handleDelete = () => {
+    triggerMutation({
+      endPoint: `/property/${deleteId}`,
+      method: "delete",
+    });
   };
 
   return (
@@ -104,6 +132,7 @@ const PropertyTable = ({
                   <FaPencilAlt size={14} />
                 </button> */}
                 <button
+                  onClick={() => {setDeleteModal(true),setDeleteId(property.id)}}
                   className="action-icon-button delete-action"
                   title="Delete"
                 >
@@ -156,6 +185,14 @@ const PropertyTable = ({
             &gt;
           </button>
         </div>
+        {deleteModal && (
+          <DeleteSure
+            open={deleteModal}
+            onCancel={() => setDeleteModal(false)}
+            onConfirm={handleDelete}
+            loading={loading}
+          />
+        )}
       </div>
     </div>
   );

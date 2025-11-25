@@ -13,17 +13,19 @@ import {
 import CommentsSection from "./Comments";
 import { useNavigate } from "react-router-dom";
 import SectionTwo from "./SectionTwo";
+import { showError } from "../../Toaster";
+import useActionMutation from "../../../queryFunctions/useActionMutation";
+import useStore from "../../../stores/store";
 
-export default function SectionOne({ rental_data, otherProperties }) {
+export default function SectionOne({ rental_data, otherProperties,alreadySaved }) {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
+  const [isSaved , setIsSaved] = useState(alreadySaved);
   const navigate = useNavigate();
+const userData = JSON.parse(localStorage.getItem("userData") || "null");
+const {login_required} = useStore();
+  
+  
   const photos = rental_data?.photos;
-
-  const dishes = [
-    { name: "Carne Asada Tacos", reviews: 127 },
-    { name: "Salsa Verde", reviews: 89 },
-    { name: "Churros", reviews: 85 },
-  ];
 
   const amenities = [
     "Outdoor Seating",
@@ -46,6 +48,29 @@ export default function SectionOne({ rental_data, otherProperties }) {
   const gotoReview = () => {
     // Scroll to the div smoothly
     sectionTwoRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const { triggerMutation, loading } = useActionMutation({
+    onSuccessCallback: (data) => {
+      setIsSaved(data?.isSaved)
+    },
+    onErrorCallback: (errmsg) => {
+      console.log(errmsg);
+
+      showError(errmsg);
+    },
+  });
+
+  const handleSaved = () => {
+    if(!userData){
+      showError(login_required)
+      return
+    }
+
+    triggerMutation({
+      endPoint: `/property/property-saved/${rental_data?._id}`,
+      method: "post",
+    });
   };
 
   return (
@@ -106,9 +131,9 @@ export default function SectionOne({ rental_data, otherProperties }) {
                 </span>
                 Add Photo
               </button> */}
-              <button className="btn btn-secondary">
+              <button onClick={handleSaved} className="btn btn-secondary">
                 <Save_svgs />
-                Save
+                {isSaved ? "Un Save" : "Save"}
               </button>
             </div>
 
@@ -149,32 +174,30 @@ export default function SectionOne({ rental_data, otherProperties }) {
         </div>
 
         {/* Popular Dishes Section */}
-        {otherProperties?.length > 0&& (
-          
-        <div className="dishes-section">
-          <h2 className="section-title">Popular Properties</h2>
-          <div className="dishes-grid">
-            {otherProperties?.slice(0, 3)?.map((data, index) => (
-              <div
-                onClick={() => navigate(`/rental-detail/${data?._id}`)}
-                key={index}
-                className="dish-card"
-              >
-                <div className="dish-image">
-                  <img src={data?.photos[0]} alt={data.listingTitle} />
+        {otherProperties?.length > 0 && (
+          <div className="dishes-section">
+            <h2 className="section-title">Popular Properties</h2>
+            <div className="dishes-grid">
+              {otherProperties?.slice(0, 3)?.map((data, index) => (
+                <div
+                  onClick={() => navigate(`/rental-detail/${data?._id}`)}
+                  key={index}
+                  className="dish-card"
+                >
+                  <div className="dish-image">
+                    <img src={data?.photos[0]} alt={data.listingTitle} />
+                  </div>
+                  <div className="dish-info">
+                    <h3 className="dish-name">{data.listingTitle}</h3>
+                    <p className="dish-reviews">
+                      Mentioned in {data.total_review} reviews
+                    </p>
+                  </div>
                 </div>
-                <div className="dish-info">
-                  <h3 className="dish-name">{data.listingTitle}</h3>
-                  <p className="dish-reviews">
-                    Mentioned in {data.total_review} reviews
-                  </p>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
         )}
-
 
         <div className="dishes-section ameinities-section">
           <h2 className="section-title">Amenties</h2>
@@ -191,7 +214,7 @@ export default function SectionOne({ rental_data, otherProperties }) {
           </div>
         </div>
 
-        <CommentsSection sectionTwoRef={sectionTwoRef} />
+        <CommentsSection sectionTwoRef={sectionTwoRef} property={rental_data} />
       </div>
     </>
   );

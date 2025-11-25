@@ -9,6 +9,7 @@ import useActionMutation from "../queryFunctions/useActionMutation";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { fetchData } from "../queryFunctions/queryFunctions";
+import { showError } from "../components/Toaster";
 
 // Yup validation schema
 const schema = yup.object().shape({
@@ -125,10 +126,10 @@ export default function PropertyForm() {
 
   const { triggerMutation, loading } = useActionMutation({
     onSuccessCallback: (data) => {
-      navigate(`/property-detail/${property_id}`);
+      navigate(`/property-detail/${data?.data?._id}`);
     },
     onErrorCallback: (errmsg) => {
-        alert(errmsg)
+        showError(errmsg)
     },
   });
 
