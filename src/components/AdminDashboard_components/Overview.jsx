@@ -7,116 +7,136 @@ import PendingReports_svg from "../Svg_components/PendingReports_svg";
 import Attention_svg from "../Svg_components/Attention_svg";
 import Like_svg from "../Svg_components/Like_svg";
 import dp from "../../assets/Images/dp.png";
+import { useQuery } from "@tanstack/react-query";
+import { fetchData } from "../../queryFunctions/queryFunctions";
+import Loader from "../Loader";
+
+function formatDate(inputDate) {
+  const date = new Date(inputDate);
+  const now = new Date();
+
+  const diffMs = now - date; // difference in milliseconds
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+  const diffMinutes = Math.floor(diffMs / (1000 * 60));
+
+  // Same day → Today or hours ago
+  const isToday = date.toDateString() === now.toDateString();
+
+  // Yesterday check
+  const yesterday = new Date();
+  yesterday.setDate(now.getDate() - 1);
+  const isYesterday = date.toDateString() === yesterday.toDateString();
+
+  // If today
+  if (isToday) {
+    if (diffHours >= 1) return `${diffHours} hours ago`;
+    if (diffMinutes >= 1) return `${diffMinutes} minutes ago`;
+    return "Just now";
+  }
+
+  // If yesterday
+  if (isYesterday) {
+    return "Yesterday";
+  }
+
+  // Else → return short date
+  const d = date.getDate().toString().padStart(2, "0");
+  const m = (date.getMonth() + 1).toString().padStart(2, "0");
+  const y = date.getFullYear();
+
+  return `${d}/${m}/${y}`;
+}
+
 const Overview = () => {
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["admin-stats"],
+    queryFn: () => fetchData(`/admin/stats`),
+    keepPreviousData: true,
+  });
 
   const cardsData = [
     {
       title: "Total Users",
-      value: "12,453",
-      change: "+12% from last month",
+      value: data?.totalUsers,
+      change: ` ${data?.userIncreasePercent}% from last month`,
       icon: <TotalUsers_svg />,
       changeIcon: <Total_svg />,
-      red: false
+      red: false,
     },
     {
       title: "Total Reviews",
-      value: "8,932",
-      change: "+8% from last month",
+      value: `${data?.totalReviews}`,
+      change: `+${data?.reviewIncreasePercent}%% from last month`,
       icon: <TotalReviews_svg />,
       changeIcon: <Total_svg />,
-      red: false
+      red: false,
     },
     {
-      title: "Active Users",
-      value: "3,421",
-      change: "+15% from last week",
+      title: `Active Users`,
+      value: `${data?.activeUsersCount}`,
+      change: `+${data?.activeUsersIncreasePercent}% from last month`,
       icon: <ActiveUsers_svg />,
       changeIcon: <Total_svg />,
-      red: false
+      red: false,
     },
     {
-      title: "Pending Reports",
-      value: "23",
-      change: "Requires attention",
+      title: `Pending Reports`,
+      value: `0`,
+      change: `Requires attention`,
       icon: <PendingReports_svg />,
       changeIcon: <Attention_svg />,
-      red: true
-    }
+      red: true,
+    },
   ];
+
+  if (isLoading) return <Loader />;
 
   return (
     <div className="Overview">
       <div className="Overview-Users-box">
-
         {cardsData.map((item, index) => (
           <div className="Overview-Users-card" key={index}>
-
             <div className="Overview-user-title">
               <p>{item.title}</p>
               <h2>{item.value}</h2>
 
               <span className={item.red ? "red-color" : ""}>
                 {item.changeIcon}
-                <h3>{item.change}</h3>
+                <h3> {item.change}</h3>
               </span>
             </div>
 
-            <div className={`Overview-user-icon ${item.red ? "red-icon-bg" : ""}`}>
+            <div
+              className={`Overview-user-icon ${item.red ? "red-icon-bg" : ""}`}
+            >
               {item.icon}
             </div>
-
           </div>
         ))}
-
       </div>
 
       <div className="Recent-box">
         <h1>Recent Activity</h1>
         <div className="Recent-Activity-box">
-          <div className="Recent-Activity-list">
-            <div className="Recent-Activity-title">
-              <div className="Recent-Activity-icon"><TotalReviews_svg /></div>
-              <span><h2>New review submitted by Sarah Mitchell</h2>
-                <p>5 minutes ago  </p></span>
+          {data?.recentActivityList?.length === 0 && (
+            <div className="no-property">
+              <p>No Activity Found!</p>
             </div>
-            <h4>New</h4>
-          </div>
-
-          <div className="Recent-Activity-list">
-            <div className="Recent-Activity-title">
-              <div className="Recent-Activity-icon"><TotalReviews_svg /></div>
-              <span><h2>New review submitted by Sarah Mitchell</h2>
-                <p>5 minutes ago  </p></span>
+          )}
+          {data?.recentActivityList?.length > 0 && data?.recentActivityList?.map((item, index) => (
+            <div key={index} className="Recent-Activity-list">
+              <div className="Recent-Activity-title">
+                <div className="Recent-Activity-icon">
+                  <TotalReviews_svg />
+                </div>
+                <span>
+                  <h2>{item?.title}</h2>
+                  <p>{formatDate(item?.createdAt)}</p>
+                </span>
+              </div>
+              <h4>New</h4>
             </div>
-            <h4>New</h4>
-          </div>
-
-          <div className="Recent-Activity-list">
-            <div className="Recent-Activity-title">
-              <div className="Recent-Activity-icon"><TotalReviews_svg /></div>
-              <span><h2>New review submitted by Sarah Mitchell</h2>
-                <p>5 minutes ago  </p></span>
-            </div>
-            <h4>New</h4>
-          </div>
-
-          <div className="Recent-Activity-list">
-            <div className="Recent-Activity-title">
-              <div className="Recent-Activity-icon"><TotalReviews_svg /></div>
-              <span><h2>New review submitted by Sarah Mitchell</h2>
-                <p>5 minutes ago  </p></span>
-            </div>
-            <h4>New</h4>
-          </div>
-
-          <div className="Recent-Activity-list">
-            <div className="Recent-Activity-title">
-              <div className="Recent-Activity-icon"><TotalReviews_svg /></div>
-              <span><h2>New review submitted by Sarah Mitchell</h2>
-                <p>5 minutes ago  </p></span>
-            </div>
-            <h4>New</h4>
-          </div>
+          ))}
         </div>
       </div>
 
@@ -124,65 +144,31 @@ const Overview = () => {
         <h1>Top Reviewers This Month</h1>
 
         <div className="Reviewers-Month-box">
+           {data?.topReviewers?.length === 0 && (
+            <div className="no-property">
+              <p>No Top Reviewers This Month!</p>
+            </div>
+          )}
+          {data?.topReviewers?.length > 0 && data?.topReviewers?.map((item, index) => (
+
           <div className="Reviewers-Month-list">
             <div className="Reviewers-Month-title">
-              <h4>#1</h4>
+              <h4>#{index + 1}</h4>
               <div className="Reviewers-Month-icon">
-                <img src={dp} alt="" />
+                <img src={item?.profile_img} alt="" />
               </div>
 
               <span>
-                <h2>Sarah Mitchell</h2>
-                <p>147 reviews</p>
+                <h2>{item?.name}</h2>
+                <p>{item?.reviewCount} reviews</p>
               </span>
             </div>
             <Like_svg />
           </div>
 
-          <div className="Reviewers-Month-list">
-            <div className="Reviewers-Month-title">
-              <h4>#2</h4>
-              <div className="Reviewers-Month-icon">
-                <img src={dp} alt="" />
-              </div>
+          ))}
 
-              <span>
-                <h2>Sarah Mitchell</h2>
-                <p>147 reviews</p>
-              </span>
-            </div>
-            <Like_svg />
-          </div>
-
-          <div className="Reviewers-Month-list">
-            <div className="Reviewers-Month-title">
-              <h4>#3</h4>
-              <div className="Reviewers-Month-icon">
-                <img src={dp} alt="" />
-              </div>
-
-              <span>
-                <h2>Sarah Mitchell</h2>
-                <p>147 reviews</p>
-              </span>
-            </div>
-            <Like_svg />
-          </div>
-
-          <div className="Reviewers-Month-list">
-            <div className="Reviewers-Month-title">
-              <h4>#4</h4>
-              <div className="Reviewers-Month-icon">
-                <img src={dp} alt="" />
-              </div>
-
-              <span>
-                <h2>Sarah Mitchell</h2>
-                <p>147 reviews</p>
-              </span>
-            </div>
-            <Like_svg />
-          </div>
+           
         </div>
       </div>
     </div>

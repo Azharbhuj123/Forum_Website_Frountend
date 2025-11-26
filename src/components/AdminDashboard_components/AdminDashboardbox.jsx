@@ -17,75 +17,68 @@ const AdminDashboardbox = () => {
     <>
       <div className="Dashboard-box">
         <div className="Dashboard-container">
-
           <div className="Dashboard-title">
             <span>
               <h2>Admin Dashboard</h2>
               <p>Manage and moderate your community</p>
             </span>
 
-            <button><Settings_svg /> Settings</button>
+            <button>
+              <Settings_svg /> Settings
+            </button>
           </div>
 
           {/* TAB BUTTONS */}
           <div className="Dashboard-tab-box">
-
             <button
               className={activeTab === "overview" ? "active" : ""}
               onClick={() => setActiveTab("overview")}
             >
-              <Overview_svg /><p>Overview</p>
+              <Overview_svg />
+              <p>Overview</p>
             </button>
 
             <button
               className={activeTab === "listings" ? "active" : ""}
               onClick={() => setActiveTab("listings")}
             >
-              <Reviews_svg /><p>Listings</p>
+              <Reviews_svg />
+              <p>Listings</p>
             </button>
 
-             <button
+            <button
               className={activeTab === "reviews" ? "active" : ""}
               onClick={() => setActiveTab("reviews")}
             >
-              <Reviews_svg /><p>Reviews</p>
+              <Reviews_svg />
+              <p>Reviews</p>
             </button>
 
             <button
               className={activeTab === "users" ? "active" : ""}
               onClick={() => setActiveTab("users")}
             >
-              <Users_svg /><p>Users</p>
+              <Users_svg />
+              <p>Users</p>
             </button>
 
-            <button
+            {/* <button
               className={activeTab === "reports" ? "active" : ""}
               onClick={() => setActiveTab("reports")}
             >
               <Reports_svg /><p>Reports</p>
-            </button>
-
+            </button> */}
           </div>
 
           {/* TAB CONTENTS */}
-          {activeTab === "overview" && (
-            <Overview/>
-          )}
-          {activeTab === "listings" && (
-           <Listings/>
-          )}
+          {activeTab === "overview" && <Overview />}
+          {activeTab === "listings" && <Listings />}
 
-          {activeTab === "reviews" && (
-           <Reviews/>
-          )}
+          {activeTab === "reviews" && <Reviews />}
 
-          {activeTab === "users" && (
-            <Users/>
-          )}
+          {activeTab === "users" && <Users />}
 
-          {activeTab === "reports" && (
-            <Reports/>
-          )}
+          {activeTab === "reports" && <Reports />}
         </div>
       </div>
     </>
@@ -93,5 +86,3 @@ const AdminDashboardbox = () => {
 };
 
 export default AdminDashboardbox;
-
-

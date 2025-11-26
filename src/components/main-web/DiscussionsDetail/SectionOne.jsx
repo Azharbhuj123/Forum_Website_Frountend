@@ -95,7 +95,6 @@ export default function SectionOne({ data, refetch }) {
       showError(login_required);
       return;
     }
-    setRepLoading(true);
     const reviewData = {
       message: my_comment,
     };
@@ -214,7 +213,10 @@ export default function SectionOne({ data, refetch }) {
       </div>
 
       <div className="comment-show">
+        {discussion_data?.nestedComments?.length > 0 && (
+          <>
         <p className="cmt-count">{data?.totalCount} Comments</p>
+
         <div className="comment-show-box">
           {discussion_data?.nestedComments?.map((cmt, index) => (
             <div
@@ -333,6 +335,9 @@ export default function SectionOne({ data, refetch }) {
             </div>
           ))}
         </div>
+        </>
+        )}
+
       </div>
     </div>
   );

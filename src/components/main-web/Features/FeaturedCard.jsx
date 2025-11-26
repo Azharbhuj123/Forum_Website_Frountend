@@ -37,7 +37,7 @@ export default function FeaturedCard({ listings }) {
                 ))}
               </div>
               <span className="rating-text">
-                {listing.rating} ({listing.total_review} reviews)
+                {listing.rating || 'N/A'} ({listing.total_review || 'N/A'} reviews)
               </span>
             </div>
 

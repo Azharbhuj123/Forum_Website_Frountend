@@ -8,6 +8,8 @@ export default function SearchItems({ data, isLoading , setPage ,setFinalQuery,f
   const start = (data?.currentPage - 1) * 3 + 1;
   const end = Math.min(data?.currentPage * 3, data?.totalItems);
 
+ 
+  
   return (
     <div className="search-items-main">
       <div className="search-items-left">
@@ -31,7 +33,7 @@ export default function SearchItems({ data, isLoading , setPage ,setFinalQuery,f
         ) : (
           data?.data?.map((item, index) => <BusinessCard item={item} />)
         )}
-        {data?.totalPages > 1 && (
+        {data?.totalPages !== 1 && (
           <div className="pagination">
             <Pagination
               current={data?.currentPage} // controlled current page

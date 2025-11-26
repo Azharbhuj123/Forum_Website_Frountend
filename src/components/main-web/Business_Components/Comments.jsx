@@ -158,16 +158,13 @@ export default function CommentsSection({ sectionTwoRef, property }) {
                       </div>
                       <div className="review-meta">
                         <div className="stars">
-                          { item?.rating == 0 ? (
-                            'N/A'
-                          ):(
- Array.from({ length: item?.rating }, (_, i) => (
-                            <span key={i} className="star">
-                              ★
-                            </span>
-                          ))
-                          )}
-                         
+                          {item?.rating == 0
+                            ? "N/A"
+                            : Array.from({ length: item?.rating }, (_, i) => (
+                                <span key={i} className="star">
+                                  ★
+                                </span>
+                              ))}
                         </div>
                         <span className="review-date">
                           {item?.createdAt?.split("T")[0]}

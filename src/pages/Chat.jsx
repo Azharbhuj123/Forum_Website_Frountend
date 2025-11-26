@@ -1,88 +1,63 @@
-import React, { useState } from 'react'
-import AdminDashboardheader from '../components/AdminDashboard_components/AdminDashboardheader'
-import ChatScreen from '../components/main-web/Chat/ChatScreen'
-import Sidebar from '../components/main-dashbord/Dashboard-sidebar/Sidebar';
-import ChatArea from '../components/main-web/Chat/ChatArea';
-import ChatSideBar from '../components/main-web/Chat/SideBar';
-import Footer from '../components/main-web/Footer';
+import React, { useState } from "react";
+import AdminDashboardheader from "../components/AdminDashboard_components/AdminDashboardheader";
+import ChatScreen from "../components/main-web/Chat/ChatScreen";
+import Sidebar from "../components/main-dashbord/Dashboard-sidebar/Sidebar";
+import ChatArea from "../components/main-web/Chat/ChatArea";
+import ChatSideBar from "../components/main-web/Chat/SideBar";
+import Footer from "../components/main-web/Footer";
+import { useLocation } from "react-router-dom";
+import { fetchData } from "../queryFunctions/queryFunctions";
+import { useQuery } from "@tanstack/react-query";
+import Loader from "../components/Loader";
 
 export default function Chat() {
+  const location = useLocation();
+  const firstToTalk = location.state?.userId || null;
 
-  const [activeConversation, setActiveConversation] = useState(2);
+  const [activeConversation, setActiveConversation] = useState(firstToTalk);
+  const [search, setSearch] = useState("");
 
-  const conversations = [
-    {
-      id: 1,
-      name: 'Marcus Chen',
-      avatar: 'https://i.pravatar.cc/150?img=12',
-      preview: 'Thanks for the restaurant recommendation!',
-      time: '10:45 AM',
-      unread: 0
-    },
-    {
-      id: 2,
-      name: 'Elena Rodriguez',
-      avatar: 'https://i.pravatar.cc/150?img=5',
-      preview: 'Would love to connect and discuss...',
-      time: '9:30 AM',
-      unread: 2
-    },
-    {
-      id: 3,
-      name: 'James Wilson',
-      avatar: 'https://i.pravatar.cc/150?img=33',
-      preview: 'See you at the coworking space tomorrow!',
-      time: 'Yesterday',
-      unread: 0
-    }
-  ];
+  const { data, isLoading } = useQuery({
+    queryKey: ["user-chat", firstToTalk, search],
+    queryFn: () =>
+      fetchData(`/chat/chat-list?topUserId=${firstToTalk}&search=${search}`),
+    keepPreviousData: true,
+  });
 
-  const messages = [
-    {
-      id: 1,
-      sender: 'them',
-      text: "Hey! Thanks for the amazing review on La Cocina Mexicana. I've been wanting to try it!",
-      time: '10:30 AM'
-    },
-    {
-      id: 2,
-      sender: 'them',
-      text: 'Thanks for the recommendation!',
-      time: '10:45 AM'
-    },
-    {
-      id: 3,
-      sender: 'me',
-      text: 'You should definitely go! The ambiance is perfect for a nice dinner.',
-      time: ''
-    }
-  ];
+  const conversations = data?.data?.map((chat) => ({
+    id: chat._id,
+    userId: chat?.userId,
+    name: chat.name,
+    avatar: chat.profile_img,
+    preview: chat.lastMessage || "",
+    time: chat.lastMessageTime || "",
+    unread: chat.unreadCount || 0,
+  }));
 
-  const activeConv = conversations.find(c => c.id === activeConversation);
+  const activeConv = conversations?.find(
+    (c) => c.userId === activeConversation
+  );
+
+  console.log(activeConv, "activeConv");
+  console.log(activeConversation, "activeConv");
+
+  // if (isLoading) return <Loader />;
 
   return (
     <div>
-      <AdminDashboardheader/>
+      <AdminDashboardheader />
 
       <div className="feautures-main Dashboard-container chat-main">
         <ChatSideBar
-        conversations={conversations}
-        activeConversation={activeConversation}
-        onSelectConversation={setActiveConversation}
-      />
-      <ChatArea conversation={activeConv} messages={messages} />
+          conversations={conversations}
+          activeConversation={activeConversation}
+          onSelectConversation={setActiveConversation}
+          setSearch={setSearch}
+        />
+        <ChatArea conversation={activeConv} />
+      </div>
+
+      <Footer />
     </div>
-
-
-    <Footer/>
-
- 
-  
-
-
-
-
-
-    </div>
-  )
+  );
 }

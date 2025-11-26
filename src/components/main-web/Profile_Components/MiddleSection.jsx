@@ -154,7 +154,7 @@ export default function MiddleSection() {
 
           {!savedLoading && savedData?.data?.length === 0 && (
             <div className="no-property">
-              <p>No Photos Found!</p>
+              <p>No Saved Listing Found!</p>
             </div>
           )}
 

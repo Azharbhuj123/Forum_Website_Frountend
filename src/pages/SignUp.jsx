@@ -11,13 +11,19 @@ import { showError } from "../components/Toaster";
 // Yup schemas
 const signInSchema = yup.object().shape({
   email: yup.string().email("Invalid email").required("Email is required"),
-  password: yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+  password: yup
+    .string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Password is required"),
 });
 
 const signUpSchema = yup.object().shape({
   name: yup.string().required("Full name is required"),
   email: yup.string().email("Invalid email").required("Email is required"),
-  password: yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+  password: yup
+    .string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Password is required"),
   confirmPassword: yup
     .string()
     .oneOf([yup.ref("password"), null], "Passwords must match")
@@ -48,34 +54,33 @@ const AuthPages = () => {
 
   const navigate = useNavigate();
 
-
-
   const { triggerMutation, loading } = useActionMutation({
-      onSuccessCallback: (data) => {
-        if(data?.token){
-            navigate(`/`)
-            localStorage.setItem("token", data?.token)
-            localStorage.setItem("userData",JSON.stringify(data?.user))
-        }
-       setCurrentPage("signin")
-       signUpReset();
-       signInReset();
-      },
-      onErrorCallback: (errmsg) => {
-          showError(errmsg)
-      },
-    });
+    onSuccessCallback: (data) => {
+      if (data?.token) {
+        const role  = data?.user?.role
+         
+        navigate(role && role === "Admin" ? "/AdminDashboard":"/");
+        localStorage.setItem("token", data?.token);
+        localStorage.setItem("userData", JSON.stringify(data?.user));
+      }
+      setCurrentPage("signin");
+      signUpReset();
+      signInReset();
+    },
+    onErrorCallback: (errmsg) => {
+      showError(errmsg);
+    },
+  });
 
   const onSignIn = (data) => {
     console.log("Signin data:", data);
 
-triggerMutation({
-      endPoint: '/auth/login' ,
+    triggerMutation({
+      endPoint: "/auth/login",
       body: data,
       method: "post",
     });
-    
-   
+
     // handle sign in API call
   };
 
@@ -83,7 +88,7 @@ triggerMutation({
     console.log("Signup data:", data);
     // handle sign up API call
     triggerMutation({
-      endPoint: '/auth/register' ,
+      endPoint: "/auth/register",
       body: data,
       method: "post",
     });
@@ -97,7 +102,8 @@ triggerMutation({
           <div className="auth-illustration-dots"></div>
           <h2 className="auth-visual-title">Find Your Next Rental</h2>
           <p className="auth-visual-description">
-            Browse listings, connect with landlords, and discuss your favorite properties
+            Browse listings, connect with landlords, and discuss your favorite
+            properties
           </p>
         </div>
       </div>
@@ -107,15 +113,20 @@ triggerMutation({
           <div className="auth-header">
             <h1 className="auth-title">Welcome Back</h1>
             <p className="auth-subtitle">
-              Sign in to manage your listings and participate in property discussions
+              Sign in to manage your listings and participate in property
+              discussions
             </p>
           </div>
 
           <form className="auth-form" onSubmit={handleSignInSubmit(onSignIn)}>
             <div className="auth-input-group">
-              <label className="auth-label" htmlFor="signin-email">Email Address</label>
+              <label className="auth-label" htmlFor="signin-email">
+                Email Address
+              </label>
               <div className="auth-input-wrapper">
-                <span className="auth-input-icon"><MdEmail /></span>
+                <span className="auth-input-icon">
+                  <MdEmail />
+                </span>
                 <input
                   type="email"
                   id="signin-email"
@@ -124,13 +135,19 @@ triggerMutation({
                   {...signInRegister("email")}
                 />
               </div>
-              {signInErrors.email && <p className="error-text">{signInErrors.email.message}</p>}
+              {signInErrors.email && (
+                <p className="error-text">{signInErrors.email.message}</p>
+              )}
             </div>
 
             <div className="auth-input-group">
-              <label className="auth-label" htmlFor="signin-password">Password</label>
+              <label className="auth-label" htmlFor="signin-password">
+                Password
+              </label>
               <div className="auth-input-wrapper">
-                <span className="auth-input-icon"><IoMdLock /></span>
+                <span className="auth-input-icon">
+                  <IoMdLock />
+                </span>
                 <input
                   type="password"
                   id="signin-password"
@@ -139,21 +156,37 @@ triggerMutation({
                   {...signInRegister("password")}
                 />
               </div>
-              {signInErrors.password && <p className="error-text">{signInErrors.password.message}</p>}
+              {signInErrors.password && (
+                <p className="error-text">{signInErrors.password.message}</p>
+              )}
             </div>
 
             <div className="auth-forgot-link">
-              <a href="#" className="auth-link-text">Forgot password?</a>
+              <a href="#" className="auth-link-text">
+                Forgot password?
+              </a>
             </div>
 
-            <button type="submit" className="auth-primary-button" disabled={loading}> {loading ? "Signing In..." : "Sign In"}</button>
+            <button
+              type="submit"
+              className="auth-primary-button"
+              disabled={loading}
+            >
+              {" "}
+              {loading ? "Signing In..." : "Sign In"}
+            </button>
           </form>
 
-          <div className="auth-divider"><span className="auth-divider-text">or</span></div>
+          <div className="auth-divider">
+            <span className="auth-divider-text">or</span>
+          </div>
 
           <p className="auth-switch-text">
             Don't have an account?{" "}
-            <button onClick={() => setCurrentPage("signup")} className="auth-link-button">
+            <button
+              onClick={() => setCurrentPage("signup")}
+              className="auth-link-button"
+            >
               Create Account
             </button>
           </p>
@@ -170,7 +203,8 @@ triggerMutation({
           <div className="auth-illustration-dots"></div>
           <h2 className="auth-visual-title">List and Discuss Rentals</h2>
           <p className="auth-visual-description">
-            Add your own rental listings, join discussions, and explore properties from our community
+            Add your own rental listings, join discussions, and explore
+            properties from our community
           </p>
         </div>
       </div>
@@ -186,9 +220,13 @@ triggerMutation({
 
           <form className="auth-form" onSubmit={handleSignUpSubmit(onSignUp)}>
             <div className="auth-input-group">
-              <label className="auth-label" htmlFor="signup-name">Full Name</label>
+              <label className="auth-label" htmlFor="signup-name">
+                Full Name
+              </label>
               <div className="auth-input-wrapper">
-                <span className="auth-input-icon"><IoMdPerson /></span>
+                <span className="auth-input-icon">
+                  <IoMdPerson />
+                </span>
                 <input
                   type="text"
                   id="signup-name"
@@ -197,13 +235,19 @@ triggerMutation({
                   {...signUpRegister("name")}
                 />
               </div>
-              {signUpErrors.name && <p className="error-text">{signUpErrors.name.message}</p>}
+              {signUpErrors.name && (
+                <p className="error-text">{signUpErrors.name.message}</p>
+              )}
             </div>
 
             <div className="auth-input-group">
-              <label className="auth-label" htmlFor="signup-email">Email Address</label>
+              <label className="auth-label" htmlFor="signup-email">
+                Email Address
+              </label>
               <div className="auth-input-wrapper">
-                <span className="auth-input-icon"><MdEmail /></span>
+                <span className="auth-input-icon">
+                  <MdEmail />
+                </span>
                 <input
                   type="email"
                   id="signup-email"
@@ -212,13 +256,19 @@ triggerMutation({
                   {...signUpRegister("email")}
                 />
               </div>
-              {signUpErrors.email && <p className="error-text">{signUpErrors.email.message}</p>}
+              {signUpErrors.email && (
+                <p className="error-text">{signUpErrors.email.message}</p>
+              )}
             </div>
 
             <div className="auth-input-group">
-              <label className="auth-label" htmlFor="signup-password">Password</label>
+              <label className="auth-label" htmlFor="signup-password">
+                Password
+              </label>
               <div className="auth-input-wrapper">
-                <span className="auth-input-icon"><IoMdLock /></span>
+                <span className="auth-input-icon">
+                  <IoMdLock />
+                </span>
                 <input
                   type="password"
                   id="signup-password"
@@ -227,13 +277,19 @@ triggerMutation({
                   {...signUpRegister("password")}
                 />
               </div>
-              {signUpErrors.password && <p className="error-text">{signUpErrors.password.message}</p>}
+              {signUpErrors.password && (
+                <p className="error-text">{signUpErrors.password.message}</p>
+              )}
             </div>
 
             <div className="auth-input-group">
-              <label className="auth-label" htmlFor="signup-confirm-password">Confirm Password</label>
+              <label className="auth-label" htmlFor="signup-confirm-password">
+                Confirm Password
+              </label>
               <div className="auth-input-wrapper">
-                <span className="auth-input-icon"><IoMdLock /></span>
+                <span className="auth-input-icon">
+                  <IoMdLock />
+                </span>
                 <input
                   type="password"
                   id="signup-confirm-password"
@@ -242,17 +298,32 @@ triggerMutation({
                   {...signUpRegister("confirmPassword")}
                 />
               </div>
-              {signUpErrors.confirmPassword && <p className="error-text">{signUpErrors.confirmPassword.message}</p>}
+              {signUpErrors.confirmPassword && (
+                <p className="error-text">
+                  {signUpErrors.confirmPassword.message}
+                </p>
+              )}
             </div>
 
-            <button type="submit" disabled={loading} className="auth-primary-button">{loading ? "Loading..." : "Create Account"}</button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="auth-primary-button"
+            >
+              {loading ? "Loading..." : "Create Account"}
+            </button>
           </form>
 
-          <div className="auth-divider"><span className="auth-divider-text">or</span></div>
+          <div className="auth-divider">
+            <span className="auth-divider-text">or</span>
+          </div>
 
           <p className="auth-switch-text">
             Already have an account?{" "}
-            <button onClick={() => setCurrentPage("signin")} className="auth-link-button">
+            <button
+              onClick={() => setCurrentPage("signin")}
+              className="auth-link-button"
+            >
               Sign In
             </button>
           </p>

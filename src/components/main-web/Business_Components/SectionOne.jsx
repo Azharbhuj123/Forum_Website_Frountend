@@ -17,14 +17,17 @@ import { showError } from "../../Toaster";
 import useActionMutation from "../../../queryFunctions/useActionMutation";
 import useStore from "../../../stores/store";
 
-export default function SectionOne({ rental_data, otherProperties,alreadySaved }) {
+export default function SectionOne({
+  rental_data,
+  otherProperties,
+  alreadySaved,
+}) {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
-  const [isSaved , setIsSaved] = useState(alreadySaved);
+  const [isSaved, setIsSaved] = useState(alreadySaved);
   const navigate = useNavigate();
-const userData = JSON.parse(localStorage.getItem("userData") || "null");
-const {login_required} = useStore();
-  
-  
+  const userData = JSON.parse(localStorage.getItem("userData") || "null");
+  const { login_required } = useStore();
+
   const photos = rental_data?.photos;
 
   const amenities = [
@@ -52,7 +55,7 @@ const {login_required} = useStore();
 
   const { triggerMutation, loading } = useActionMutation({
     onSuccessCallback: (data) => {
-      setIsSaved(data?.isSaved)
+      setIsSaved(data?.isSaved);
     },
     onErrorCallback: (errmsg) => {
       console.log(errmsg);
@@ -62,14 +65,29 @@ const {login_required} = useStore();
   });
 
   const handleSaved = () => {
-    if(!userData){
-      showError(login_required)
-      return
+    if (!userData) {
+      showError(login_required);
+      return;
     }
 
     triggerMutation({
       endPoint: `/property/property-saved/${rental_data?._id}`,
       method: "post",
+    });
+  };
+
+  const handleMessage = () => {
+    if (!userData) {
+      showError(login_required);
+      return;
+    }
+
+    console.log(rental_data?.user?._id);
+    
+    navigate("/chat", {
+      state: {
+        userId: rental_data?.user?._id,
+      },
     });
   };
 
@@ -136,18 +154,16 @@ const {login_required} = useStore();
                 {isSaved ? "Un Save" : "Save"}
               </button>
             </div>
-
-            <div className="secondary-buttons">
-              <button
-                className="btn btn-tertiary"
-                onClick={() => navigate("/chat")}
-              >
-                <span className="btn-icon">
-                  <Chat2_svg />
-                </span>
-                Message
-              </button>
-            </div>
+            {userData?._id !== rental_data?.user?._id && (
+              <div className="secondary-buttons">
+                <button className="btn btn-tertiary" onClick={handleMessage}>
+                  <span className="btn-icon">
+                    <Chat2_svg />
+                  </span>
+                  Message
+                </button>
+              </div>
+            )}
           </div>
         </div>
         <div className="res786Done">

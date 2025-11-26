@@ -8,6 +8,8 @@ export const showSuccess = (message = "Success!") => {
     style: {
       borderRadius: "8px",
       background: "#4BB543",
+      fontFamily:"Poppins",
+
       color: "#fff",
       padding: "10px 15px",
       fontWeight: "500",

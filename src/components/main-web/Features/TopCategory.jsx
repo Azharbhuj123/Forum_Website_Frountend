@@ -11,98 +11,24 @@ import travel from "../../../assets/Images/travel.png";
 import dpOr from "../../../assets/Images/dp-or.png";
 import Discussion_Svg from "../../Svg_components/Discussion_Svg";
 import Comment_Svg from "../../Svg_components/Comment_Svg";
+import { useQuery } from "@tanstack/react-query";
+import { fetchData } from "../../../queryFunctions/queryFunctions";
+import { useNavigate } from "react-router-dom";
 
 function TopCategory() {
-  const top_category = [
-    {
-      id: 1,
-      label: "Restaurants",
-      value: "3,245",
-      img: dish_svg,
-    },
-    {
-      id: 2,
-      label: "Beauty",
-      value: "3,245",
-      img: beauty,
-    },
-    {
-      id: 3,
-      label: "Education",
-      value: "3,245",
-      img: education,
-    },
-    {
-      id: 4,
-      label: "Fitness",
-      value: "3,245",
-      img: fit,
-    },
-    {
-      id: 5,
-      label: "Technology",
-      value: "3,245",
-      img: tech,
-    },
-    {
-      id: 6,
-      label: "Art & Design",
-      value: "3,245",
-      img: art,
-    },
-    {
-      id: 7,
-      label: "Services",
-      value: "3,245",
-      img: service,
-    },
-    {
-      id: 8,
-      label: "Travel",
-      value: "3,245",
-      img: travel,
-    },
-  ];
+ 
+const navigate = useNavigate()
+ const { data, isLoading } = useQuery({
+    queryKey: ["landing-discussion"],
+    queryFn: () =>
+      fetchData(
+        `/discussion?limit=4`
+      ),
+    keepPreviousData: true,
+  });
 
 
-  const therad_data = [
-    {
-      id: 1,
-      question: "Best hidden gem restaurants in Downtown?",
-      user_img: dpOr,
-      user_name: "Marcus Chen, Food & Dining",
-      comments: 47,
-      views: 1234,
-      time: "2 hours ago",
-    },
-    {
-      id: 2,
-      question: "Best hidden gem restaurants in Downtown?",
-      user_img: dpOr,
-      user_name: "Marcus Chen, Food & Dining",
-      comments: 47,
-      views: 1234,
-      time: "2 hours ago",
-    },
-    {
-      id: 3,
-      question: "Best hidden gem restaurants in Downtown?",
-      user_img: dpOr,
-      user_name: "Marcus Chen, Food & Dining",
-      comments: 47,
-      views: 1234,
-      time: "2 hours ago",
-    },
-    {
-      id: 4,
-      question: "Best hidden gem restaurants in Downtown?",
-      user_img: dpOr,
-      user_name: "Marcus Chen, Food & Dining",
-      comments: 47,
-      views: 1234,
-      time: "2 hours ago",
-    },
-  ];
+ 
   return (
     <div className="top-category">
       {/* <div className="top-cat-head">
@@ -119,31 +45,33 @@ function TopCategory() {
           </div>
         ))}
       </div> */}
+  {data?.data?.length > 0 && (
 
+<>
       <div className="top-cat-two-head">
         <div className="heading">
           <Discussion_Svg />
           <h1>Discussion Threads</h1>
         </div>
 
-        <p className="viewall">View All {">"}</p>
+        <p onClick={()=>navigate('/discussions')} className="viewall">View All {">"}</p>
       </div>
 
       <div className="main-theard">
-        {therad_data.map((item) => (
-          <div className="single-theard" key={item.id}>
-            <h2 className="question">{item.question}</h2>
+        {data?.data.map((item) => (
+          <div className="single-theard" key={item._id}>
+            <h2 className="question">{item.title}</h2>
             <div className="reply-user">
-              <img src={item.user_img} alt="" />
-              <p className="name">{item.user_name}</p>
+              <img src={item?.user?.profile_img} alt="" />
+              <p className="name">{item?.user?.name} • {item?.category}</p>
             </div>
             <div className="meta-div">
               <div className="status">
                 <p>
 
-                  <Comment_Svg /> {item.comments} comments
+                  <Comment_Svg /> {item.comments?.length} comments
                 </p>
-                <p> {item.views} views</p>
+                <p> {item.viewsCount} views</p>
               </div>
               <p>{item.time}</p>
             </div>
@@ -151,6 +79,9 @@ function TopCategory() {
         ))}
      
       </div>
+      </>
+        )}
+
 
 
 

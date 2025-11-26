@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Remove_svg from "../Svg_components/Remove_svg";
 import Approve_Svg from "../Svg_components/Approve_Svg";
 import dp from "../../assets/Images/dp.png";
@@ -13,11 +13,33 @@ import SuspendAccount_svg from "../Svg_components/SuspendAccount_svg";
 import BanUser_svg from "../Svg_components/BanUser_svg";
 import DeleteAccount_Svg from "../Svg_components/DeleteAccount_Svg";
 import AddNewUserpopup from "../Popup_components/AddNewUserpopup";
-
+import { useQuery } from "@tanstack/react-query";
+import { fetchData } from "../../queryFunctions/queryFunctions";
+import useActionMutation from "../../queryFunctions/useActionMutation";
+import { showSuccess } from "../Toaster";
+import DeleteSure from "../Modals/DeleteSure";
 
 const Users = () => {
   const [openMenu, setOpenMenu] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
+  const [api_data, setApiData] = useState([]);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [delete_id, setDelete_id] = useState(null);
+  const [edit_id, setEdit_id] = useState(null);
+
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["admin-user-view"],
+    queryFn: () => fetchData(`/admin/user`),
+    keepPreviousData: true,
+  });
+
+  useEffect(() => {
+    if (data?.data) {
+      setApiData(data?.data);
+    } else {
+      setApiData([]);
+    }
+  }, [data?.data]);
 
   const users = [
     { name: "Sarah Mitchell", reviews: 147, joined: "2024-01-15" },
@@ -25,6 +47,39 @@ const Users = () => {
     { name: "Fatima Noor", reviews: 250, joined: "2023-11-05" },
     { name: "Bilal Ahmed", reviews: 89, joined: "2024-03-01" },
   ];
+
+  const { triggerMutation, loading } = useActionMutation({
+    onSuccessCallback: (res) => {
+      showSuccess(res?.message);
+      const updatedList = api_data?.map((item) =>
+        item?._id?.toString() === res?.data?._id?.toString()
+          ? { ...item, is_suspend: res?.data?.is_suspend }
+          : item
+      );
+
+      setDeleteModal(false);
+      setDelete_id(null);
+      refetch();
+      setApiData(updatedList);
+    },
+    onErrorCallback: (errmsg) => {
+      showError(errmsg);
+    },
+  });
+
+  const handleSuspend = (id) => {
+    triggerMutation({
+      endPoint: `/admin/users/${id}/suspend`,
+      method: "patch",
+    });
+  };
+
+  const handleDelete = () => {
+    triggerMutation({
+      endPoint: `/admin/users/${delete_id}`,
+      method: "delete",
+    });
+  };
 
   return (
     <>
@@ -34,33 +89,43 @@ const Users = () => {
             <h1>User Management</h1>
 
             <span>
-              <button
-                className="Add-User"
-                onClick={() => setShowPopup(true)}
-              >
+              <button className="Add-User" onClick={() => {setEdit_id(null);setShowPopup(true)}}>
                 Add User
               </button>
             </span>
           </div>
 
           <div className="Reviews-box">
-            {users.map((user, index) => (
+            {api_data?.map((user, index) => (
               <div className="Reviews-box-list" key={index}>
                 <div className="Reviews-box-list-title">
                   <div className="Reviews-box-list-dp">
-                    <img src={dp} alt="" />
+                    <img src={user.profile_img} alt={user.name} />
+
                     <div className="Reviews-box-list-name">
-                      <h2>{user.name}</h2>
+                      <h2>{user.name || "Unknown User"}</h2>
+
                       <span>
-                        <p>{user.reviews} reviews</p>
-                        <p>Joined {user.joined}</p>
+                        <p>{user.approvedReviewsCount} reviews</p>
+                        <p>
+                          Joined{" "}
+                          {user.createdAt
+                            ? new Date(user.createdAt).toLocaleDateString()
+                            : "N/A"}
+                        </p>
                       </span>
                     </div>
                   </div>
                 </div>
 
                 <div className="Management-box-list-btn">
-                  <button className="View-btn">
+                  <button
+                    onClick={() => {
+                      setShowPopup(true);
+                      setEdit_id(user?._id);
+                    }}
+                    className="View-btn"
+                  >
                     <ViewProfile_svg /> View Profile
                   </button>
 
@@ -75,14 +140,27 @@ const Users = () => {
                   {openMenu === index && (
                     <div className="actions-dropdown">
                       <ul>
-                        <li><EditUserProfile_svg /> Edit User Profile</li>
-                        <li><EditPermissions_svg /> Edit Permissions</li>
-                        <li><SendEmail_svg /> Send Email</li>
-                        <li><ResetPassword_svg /> Reset Password</li>
-                        <li className="verify"> <VerifyUser_svg /> Verify User</li>
-                        <li className="red"><SuspendAccount_svg /> Suspend</li>
-                        <li className="red"><BanUser_svg /> Ban</li>
-                        <li className="red"><DeleteAccount_Svg /> Delete</li>
+                        <li>
+                          <SendEmail_svg /> Send Email
+                        </li>
+
+                        <li
+                          onClick={() => handleSuspend(user?._id)}
+                          className="red"
+                        >
+                          <SuspendAccount_svg />{" "}
+                          {user?.is_suspend ? "Un Suspend" : "Suspend"}
+                        </li>
+
+                        <li
+                          className="red"
+                          onClick={() => {
+                            setDelete_id(user?._id);
+                            setDeleteModal(true);
+                          }}
+                        >
+                          <DeleteAccount_Svg /> Delete
+                        </li>
                       </ul>
                     </div>
                   )}
@@ -92,11 +170,22 @@ const Users = () => {
           </div>
         </div>
       </div>
-
       {/* SHOW POPUP */}
-{showPopup && (
-  <AddNewUserpopup closePopup={() => setShowPopup(false)} />
-)}
+      {showPopup && (
+        <AddNewUserpopup
+          refetch={refetch}
+          closePopup={(() => setShowPopup(false) )}
+          edit_id={edit_id}
+        />
+      )}
+      {deleteModal && (
+        <DeleteSure
+          open={deleteModal}
+          onCancel={() => setDeleteModal(false)}
+          onConfirm={handleDelete}
+          loading={loading}
+        />
+      )}{" "}
     </>
   );
 };

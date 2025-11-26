@@ -23,33 +23,45 @@ export default function SectionTwo({ rental_data, otherProperties }) {
         {/* Business Information Card */}
         <div className="info-card">
           <h3 className="card-title">Business Information</h3>
+          {rental_data?.user?.basic_info?.location && (
+            <div className="info-item  margin">
+              <Location_Svg />
 
-          <div className="info-item  margin">
-            <Location_Svg />
-
-            <div className="info-content">
-              <p className="info-text">123 Main St, Downtown</p>
-              <p className="info-label">Get Directions</p>
+              <div className="info-content">
+                <p className="info-text">
+                  {rental_data?.user?.basic_info?.location || ""}
+                </p>
+                <p className="info-label">Get Directions</p>
+              </div>
             </div>
-          </div>
+          )}
+          {rental_data?.user?.basic_info?.phone_number && (
+            <div className="info-item">
+              <Phone_Svg />
 
-          <div className="info-item">
-            <Phone_Svg />
-
-            <div className="info-content">
-              <p className="info-text">(555) 123-4567</p>
+              <div className="info-content">
+                <p className="info-text">
+                  {rental_data?.user?.phone_number || ""}
+                </p>
+              </div>
             </div>
-          </div>
+          )}
+
+          {rental_data?.user?.basic_info?.website && (
 
           <div className="info-item">
             <Webiste_SVg />
 
             <div className="info-content">
-              <p className="info-text">www.lacocinsmexicana.com</p>
+              <p className="info-text">
+                {rental_data?.user?.basic_info?.website || ""}
+              </p>
             </div>
           </div>
+          )}
 
-          <div className="info-item">
+
+          {/* <div className="info-item">
             <Clock_Svg />
             <div className="info-content">
               <p className="info-text">11:00 AM - 10:00 PM</p>
@@ -57,7 +69,7 @@ export default function SectionTwo({ rental_data, otherProperties }) {
                 <span className="status-badge">Open Now</span>
               </div>
             </div>
-          </div>
+          </div> */}
 
           <div className="map-section">
             <button className="map-button">
@@ -69,34 +81,38 @@ export default function SectionTwo({ rental_data, otherProperties }) {
 
         {/* Related Businesses Card */}
         {otherProperties?.slice(3, 6)?.length > 0 && (
-        <div className="info-card">
-          <h3 className="card-title">Related Businesses</h3>
+          <div className="info-card">
+            <h3 className="card-title">Related Businesses</h3>
 
-          <div className="related-businesses">
-            {otherProperties?.slice(3, 6)?.map((data, index) => (
-              <div onClick={()=>navigate(`/rental-detail/${data?._id}`)} key={index} className="business-item">
-                <div className="business-image">
-                  <img src={data?.photos[0]} alt={data.listingTitle} />
-                </div>
-                <div className="business-details">
-                  <h4 className="business-name">{data.listingTitle}</h4>
-                  <div className="business-rating">
-                    <div className="stars1">
-                      <span className="star0">★</span>
-                      <span className="star0">★</span>
-                      <span className="star0">★</span>
-                      <span className="star0">★</span>
-                      <span className="star0">★</span>
+            <div className="related-businesses">
+              {otherProperties?.slice(3, 6)?.map((data, index) => (
+                <div
+                  onClick={() => navigate(`/rental-detail/${data?._id}`)}
+                  key={index}
+                  className="business-item"
+                >
+                  <div className="business-image">
+                    <img src={data?.photos[0]} alt={data.listingTitle} />
+                  </div>
+                  <div className="business-details">
+                    <h4 className="business-name">{data.listingTitle}</h4>
+                    <div className="business-rating">
+                      <div className="stars1">
+                        <span className="star0">★</span>
+                        <span className="star0">★</span>
+                        <span className="star0">★</span>
+                        <span className="star0">★</span>
+                        <span className="star0">★</span>
+                      </div>
+                      <span className="review-count">
+                        {data?.total_review} reviews
+                      </span>
                     </div>
-                    <span className="review-count">
-                      {data?.total_review} reviews
-                    </span>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
         )}
         <Sponser />
       </div>

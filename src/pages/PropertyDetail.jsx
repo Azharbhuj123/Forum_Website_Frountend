@@ -38,6 +38,7 @@ const PropertyDetail = () => {
   const params = useParams();
   const [mainImage, setMainImage] = useState(null);
   const [deleteModal, setDeleteModal] = useState(false);
+  const userData = JSON.parse(localStorage.getItem("userData"));
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["admin-property", params.id],
@@ -91,7 +92,7 @@ const PropertyDetail = () => {
       <AdminDashboardheader />
 
       <div className="property-listing-container Dashboard-container">
-        <button className="back-button" onClick={() => navigate('/')}>
+        <button className="back-button" onClick={() => navigate(userData?.role === "Admin"? '/' :'/')}>
           <span className="back-arrow">‹</span> Back
         </button>
 

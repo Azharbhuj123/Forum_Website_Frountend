@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -7,33 +7,65 @@ import Footer from "../components/main-web/Footer";
 import profile from "../assets/Images/profile.png";
 import Switch from "react-switch"; // make sure this is installed
 import { Location_Svg, Webiste_SVg } from "../components/Svg_components/Svgs";
-
-
+import useActionMutation from "../queryFunctions/useActionMutation";
+import { showError } from "../components/Toaster";
+import { useQuery } from "@tanstack/react-query";
+import { fetchData } from "../queryFunctions/queryFunctions";
 
 const profileSchema = yup.object({
   name: yup.string().required("Display name is required"),
   bio: yup.string().max(500, "Bio must be less than 500 characters"),
   location: yup.string(),
   website: yup.string().url("Please enter a valid URL"),
-  email: yup.string().email("Please enter a valid email").required("Email is required"),
-  phone: yup.string().matches(/^[+]?[\d\s\-()]*$/, "Please enter a valid phone number"),
-  password: yup.string().min(6, "Password must be at least 6 characters"),
-  twofactor: yup.string(),
+  email: yup
+    .string()
+    .email("Please enter a valid email")
+    .required("Email is required"),
+  phone: yup
+    .string()
+    .matches(/^[+]?[\d\s\-()]*$/, "Please enter a valid phone number"),
+password: yup
+  .string()
+  .nullable()
+  .notRequired()
+  .test(
+    "password-length",
+    "Password must be at least 6 characters",
+    function (value) {
+      if (!value) return true; // user ne password nahi dala → OK
+      return value.length >= 6; // user ne dala → length check
+    }
+  ),
+  // twofactor: yup.string(),
   coverPhoto: yup.mixed(),
   profilePhoto: yup.mixed(),
 });
 
 export default function EditProfile() {
-  const [publicProfile, setPublicProfile] = useState(false); 
+  const userData = JSON.parse(localStorage.getItem("userData"));
+  const [publicProfile, setPublicProfile] = useState(false);
   const [showEmailPublic, setShowEmailPublic] = useState(false);
   const [notifyByEmail, setNotifyByEmail] = useState(false);
+  const [preview, setPreview] = useState(userData?.profile_img);
+  const [preview_cover, setPreviewCover] = useState(null);
+
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["user-detail"],
+    queryFn: () =>
+      fetchData(
+        `/auth/my-detail`
+      ),
+    keepPreviousData: true,
+  });
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     control,
-    watch
+    watch,
+    reset
   } = useForm({
     resolver: yupResolver(profileSchema),
     defaultValues: {
@@ -44,22 +76,90 @@ export default function EditProfile() {
       email: "",
       phone: "",
       password: "",
-      twofactor: "",
+      //  twofactor: "",
       coverPhoto: null,
-      profilePhoto: null
-    }
+      profilePhoto: null,
+    },
   });
 
-  const onSubmit = (data) => {
-    const formData = {
-      ...data,
-      publicProfile,
-      showEmailPublic,
-      notifyByEmail
-    };
-    console.log("Form submitted:", formData);
-    // Here you can send formData to backend, including files
-  };
+
+
+  useEffect(() => {
+  if (data) {
+    reset({
+      name: data.name || "",
+      bio: data.basic_info?.bio || "",
+      location: data.basic_info?.location || "",
+      website: data.basic_info?.website || "",
+      email: data.email || "",
+      phone: data.phone_number || "",
+      coverPhoto: data.cover_img || null,
+      profilePhoto: data.profile_img || null,
+      password: "" // leave blank for security
+    });
+    setPublicProfile(data.privacy_settings?.public_profile)
+    setShowEmailPublic(data.privacy_settings?.public_email)
+    setNotifyByEmail(data.privacy_settings?.email_notify)
+    setPreview(data?.profile_img)
+    setPreviewCover(data?.cover_img)
+  }
+}, [data, ]);
+
+
+
+
+
+
+
+const { triggerMutation, loading } = useActionMutation({
+    onSuccessCallback: (data) => {
+       
+    },
+    onErrorCallback: (errmsg) => {
+      console.log(errmsg);
+      showError(errmsg);
+    },
+  });
+
+
+ const onSubmit = (data) => {
+  const formData = new FormData();
+
+  // Append normal text fields
+  formData.append("name", data.name);
+  formData.append("bio", data.bio);
+  formData.append("location", data.location);
+  formData.append("website", data.website);
+  formData.append("email", data.email);
+  formData.append("phone", data.phone);
+  formData.append("password", data.password);
+
+  // Append boolean values (must convert to string)
+  formData.append("publicProfile", publicProfile ? "true" : "false");
+  formData.append("showEmailPublic", showEmailPublic ? "true" : "false");
+  formData.append("notifyByEmail", notifyByEmail ? "true" : "false");
+
+  // Append files only if selected
+  if (data.coverPhoto instanceof File) {
+    formData.append("coverPhoto", data.coverPhoto);
+  }
+
+  if (data.profilePhoto instanceof File) {
+    formData.append("profilePhoto", data.profilePhoto);
+  }
+
+  // Debug: show all values
+  for (let pair of formData.entries()) {
+    console.log(pair[0], pair[1]);
+  }
+
+ triggerMutation({
+      endPoint: `/auth/update-profile`,
+      body: formData,
+      method: "patch",
+    });
+};
+
 
   const triggerFileInput = (ref) => ref.current.click();
 
@@ -95,60 +195,85 @@ export default function EditProfile() {
                       onDrop={(e) => {
                         e.preventDefault();
                         const file = e.dataTransfer.files[0];
-                        field.onChange(file);
-                        console.log("File Dropped:", file?.name);
+
+                        field.onChange(file); // update react-hook-form
+                        console.log(file, "file");
+
+                        if (file) {
+                          setPreviewCover(URL.createObjectURL(file)); // update preview UI
+                        }
                       }}
                     >
-                      <div className="smitchell-edit-upload-icon">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="48"
-                          height="48"
-                          viewBox="0 0 48 48"
-                          fill="none"
-                        >
-                          <path
-                            d="M24 6V30"
-                            stroke="#EF7235"
-                            strokeWidth="4"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
+                      {preview_cover ? (
+                        <div className="smitchell-edit-upload-icon">
+                          <img
+                            src={preview_cover}
+                            className="smitchell-edit-cover-preview"
+                            alt="cover preview"
                           />
-                          <path
-                            d="M34 16L24 6L14 16"
-                            stroke="#EF7235"
-                            strokeWidth="4"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                          <path
-                            d="M42 30V38C42 39.0609 41.5786 40.0783 40.8284 40.8284C40.0783 41.5786 39.0609 42 38 42H10C8.93913 42 7.92172 41.5786 7.17157 40.8284C6.42143 40.0783 6 39.0609 6 38V30"
-                            stroke="#EF7235"
-                            strokeWidth="4"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </div>
-                      <p className="smitchell-edit-drag-text">
-                        Drag and drop photos here
-                      </p>
-                      <p className="smitchell-edit-recommended-size">
-                        Recommended size: 1500 × 500px
-                      </p>
-                      <p className="smitchell-edit-or-text">or click to browse</p>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="smitchell-edit-upload-icon">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="48"
+                              height="48"
+                              viewBox="0 0 48 48"
+                              fill="none"
+                            >
+                              <path
+                                d="M24 6V30"
+                                stroke="#EF7235"
+                                strokeWidth="4"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                              <path
+                                d="M34 16L24 6L14 16"
+                                stroke="#EF7235"
+                                strokeWidth="4"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                              <path
+                                d="M42 30V38C42 39.0609 41.5786 40.0783 40.8284 40.8284C40.0783 41.5786 39.0609 42 38 42H10C8.93913 42 7.92172 41.5786 7.17157 40.8284C6.42143 40.0783 6 39.0609 6 38V30"
+                                stroke="#EF7235"
+                                strokeWidth="4"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                            </svg>
+                          </div>
+                          <p className="smitchell-edit-drag-text">
+                            Drag and drop photos here
+                          </p>
+                          <p className="smitchell-edit-recommended-size">
+                            Recommended size: 1500 × 500px
+                          </p>
+                          <p className="smitchell-edit-or-text">
+                            or click to browse
+                          </p>
 
-                      <button
-                        className="smitchell-edit-choose-button"
-                        type="button"
-                      >
-                        Choose Files
-                      </button>
+                          <button
+                            className="smitchell-edit-choose-button"
+                            type="button"
+                          >
+                            Choose Files
+                          </button>
+                        </>
+                      )}
 
                       <input
                         type="file"
                         ref={coverPhotoRef}
-                        onChange={(e) => field.onChange(e.target.files[0])}
+                        onChange={(e) => {
+                          const file = e.target.files[0];
+                          field.onChange(file); // FORM UPDATE
+                          if (file) {
+                            setPreviewCover(URL.createObjectURL(file)); // PREVIEW UPDATE
+                          }
+                        }}
                         className="smitchell-edit-hidden-input"
                         accept="image/*"
                       />
@@ -170,10 +295,11 @@ export default function EditProfile() {
                       onClick={() => triggerFileInput(profilePhotoRef)}
                     >
                       <img
-                        src={profile}
+                        src={preview} // SHOW PREVIEW HERE
                         alt="Profile"
                         className="smitchell-edit-profile-avatar"
                       />
+
                       <div className="smitchell-edit-camera-icon-overlay">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -205,9 +331,17 @@ export default function EditProfile() {
                     <input
                       type="file"
                       ref={profilePhotoRef}
-                      onChange={(e) => field.onChange(e.target.files[0])}
                       className="smitchell-edit-hidden-input"
                       accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files[0];
+                        field.onChange(file);
+
+                        if (file) {
+                          const url = URL.createObjectURL(file);
+                          setPreview(url); // UPDATE PREVIEW
+                        }
+                      }}
                     />
                   </div>
                 )}
@@ -231,7 +365,9 @@ export default function EditProfile() {
                 placeholder="Enter your display name"
                 {...register("name")}
               />
-              {errors.name && <span className="error-text">{errors.name.message}</span>}
+              {errors.name && (
+                <span className="error-text">{errors.name.message}</span>
+              )}
             </div>
 
             <div className="form-field-group">
@@ -244,7 +380,9 @@ export default function EditProfile() {
                 placeholder="Tell us about yourself..."
                 {...register("bio")}
               ></textarea>
-              {errors.bio && <span className="error-text">{errors.bio.message}</span>}
+              {errors.bio && (
+                <span className="error-text">{errors.bio.message}</span>
+              )}
             </div>
 
             <div className="form-field-group">
@@ -258,7 +396,9 @@ export default function EditProfile() {
                 placeholder="Enter your location"
                 {...register("location")}
               />
-              {errors.location && <span className="error-text">{errors.location.message}</span>}
+              {errors.location && (
+                <span className="error-text">{errors.location.message}</span>
+              )}
             </div>
 
             <div className="form-field-group">
@@ -272,7 +412,9 @@ export default function EditProfile() {
                 placeholder="Enter your website URL"
                 {...register("website")}
               />
-              {errors.website && <span className="error-text">{errors.website.message}</span>}
+              {errors.website && (
+                <span className="error-text">{errors.website.message}</span>
+              )}
             </div>
           </div>
 
@@ -292,8 +434,11 @@ export default function EditProfile() {
                 className="form-input unique-display-name-input"
                 placeholder="Enter your email address"
                 {...register("email")}
+                disabled
               />
-              {errors.email && <span className="error-text">{errors.email.message}</span>}
+              {errors.email && (
+                <span className="error-text">{errors.email.message}</span>
+              )}
             </div>
 
             <div className="form-field-group">
@@ -307,7 +452,9 @@ export default function EditProfile() {
                 placeholder="Enter your phone number"
                 {...register("phone")}
               />
-              {errors.phone && <span className="error-text">{errors.phone.message}</span>}
+              {errors.phone && (
+                <span className="error-text">{errors.phone.message}</span>
+              )}
             </div>
           </div>
 
@@ -322,7 +469,9 @@ export default function EditProfile() {
                 <p>Allow others to view your profile and reviews</p>
               </div>
               <Switch
-                onChange={(checked) => handleChangeSwitch(checked, setPublicProfile)}
+                onChange={(checked) =>
+                  handleChangeSwitch(checked, setPublicProfile)
+                }
                 checked={publicProfile}
                 uncheckedIcon={false}
                 checkedIcon={false}
@@ -338,7 +487,9 @@ export default function EditProfile() {
                 <p>Display your email address on your public profile</p>
               </div>
               <Switch
-                onChange={(checked) => handleChangeSwitch(checked, setShowEmailPublic)}
+                onChange={(checked) =>
+                  handleChangeSwitch(checked, setShowEmailPublic)
+                }
                 checked={showEmailPublic}
                 uncheckedIcon={false}
                 checkedIcon={false}
@@ -356,7 +507,9 @@ export default function EditProfile() {
                 </p>
               </div>
               <Switch
-                onChange={(checked) => handleChangeSwitch(checked, setNotifyByEmail)}
+                onChange={(checked) =>
+                  handleChangeSwitch(checked, setNotifyByEmail)
+                }
                 checked={notifyByEmail}
                 uncheckedIcon={false}
                 checkedIcon={false}
@@ -382,10 +535,12 @@ export default function EditProfile() {
                 className="form-input unique-display-name-input"
                 {...register("password")}
               />
-              {errors.password && <span className="error-text">{errors.password.message}</span>}
+              {errors.password && (
+                <span className="error-text">{errors.password.message}</span>
+              )}
             </div>
 
-            <div className="form-field-group">
+            {/* <div className="form-field-group">
               <input
                 type="text"
                 id="twofactor"
@@ -394,7 +549,7 @@ export default function EditProfile() {
                 {...register("twofactor")}
               />
               {errors.twofactor && <span className="error-text">{errors.twofactor.message}</span>}
-            </div>
+            </div> */}
 
             <div className="deactivate-account">
               <button type="button">Deactivate Account</button>
@@ -402,8 +557,10 @@ export default function EditProfile() {
           </div>
 
           <div className="actions-button-pro">
-            <button type="button" className="close">Close</button>
-            <button type="submit" className="save">
+            <button type="button" className="close">
+              Close
+            </button>
+            <button disabled={loading} type="submit" className="save">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -433,7 +590,7 @@ export default function EditProfile() {
                   strokeLinejoin="round"
                 />
               </svg>
-              Save Changes
+              {loading ?  "Saving...":"Save Changes"}
             </button>
           </div>
         </form>
