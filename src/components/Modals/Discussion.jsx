@@ -76,9 +76,9 @@ const {login_required} =useStore()
   });
 
   const onSubmit = (data) => {
-    if(!token){
-      showError(login_required)
-      return
+     if (!token) {
+      navigate("/register");
+      return;
     }
     const formData = new FormData();
 

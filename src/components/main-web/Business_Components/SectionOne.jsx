@@ -66,7 +66,7 @@ export default function SectionOne({
 
   const handleSaved = () => {
     if (!userData) {
-      showError(login_required);
+      navigate("/register");
       return;
     }
 
@@ -77,12 +77,11 @@ export default function SectionOne({
   };
 
   const handleMessage = () => {
-    if (!userData) {
-      showError(login_required);
+     if (!userData) {
+      navigate("/register");
       return;
     }
 
-    console.log(rental_data?.user?._id);
     
     navigate("/chat", {
       state: {

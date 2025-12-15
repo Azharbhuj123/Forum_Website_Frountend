@@ -9,6 +9,7 @@ import Reviews from "./Reviews";
 import Users from "./Users";
 import Reports from "./Reports";
 import Listings from "./Listings";
+import { CiSettings } from "react-icons/ci";
 
 const AdminDashboardbox = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -24,7 +25,7 @@ const AdminDashboardbox = () => {
             </span>
 
             <button>
-              <Settings_svg /> Settings
+              <CiSettings szie={50} /> Settings
             </button>
           </div>
 

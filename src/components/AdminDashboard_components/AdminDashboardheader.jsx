@@ -41,12 +41,7 @@ const AdminDashboardheader = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const handleNavigate = () => {
-
-    navigate("/search-rental",{
-      state:searchQuery
-    });
-  };
+  
 
   return (
     <>
@@ -59,37 +54,7 @@ const AdminDashboardheader = () => {
             <img src={logo} alt="" />
           </div>
 
-          <div className="AdminDashboardheader-Search">
-            <div className="SearchBar">
-              <div className="SearchBar-section">
-                <Search_Svg />
-                <input
-                  type="text"
-                  onChange={(e) =>
-                    setSearchQuery({ ...searchQuery, business_name: e.target.value })
-                  }
-                  placeholder="Search listing by name.."
-                />
-              </div>
-
-              <div className="divider"></div>
-
-              <div className="SearchBar-section">
-                <Location_Svg />
-                <input
-                  type="text"
-                  onChange={(e) =>
-                    setSearchQuery({ ...searchQuery, location: e.target.value })
-                  }
-                  placeholder="Enter city or location"
-                />
-              </div>
-
-              <button onClick={handleNavigate} className="search-btn">
-                Search
-              </button>
-            </div>
-          </div>
+         
 
           {/* New Hamburger Button: Visible only on small screens via CSS */}
           <button

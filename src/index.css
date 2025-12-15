@@ -1,2594 +1,2798 @@
-    * {
-    padding: 0px;
-    margin: 0px;
-    box-sizing: border-box;
-    }
-    @font-face {
-    font-family: "Inter";
-    src: url("../src/font/Inter/Inter-VariableFont_opsz\,wght.ttf") format("truetype");
-    
-    }
-
-
-    @font-face {
-    font-family: "Montserrat";
-    src: url("../src/font/Montserrat/Montserrat-VariableFont_wght.ttf") format("truetype");
-    
-    }
-
-
-    @font-face {
-    font-family: "Poppins";
-    src: url("../src/font/Poppins/Poppins-Regular.ttf") format("truetype");
-    
-    }
-
-
-    /* width */
-    ::-webkit-scrollbar {
-    width: 0px;
-    height: 0px;
-    }
-
-    /* Track */
-    ::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    }
-
-    /* Handle */
-    ::-webkit-scrollbar-thumb {
-    background: #000
-    }
-
-
-
-    .AdminDashboardPage {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        height: 100vh;
-    }
-
-    .AdminDashboard-header {
-        width: 100%;
-        height: 80px;
-    }
-
-    header.AdminDashboardheader {
-        width: 100%;
-    border-bottom: 1px solid rgba(239, 114, 53, 0.05);
-    background: rgba(255, 255, 255, 0.80);
-        padding: 15px 40px;
-        height: 100%;
-    }
-
-    .Main-AdminDashboardheader {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-
-
-    .AdminDashboardheader-Search {
-        width: 50%;
-        border-radius: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-    }
-
-    .SearchBar {
-    width: 100%;
-    background: #ffffff;
-    padding: 8px;
-    border-radius: 16px;
-    border: 1px solid #e3e3e3;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    }
-
-    .SearchBar-section {
-    display: flex;
-    align-items: center;
-    flex: 1;
-    gap: 10px;
-    }
-
-    .SearchBar input {
-    border: none;
-    outline: none;
-    width: 100%;
-    font-size: 15px;
-    color: #888;
-
-    color: #99A1AF;
-    font-family: Montserrat !important;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-    }
-
-    .icon {
-    font-size: 18px;
-    color: #ff7a45;
-    }
-
-    .divider {
-    width: 1px;
-    height: 30px;
-    background: #ddd;
-    }
-
-    .search-btn {
-border-radius: 12px;
-background: linear-gradient(180deg, #DF5750 0%, #EE6F38 100%);
-display: flex;
-height: 37px;
-padding: 13px 12px;
-justify-content: center;
-align-items: center;
-gap: 10px;
-    border: none;
-    color: #FFF;
-font-family: Montserrat;
-font-size: 14px;
-font-style: normal;
-font-weight: 500;
-line-height: 20px; /* 142.857% */
-    cursor: pointer;
-    }
-
-
-    .AdminDashboardheader-Search input {
-    
-        width: 100%;
-        color: rgba(239, 114, 53, 0.50);
-        font-family: Inter;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: normal;
-
-        /* border-radius: 16px; */
-    /* border: 1px solid rgba(239, 114, 53, 0.50); */
-    background: #FFF;
-    }
-
-    .AdminDashboardheader-Search button {
-        left: 20px;
-        /* position: absolute; */
-        /* background: transparent; */
-        border: none;
-    }
-    .AdminDashboardheader-logo {
-        width: 20%;
-        height: 50px;
-        cursor: pointer;
-    }
-
-    .AdminDashboardheader-logo img {
-        width: 100px;
-        height: 100%;
-        object-fit: contain;
-    }
-
-    .AdminDashboardheader-Search input::placeholder {  color: rgba(239, 114, 53, 0.50);;font-family: Inter;font-size: 16px;font-style: normal;font-weight: 400;line-height: normal;}
-
-    .AdminDashboardheader-Search button svg {
-        width: 20px;
-        height: 20px;
-    }
-
-    .AdminDashboardheader-btn-box {
-        width: 20%;
-        display: flex;
-        justify-content: flex-end;
-        gap: 15px;
-        align-items: center;
-    }
-
-    .AdminDashboardheader-icon {
-        border-radius: 500px;
-        width: 35px;
-        height: 35px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: 0.5s;
-        cursor: pointer;
-    }
-
-    .AdminDashboardheader-icon:hover {
-    background: rgba(239, 114, 53, 0.10);
-    }
-
-    .AdminDashboardheader-icon svg {
-        width: 15px;
-        height: 15px;
-    }
-
-    .AdminDashboardheader-btn-box button {
-        border-radius: 20px;
-        background: linear-gradient(180deg, #DD5253 0%, #F07433 100%);
-        color: #FFF;
-        font-family: Montserrat;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 20px; /* 142.857% */
-        padding: 8px 22px;
-        border: none;
-    }
-
-    button {
-        cursor: pointer;
-    }
-
-    .AdminDashboard-box {
-        width: 100%;
-        height: calc(100% - 80px);
-    }
-
-    .Dashboard-box {
-        width: 100%;
-        height: 100%;
-        padding-top: 55px;
-    }
-
-    .Dashboard-container {
-        width: 100%;
-        max-width: 1180px;
-        margin: 0 auto;
-    }
-
-    .Dashboard-title {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding-bottom: 20px;
-    }
-
-    .Dashboard-title span {
-        width: 50%;
-    }
-
-    .Dashboard-title span h2 {
-        color: #1A1A1A;
-        font-family: Poppins;
-        font-size: 26px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 33.794px; /* 129.977% */
-    }
-
-    .Dashboard-title span p {
-        color: #555;
-        font-family: Inter;
-        font-size: 15.02px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 22.529px; /* 150% */
-    }
-
-    .Dashboard-title button {
-        border-radius: 15.395px;
-        background: linear-gradient(180deg, #DD5253 0%, #F07433 100%);
-        border: none;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 8px 18px;
-        color: #FFF;
-        font-family: Montserrat;
-        font-size: 15px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 18.774px; /* 134.103% */
-    }
-
-
-    .Dashboard-tab-box {
-        border-radius: 15.395px;
-        border: 0.939px solid #EAEAEA;
-        background: #FFF;
-        width: 100%;
-        padding: 5px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .Dashboard-tab-box button {
-        width: 24%;
-        border-radius: 9.387px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 15px;
-        padding: 12px;
-        border: none;
-        background: transparent;
-    }
-
-    .Dashboard-tab-box button p {
-        color: #0e0d0d;
-        font-family: Montserrat;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 18.774px; /* 117.34% */
-    }
-
-
-    .Dashboard-tab-box button.active {
-        border-radius: 9.387px;
-        border: 0.939px solid rgba(0, 0, 0, 0.00);
-        background: linear-gradient(180deg, #DD5253 0%, #F07433 100%);
-    }
-
-    .Dashboard-tab-box button.active svg path {stroke: #fff;}
-
-    .Dashboard-tab-box button.active p {color: #ffffff;}
-
-
-    .Overview {
-            width: 100%;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        gap: 30px 0px;
-    }
-
-    .Overview-Users-box {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding-top: 30px;
-    }
-
-    .Overview-Users-card {
-        width: 24%;
-        border-radius: 15.02px;
-        border: 0.939px solid #EAEAEA;
-        background: #FFF;
-        box-shadow: 0 0.939px 2.816px 0 rgba(0, 0, 0, 0.10), 0 0.939px 1.877px -0.939px rgba(0, 0, 0, 0.10);
-        padding: 24px;
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-    }
-
-    .Overview-user-icon {
-        width: 45px;
-        height: 45px;
-        border-radius: 31498264px;
-    background: rgba(239, 114, 53, 0.10);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .Overview-user-title {
-        width: 75%;
-    }
-
-    .Overview-user-title p {
-        color: #555;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 18.774px; /* 134.103% */
-    }
-
-    .Overview-user-title h2 {
-        color: #1A1A1A;
-        font-family: Inter;
-        font-size: 26px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 33.794px; /* 129.977% */
-        padding: 8px 0px;
-    }
-
-    .Overview-user-title span {
-        width: 100%;
-        display: flex;
-    }
-
-    .Overview-user-title span svg {
-        width: 15px;
-        height: 15px;
-    }
-
-    .Overview-user-title span h3 {
-        color: #00A63E;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 18.774px; /* 134.103% */
-    }
-    span.red-color h3 {
-        color: #F54900;
-    }
-
-    .Overview-user-icon.red-icon-bg {
-        background: #FFEDD4;
-    }
-
-
-    .Recent-box {
-        width: 48%;
-        border-radius: 15.02px;
-        border: 0.939px solid #EAEAEA;
-        background: #FFF;
-        height: 415px;
-        padding: 22px;
-    }
-
-    .Recent-box h1 {
-        color: #1A1A1A;
-        font-family: Poppins;
-        font-size: 20px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 22.529px; /* 112.647% */
-        padding-bottom: 35px;
-    }
-
-    .Recent-Activity-box {
-        width: 100%;
-        height: 280px;
-        overflow: auto;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding-right: 15px;
-        justify-content: flex-start;
-    }
-
-    .Recent-Activity-list {
-        width: 100%;
-        border-bottom: 0.939px solid #EAEAEA;
-        padding: 15px 0px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .Recent-Activity-title {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        width: 90%;
-        gap: 10px;
-    }
-
-    .Recent-Activity-icon {
-        border-radius: 31498264px;
-    background: rgba(239, 114, 53, 0.10);
-        width: 35px;
-        height: 35px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    button.Remove {
-        color: #ec6d3a !important;
-    }
-    .Recent-Activity-icon svg {
-        width: 15px;
-        height: 15px;
-    }
-
-    .Recent-Activity-title span {
-        width: 75%;
-    }
-
-    .Recent-Activity-title span h2 {
-        color: #1A1A1A;
-        font-family: Inter;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 18.774px; /* 117.34% */
-    }
-
-    .Recent-Activity-title span p {
-        color: #555;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 15.02px; /* 107.283% */
-    }
-
-    .Recent-Activity-list h4 {
-        border-radius: 31498264px;
-        border: 0.939px solid rgba(0, 0, 0, 0.00);
-        background: #DCFCE7;
-        color: #008236;
-        font-family: Inter;
-        font-size: 11.265px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 15.02px; /* 133.333% */
-        padding: 4px 10px;
-    }
-
-    .Reviewers-Month-box {
-        width: 100%;
-        height: 280px;
-        overflow: auto;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-        gap: 15px;
-    }
-
-    .Reviewers-Month-list {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .Reviewers-Month-title {
-        width: 90%;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-
-    .Reviewers-Month-title h4 {
-        color: #FFF;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 22.529px; /* 160.924% */
-        border-radius: 31498264px;
-        background: linear-gradient(180deg, #DD5253 0%, #F07433 100%);
-        width: 30px;
-        height: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .Reviewers-Month-icon {
-        width: 38px;
-        height: 38px;
-    }
-
-    .Reviewers-Month-icon img {
-        width: 100%;
-        height: 100%;
-    }
-
-    .Reviewers-Month-title span h2 {
-        color: #1A1A1A;
-        font-family: Inter;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 18.774px; /* 117.34% */
-    }
-
-    .Reviewers-Month-title span p {
-        color: #555;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 15.02px; /* 107.283% */
-    }
-
-
-    .Reviews {
-        width: 100%;
-        padding-top: 30px;
-    }
-
-    .Main-Reviews-box {
-        width: 100%;
-        border-radius: 15.02px;
-        border: 0.939px solid #EAEAEA;
-        background: #FFF;
-        padding: 24px;
-    }
-
-    .Reviews-heading {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding-bottom: 30px;
-    }
-
-    .Reviews-heading h1 {
-        color: #1A1A1A;
-        font-family: Poppins;
-        font-size: 20px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 22.529px; /* 112.647% */
-    }
-
-    .Reviews-heading span {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        gap: 10px;
-    }
-
-    .Reviews-heading span button {
-        border-radius: 15.395px;
-        border: 0.939px solid #EAEAEA;
-        background: #FFF;
-        color: #555;
-        font-family: Montserrat;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 18.774px; /* 134.103% */
-        padding: 7px 14px;
-    }
-
-    .Reviews-box {
-        width: 100%;
-        height: 400px;
-        overflow: auto;
-        display: flex;
-        align-items: flex-start;
-        flex-direction: column;
-        justify-content: flex-start;
-    }
-
-    .Reviews-box-list {
-        width: 100%;
-        border-bottom: 0.939px solid #EAEAEA;
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        padding: 20px 0px;
-    }
-
-    .Reviews-box-list-title {
-        width: 75%;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-    }
-
-    .Reviews-box-list-btn {
-        width: 20%;
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        gap: 8px;
-    }
-
-    .Reviews-box-list-dp {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .Reviews-box-list-dp span {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        gap: 10px;
-    }
-
-    .Reviews-box-list-dp img {
-        width: 34px;
-        height: 34px;
-    }
-
-    .Reviews-box-list-dp span h2 {
-        color: #1A1A1A;
-        font-family: Inter;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 18.774px; /* 117.34% */
-    }
-
-    .Reviews-box-list-dp span h3 {
-        color: #555;
-        font-family: Inter;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 18.774px; /* 117.34% */
-    }
-
-    .Reviews-box-list-dp span h4 {
-    color: #EF7235;
-        font-family: Inter;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 18.774px; /* 117.34% */
-    }
-
-    .Reviews-box-list-title p {
-        color: #1A1A1A;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 18.774px; /* 134.103% */
-    }
-
-    .Reviews-box-list-title h3 {
-        color: #555;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 15.02px; /* 107.283% */
-    }
-
-    .Reviews-box-list-btn button {
-        border-radius: 9.387px;
-        border: 0.939px solid #EAEAEA;
-        background: #FFF;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 7px 20px;
-        gap: 8px;
-        color: #00A63E;
-        font-family: Montserrat;
-        font-size: 13.142px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 18.774px; /* 142.857% */
-    }
-
-    .Reviews-box-list-name {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .Reviews-box-list-name h2 {
-        color: #1A1A1A;
-        font-family: Inter;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 22.529px; /* 140.808% */
-    }
-
-    .Reviews-box-list-name span {
-        display: flex;
-        align-items: flex-start;
-    }
-
-    .Management-box-list-btn {
-        width: 25%;
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        gap: 8px;
-        position: relative;
-    }
-
-    .Management-box-list-btn button {
-        border-radius: 9.387px;
-        border: 0.939px solid #EAEAEA;
-        background: #FFF;
-        padding: 8px 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 5px;
-        color: #555;
-        font-family: Montserrat;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 18.774px; /* 134.103% */
-    }
-
-    .actions-dropdown {
-        position: absolute;
-        right: 0px;
-        top: 45px;
-        z-index: 999;
-        border-radius: 6.8px;
-        border: 1px solid #EAEAEA;
-        background: #FFF;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.10), 0 2px 4px -2px rgba(0, 0, 0, 0.10);
-        padding: 15px;
-        width: 100%;
-    }
-
-    .actions-dropdown ul {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        gap: 10px;
-    }
-
-    .actions-dropdown ul li {
-        list-style: none;
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        gap: 12px;
-        color: #555;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 20px; /* 142.857% */
-        cursor: pointer;
-    }
-
-    button.Add-User {background: linear-gradient(180deg, #DD5253 0%, #F07433 100%) !important;color: #fff !important;}
-
-
-    li.red {
-        color: #F54900 !important;
-    }
-
-    li.verify{
-        color: #00A63E !important;
-    }
-
-
-    button.View-btn {
-        color: #EF7235;
-    }
-
-    .Pending-Reports-box {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-        gap: 20px;
-        height: 400px;
-        overflow: auto;
-    }
-
-    .Pending-Reports-list {
-        width: 100%;
-        border-radius: 15.395px;
-        border: 0.939px solid #FFD6A7;
-        background: #FFF7ED;
-        padding: 15px;
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-    }
-
-    .Pending-Reports-title {
-        width: 90%;
-    }
-
-    .Pending-Reports-title span {display: flex;align-items: center;gap: 10px;}
-
-    .Pending-Reports-title span h2 {
-        color: #1A1A1A;
-        font-family: Inter;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 22.529px; /* 140.808% */
-    }
-
-    .Pending-Reports-title p {
-        color: #555;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 18.774px; /* 134.103% */
-        padding: 10px 0px;
-    }
-
-    .Pending-Reports-btn-box {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .Pending-Reports-btn-box button {
-        border-radius: 9.387px;
-        border: 0.939px solid #EAEAEA;
-        background: #FFF;
-            padding: 8px 12px;
-        color: #555;
-        font-family: Montserrat;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 18.774px; /* 134.103% */
-    }
-
-    button.Take {
-        border: 0.939px solid #EF7235;
-        color: #EF7235;
-    }
-
-    button.Dismiss {
-        color: #fff;
-        border-radius: 9.387px;
-        background: #00A63E;
-        border: 0.939px solid #00a63e;
-    }
-
-    .Pending-box {
-        cursor: pointer;
-        border-radius: 31498264px;
-        border: 0.939px solid rgba(0, 0, 0, 0.00);
-        background: #FFEDD4;
-        padding: 5px 16px;
-    }
-
-    .Pending-box p {
-        color: #FB671E;
-        font-family: Inter;
-        font-size: 11.265px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 15.02px; /* 133.333% */
-    }
-
-    .popup-overly-box {
-        top: 0px;
-        background: rgba(0, 0, 0, 0.50);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        position: fixed;
-        right: 0px;
-        width: 100%;
-    }
-    .close-btn {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-    }
-    .popup-box {
-        border-radius: 10px;
-        border: 1px solid #EAEAEA;
-        background: #FFF;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.10), 0 4px 6px -4px rgba(0, 0, 0, 0.10);
-        width: 895px;
-        position: relative;
-        padding: 30px;
-    }
-
-    .popup-heading {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding-bottom: 20px;
-    }
-
-    .popup-heading span h2 {
-        color: #1A1A1A;
-        font-family: Poppins;
-        font-size: 24px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 32px; /* 133.333% */
-    }
-
-
-
-    .popup-heading span p {
-        color: #555;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 20px; /* 142.857% */
-    }
-
-    .popup-heading span {
-        width: auto;
-    }
-
-    .popup-btn-box {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        gap: 14px;
-    }
-
-    .popup-btn-box button {
-        border-radius: 16.4px;
-        background: linear-gradient(180deg, #DD5253 0%, #F07433 100%);
-        color: #FFF;
-        font-family: Montserrat;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 20px; /* 142.857% */
-        border: none;
-        padding: 10px;
-        border: 1px solid #EAEAEA;
-    }
-
-    button.no-bg {
-        border-radius: 16.4px;
-        border: 1px solid #EAEAEA;
-        background: #FFF;
-        color: #000;
-    }
-
-    .Add-New-User-box {
-        width: 100%;
-        height: 60vh;
-        overflow: auto;
-    }
-
-    .Profile-Photo {
-        border-radius: 16.4px;
-        border: 1px solid #EAEAEA;
-        background: #FAFAFA;
-        padding: 25px;
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        gap: 24px;
-    }
-
-    .Profile-Photo-dp-box {
-        height: 70px;
-        width: 70px;
-        position: relative;
-    }
-
-    .Profile-Photo-img {
-        width: 100%;
-        height: 100%;
-    }
-
-    .Profile-Photo-img img {
-        width: 100%;
-        height: 100%;
-        border-radius: 50px;
-    }
-
-    .Profile-Photo-icon-uplode {
-        position: absolute;
-        border-radius: 33554400px;
-        background: linear-gradient(180deg, #DD5253 0%, #F07433 100%);
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.10), 0 4px 6px -4px rgba(0, 0, 0, 0.10);
-        width: 30px;
-        height: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: absolute;
-        bottom: 0px;
-        right: 0px;
-    }
-
-    .Profile-Photo span h2 {
-        color: #1A1A1A;
-        font-family: Poppins;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 24px; /* 150% */
-    }
-
-    .Profile-Photo span p {
-        color: #555;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 20px; /* 142.857% */
-    }
-
-    .Add-New-User-group-box {
-        width: 100%;
-        display: flex;
-        flex-wrap: wrap;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 25px 0px;
-        padding: 30px 0px;
-    }
-
-    .Add-New-User-group {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
-
-    .Add-New-User-group input {
-        width: 100%;
-        border-radius: 16.4px;
-        border: 1px solid #EAEAEA;
-        background: #FFF;
-        padding: 14px;
-        color: #555;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: normal;
-    }
-
-    .Add-New-User-group span {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .Add-New-User-group span label {
-        color: #1A1A1A;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 14px; /* 100% */
-    }
-
-    .Add-New-User-group p {
-        color: #1A1A1A;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 14px; /* 100% */
-    }
-
-
-
-    .Add-New-User-group textarea {
-        width: 100%;
-        border-radius: 16.4px;
-        border: 1px solid #EAEAEA;
-        background: #FFF;
-        padding: 14px;
-        color: #555;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: normal;
-        resize: none;
-        height: 140px;
-    }
-
-    .Add-New-User-group.Haf-width {
-        width: 48%;
-    }
-
-
-    .Report_Details_box {
-        width: 100%;
-        height:60vh;
-        overflow: auto;
-    }
-
-    .Report-Type-box {
-        border-radius: 16.4px;
-        border: 1px solid #EAEAEA;
-        background: #FAFAFA;
-        padding: 15px;
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 20px 0px;
-    }
-
-    .Report-Type-list {
-        width: 48%;
-    }
-
-    .Report-Type-list h3 {
-        color: #555;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 16px; /* 114.286% */
-        padding-bottom: 8px;
-    }
-
-    .Report-Type-list span {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .Report-Type-list span h4 {
-        color: #1A1A1A;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 20px; /* 142.857% */
-    }
-
-    .Report-Type-list h5 {
-        color: #C10007;
-        font-family: Inter;
-        font-size: 12px;
-        font-style: normal;
-        font-weight: 500;
-        border-radius: 33554400px;
-        border: 1px solid rgba(0, 0, 0, 0.00);
-        background: #FFE2E2; /* 133.333% */
-        width: fit-content;
-        padding: 4px 11px;
-    }
-
-    .Reported-By {
-        width: 100%;
-    }
-
-    .Reported-By-heading {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 30px  0px 10px 0px;
-    }
-
-    .Reported-By-heading h2 {
-        color: #1A1A1A;
-        font-family: Poppins;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 24px; /* 150% */
-    }
-
-    .Reported-By-box {
-        border-radius: 16.4px;
-        border: 1px solid #EAEAEA;
-        background: #FFF;
-        width: 100%;
-        padding: 15px;
-    }
-
-    .Reported-By-box-list {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding-bottom: 25px;
-        border-bottom: 1px solid #80808040;
-    }
-
-    .Reported-By-box-list button {
-        border-radius: 10px;
-        border: 1px solid #EAEAEA;
-        background: #FFF;
-        color: #EF7235;
-        font-family: Montserrat;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 20px; /* 142.857% */
-        padding: 10px 12px;
-    }
-
-    .Reported-By-list-id {
-        display: flex;
-        align-items: flex-start;
-        justify-content: center;
-        gap: 10px;
-    }
-
-    .Reported-By-list-id span h3 {
-        color: #1A1A1A;
-        font-family: Inter;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 24px; /* 150% */
-    }
-
-    .Reported-By-list-id span p {
-        color: #555;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 20px; /* 142.857% */
-    }
-
-    .Reported-By-list-id img {
-    width: 48px;height: 48px;width: 48px;border-radius: 33554400px;border: 2px solid #EF7235;background: url(<path-to-image>) lightgray 50% / cover no-repeat;}
-
-    .Reported-By-box-list-2 {
-        width: 100%;
-        padding-top: 25px;
-    }
-
-    .Reported-By-box-list-2 p {
-        color: #555;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 20px; /* 142.857% */
-    }
-
-    .Reported-By-box-list-2 h3 {
-        color: #1A1A1A;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 20px; /* 142.857% */
-    }
-
-    .ReportInformation {
-        width: 100%;
-    }
-
-    .ReportInformation-box {
-        width: 100%;
-        border-radius: 16.4px;
-        border: 1px solid #EAEAEA;
-        background: #FFF;
-        padding: 16px;
-        display: flex;
-        flex-direction: column;
-        gap: 40px;
-    }
-
-    .ReportInformation-box span p {
-        color: #555;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 20px; /* 142.857% */
-    }
-
-    .ReportInformation-box span h4 {
-        color: #EF7235;
-        font-family: Inter;
-        font-size: 12px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 16px; /* 133.333% */
-        border-radius: 33554400px;
-        border: 1px solid rgba(0, 0, 0, 0.00);
-        background: rgba(239, 114, 53, 0.10);
-        padding: 8px;
-        width: fit-content;
-        margin-top: 7px;
-    }
-
-    .ReportedContent {
-        width: 100%;
-    }
-
-    .ReportedContent-box-head {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding-bottom: 30px;
-        border-bottom: 1px solid #ef7235;
-    }
-
-    .ReportedContent-box {
-        border-radius: 16.4px;
-        border: 1px solid #FFD6A7;
-        background: #FFF7ED;
-        padding: 15px;
-        width: 100%;
-    }
-
-    .Review-box {
-        width: 40%;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
-
-    .Review-box {}
-
-    .Review-box span {
-        color: #1A1A1A;
-        font-family: Inter;
-        font-size: 12px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 16px; /* 133.333% */
-        border-radius: 4px;
-        border: 1px solid rgba(0, 0, 0, 0.00);
-        background: #FFF;
-        padding: 2px 10px;
-    }
-
-    .Review-box p {
-        color: #555;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 20px; /* 142.857% */
-    }
-
-    .ReportedContent-box-head button {
-        color: #EF7235;
-        font-family: Montserrat;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 20px; /* 142.857% */
-        background: transparent;
-        border: none;
-    }
-
-    .ReportedContent-note {
-        margin-top: 30px;
-        border-radius: 10px;
-        background: #FFF;
-        padding: 15px;
-    }
-
-    .Content-id {
-        width: 100%;
-        display: flex;
-        align-items: flex-start;
-        justify-content: flex-start;
-        gap: 20px;
-    }
-
-    .Content-dp {
-        width: 40px;
-        height: 40px;
-        border-radius: 33554400px;
-        border: 2px solid #EF7235;
-        background: url(<path-to-image>) lightgray 50% / cover no-repeat;
-    }
-
-    .Content-title {
-        width: 40%;
-    }
-
-    .Content-title span {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        gap: 10px;
-    }
-
-    .Content-title span h3 {
-        color: #1A1A1A;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 20px; /* 142.857% */
-    }
-
-    .Content-title span p {
-        color: #555;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 20px; /* 142.857% */
-    }
-
-    .Content-title span h4 {
-        color: #EF7235;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 20px; /* 142.857% */
-    }
-
-    .Content-star {
-        display: flex;
-        align-items: center;
-        font-size: 16px;
-        color: #EAEAEA;
-    }
-
-    .Content-star span {
-        color: #EF7235;
-    }
-
-    .ReportedContent-note h3 {
-        color: #1A1A1A;
-        font-family: Poppins;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 24px; /* 150% */
-    }
-
-    .ReportedContent-note p {
-        color: #555;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 20px; /* 142.857% */
-    }
-
-    .ReportedContent-note ul {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        gap: 20px;
-        padding-top: 11px;
-        padding-left: 20px;
-    }
-
-    .ReportedContent-note ul li {
-        color: #555;
-        font-family: Inter;
-        font-size: 12px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 16px; /* 133.333% */
-    }
-
-    .PreviousReportsAgainst-box {
-        width: 100%;
-        border-radius: 16.4px;
-        border: 1px solid #EAEAEA;
-        background: #FFF;
-        padding: 16px;
-    }
-
-    .PreviousReportsAgainst-list {
-        width: 100%;
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        padding: 10px 0px;
-    }
-
-    .PreviousReportsAgainst-list span h3 {
-        color: #1A1A1A;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 20px; /* 142.857% */
-    }
-
-    .PreviousReportsAgainst-list span p {
-        color: #1A1A1A;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 20px; /* 142.857% */
-    }
-
-    .PreviousReportsAgainst-list button {
-        color: #008236;
-        font-family: Inter;
-        font-size: 12px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 16px; /* 133.333% */
-        border-radius: 33554400px;
-        border: 1px solid rgba(0, 0, 0, 0.00);
-        background: #DCFCE7;
-        padding: 10px 20px;
-    }
-
-    .PreviousReportsAgainst-list {
-    }
-
-    button.Warning {
-        border-radius: 33554400px;
-        border: 1px solid rgba(0, 0, 0, 0.00);
-        background: #FEF9C2;
-        color: #A65F00;
-    }
-
-    .Evidence_Attachments {
-        width: 100%;
-    }
-
-    .Evidence_Attachments_box {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 20px 0px;
-    }
-
-    .Evidence_Attachments_list {
-        width: 48%;
-        border-radius: 16.4px;
-        border: 1px solid #EAEAEA;
-        background: #FFF;
-        padding: 18px;
-        display: flex;
-        align-items: flex-start;
-        gap: 20px;
-    }
-
-    .Evidence_Attachments_icon {
-        border-radius: 10px;
-        background: rgba(239, 114, 53, 0.10);
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .Evidence_Attachments_list span h3 {
-        color: #1A1A1A;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 20px; /* 142.857% */
-    }
-
-    .Evidence_Attachments_list span p {
-        color: #1A1A1A;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 20px; /* 142.857% */
-    }
-
-    .popup-heading button {
-        color: #FB671E;
-        font-family: Inter;
-        font-size: 12px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 16px; /* 133.333% */
-        border-radius: 33554400px;
-        border: 1px solid rgba(0, 0, 0, 0.00);
-        background: #FFEDD4;
-        padding: 5px 10px;
-    }
-
-    button.Dismiss_Report_btn {
-        border-radius: 16.4px;
-        border: 1px solid #00A63E;
-        background: #FFF;
-        color: #00A63E;
-    }
-
-
-    .Take-Action-Report-box {
-        width: 100%;
-        height: 60vh;
-        overflow: auto;
-    }
-
-    .Inappropriate-Content-box {
-        border-radius: 16.4px;
-        border: 1px solid #FFD6A7;
-        background: #FFF7ED;
-        width: 100%;
-        display: flex;
-        align-items: flex-start;
-        justify-content: flex-start;
-        gap: 12px;
-        padding: 16px;
-    }
-
-    .Inappropriate-Content-icon {
-        border-radius: 33554400px;
-        background: #EF7235;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .Inappropriate-Content-title span h2 {
-        color: #1A1A1A;
-        font-family: Inter;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 24px; /* 150% */
-    }
-
-    .Inappropriate-Content-title span {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        gap: 10px;
-    }
-
-    .Inappropriate-Content-title span h6 {
-        color: #FFF;
-        font-family: Inter;
-        font-size: 12px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 16px; /* 133.333% */
-        border-radius: 33554400px;
-        border: 1px solid rgba(0, 0, 0, 0.00);
-        background: #EF7235;
-        padding: 5px 10px;
-    }
-
-    .Inappropriate-Content-title p {
-        color: #555;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 20px; /* 142.857% */
-    }
-
-    .Inappropriate-Content-title h5 {
-        color: #1A1A1A;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 20px; /* 142.857% */
-    }
-
-    .Select-Action {
-        width: 100%;
-        padding-top: 25px;
-    }
-
-    .Select-Action-title h2 {
-        color: #1A1A1A;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 14px; /* 100% */
-    }
-
-    .Select-Action-box {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-        padding-bottom: 30px;
-    }
-
-    .Select-Action-list {
-        width: 100%;
-        border-radius: 16.4px;
-        border: 2px solid #EAEAEA;
-        background: #FFF;
-        padding: 18px;
-        display: flex;
-        align-items: flex-start;
-        justify-content: flex-start;
-        gap: 15px;
-    }
-
-    .Select-Action-title {
-        width: 80%;
-    }
-
-    .Select-Action-title span {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .Select-Action-title span h2 {
-        color: #1A1A1A;
-        font-family: Inter;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 24px; /* 150% */
-    }
-
-    h3.medium {
-        color: #A65F00;
-        font-family: Inter;
-        font-size: 12px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 16px; /* 133.333% */
-        border-radius: 33554400px;
-        border: 1px solid rgba(0, 0, 0, 0.00);
-        background: #FEF9C2;
-        padding: 2px 5px;
-    }
-
-    .Select-Action-title p {
-        color: #555;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 20px; /* 142.857% */
-        padding-top: 5px;
-    }
-
-    h3.high {
-        border-radius: 33554400px;
-        border: 1px solid rgba(0, 0, 0, 0.00);
-        background: #FFEDD4;
-        color: #FB671E;
-        font-family: Inter;
-        font-size: 12px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 16px; /* 133.333% */
-        padding: 2px 6px;
-    }
-
-    h3.low {
-        border-radius: 33554400px;
-        border: 1px solid rgba(0, 0, 0, 0.00);
-        background: #DBEAFE;
-        color: #1447E6;
-        font-family: Inter;
-        font-size: 12px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 16px; /* 133.333% */
-        padding: 2px 9px;
-    }
-
-
-
-    h3.critical {
-        color: #C10007;
-        font-family: Inter;
-        font-size: 12px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 16px; /* 133.333% */
-        border-radius: 33554400px;
-        border: 1px solid rgba(0, 0, 0, 0.00);
-        background: #FFE2E2;
-        padding: 2px 8px;
-    }
-
-    .Select-Action-input {
-        width: 20px;
-        height: 20px;
-    }
-
-    .Select-Action-input input {
-        width: 100%;
-        height: 100%;
-    }
-
-    .Action-Impact-box {
-        border-radius: 16.4px;
-        border: 1px solid #EAEAEA;
-        background: #FAFAFA;
-        padding: 16px;
-        width: 100%;
-    }
-
-    span {}
-
-    .Action-Impact-box span {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .Action-Impact-box span h2 {
-        color: #1A1A1A;
-        font-family: Inter;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 24px; /* 150% */
-    }
-
-    .Action-Impact-box ul {
-        gap: 7px;
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        padding-top: 20px;
-        align-items: flex-start;
-    }
-
-    .Action-Impact-box ul li {
-        color: #555;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 20px; /* 142.857% */
-        list-style: none;
-    }
-
-    .Reason-Action-box {
-        width: 100%;
-        padding-top: 30px;
-    }
-
-    .Reason-Action-head {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .Reason-Action-head h2 {
-        color: #1A1A1A;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 14px; /* 100% */
-    }
-
-    .Reason-Action-head {}
-
-    .Reason-Action-title {
-        width: 100%;
-        border-radius: 16.4px;
-        border: 1px solid #EAEAEA;
-        background: #FFF;
-        height: 173px;
-        padding: 20px;
-        color: #555;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 20px; /* 142.857% */
-    }
-
-    .Additional-Options {
-        width: 100%;
-        border-radius: 16.4px;
-        border: 1px solid #EAEAEA;
-        background: #FFF;
-        margin-top: 30px;
-        padding: 20px;
-    }
-
-    .Additional-Options h2 {
-        color: #1A1A1A;
-        font-family: Inter;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 24px; /* 150% */
-    }
-
-    .Additional-Options-box {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        padding-bottom: 30px;
-        border-bottom: 1px solid #80808047;
-        padding-top: 16px;
-        gap: 18px;
-    }
-
-    .Additional-Options-list {
-        width: 100%;
-        display: flex;
-        align-items: flex-start;
-        gap: 20px;
-    }
-
-    .Additional-Options-list input {
-        width: 20px;
-        height: 20px;
-    }
-
-    .Additional-Options-list span h3 {
-        color: #1A1A1A;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 14px; /* 100% */
-    }
-
-    .Additional-Options-list span p {
-        color: #555;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 20px; /* 142.857% */
-    }
-
-    .The-report-box {
-        width: 100%;
-        border-radius: 10px;
-        background: #EFF6FF;
-        display: flex;
-        padding: 12px;
-        margin-top: 20px;
-        gap: 10px;
-    }
-
-    .The-report-box p {
-        color: #1C398E;
-        font-family: Inter;
-        font-size: 12px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 16px; /* 133.333% */
-    }
-
-
-
-
-
-
+* {
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("../src/font/Inter/Inter-VariableFont_opsz\,wght.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Montserrat";
+  src: url("../src/font/Montserrat/Montserrat-VariableFont_wght.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Poppins";
+  src: url("../src/font/Poppins/Poppins-Regular.ttf") format("truetype");
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #000;
+}
+
+svg path {
+  stroke: #f91942;
+}
+
+.plus_svg {
+  stroke: #fff !important;
+}
+
+.AdminDashboardPage {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+}
+
+.AdminDashboard-header {
+  width: 100%;
+  height: 80px;
+}
+
+header.AdminDashboardheader {
+  width: 100%;
+  border-bottom: 1px solid rgba(239, 114, 53, 0.05);
+  background: rgba(255, 255, 255, 0.8);
+  padding: 15px 40px;
+  height: 100%;
+}
+
+.Main-AdminDashboardheader {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.AdminDashboardheader-Search {
+  width: 50%;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.SearchBar {
+  width: 100%;
+  background: #ffffff;
+  padding: 8px 18px;
+  border-radius: 16px;
+  border: 1px solid #e3e3e3;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.SearchBar-section {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 10px;
+}
+
+.SearchBar input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 15px;
+
+  color: #f91942;
+  font-family: Montserrat !important;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.icon {
+  font-size: 18px;
+  color: #f91942 !important;
+}
+
+.divider {
+  width: 1px;
+  height: 30px;
+  background: #ddd;
+}
+
+.search-btn {
+  border-radius: 20px;
+  background: linear-gradient(180deg, #ff002f 0%, #ff2d54 100%);
+  display: flex;
+  height: 45px;
+  padding: 15px 30px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border: none;
+  color: #fff;
+  font-family: Montserrat;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+  cursor: pointer;
+}
+
+.AdminDashboardheader-Search input {
+  width: 100%;
+  color: #f91942 !important;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+
+  /* border-radius: 16px; */
+  /* border: 1px solid rgba(239, 114, 53, 0.50); */
+  background: #fff;
+}
+
+.AdminDashboardheader-Search input::placeholder {
+  color: #99a1af !important;
+}
+
+.AdminDashboardheader-Search button {
+  left: 20px;
+  /* position: absolute; */
+  /* background: transparent; */
+  border: none;
+}
+
+.AdminDashboardheader-logo {
+  width: 20%;
+  height: 50px;
+  cursor: pointer;
+}
+
+.AdminDashboardheader-logo img {
+  width: 100px;
+  height: 100%;
+  object-fit: contain;
+}
+
+.AdminDashboardheader-Search input::placeholder {
+  color: rgba(239, 114, 53, 0.5);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.AdminDashboardheader-Search button svg {
+  width: 20px;
+  height: 20px;
+}
+
+.AdminDashboardheader-btn-box {
+  width: 40%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  align-items: center;
+}
+
+.AdminDashboardheader-icon {
+  border-radius: 500px;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.5s;
+  cursor: pointer;
+}
+
+.AdminDashboardheader-icon:hover {
+  background: rgba(239, 114, 53, 0.1);
+}
+
+.AdminDashboardheader-icon svg {
+  width: 15px;
+  height: 15px;
+}
+
+.AdminDashboardheader-btn-box button {
+  border-radius: 20px;
+  background: linear-gradient(180deg, #ff002f 0%, #ff2d54 100%);
+  color: #fff;
+  font-family: Montserrat;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+  /* 142.857% */
+  padding: 8px 22px;
+  border: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+.AdminDashboard-box {
+  width: 100%;
+  height: calc(100% - 80px);
+}
+
+.Dashboard-box {
+  width: 100%;
+  height: 100%;
+  padding-top: 55px;
+}
+
+.Dashboard-container {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.Dashboard-title {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 20px;
+}
+
+.Dashboard-title span {
+  width: 50%;
+}
+
+.Dashboard-title span h2 {
+  color: #1a1a1a;
+  font-family: Poppins;
+  font-size: 26px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 33.794px;
+  /* 129.977% */
+}
+
+.Dashboard-title span p {
+  color: #555;
+  font-family: Inter;
+  font-size: 15.02px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22.529px;
+  /* 150% */
+}
+
+.Dashboard-title button {
+  border-radius: 15.395px;
+  background: linear-gradient(180deg, #ff002f 0%, #f91942 50%, #ff002f 100%);
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 18px;
+  color: #fff;
+  font-family: Montserrat;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18.774px;
+  /* 134.103% */
+}
+
+.Dashboard-tab-box {
+  border-radius: 15.395px;
+  border: 0.939px solid #eaeaea;
+  background: #fff;
+  width: 100%;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.Dashboard-tab-box button {
+  width: 24%;
+  border-radius: 9.387px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  padding: 12px;
+  border: none;
+  background: transparent;
+}
+
+.Dashboard-tab-box button p {
+  color: #0e0d0d;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 18.774px;
+  /* 117.34% */
+}
+
+.Dashboard-tab-box button.active {
+  border-radius: 9.387px;
+  border: 0.939px solid rgba(0, 0, 0, 0);
+  background: linear-gradient(180deg, #ff002f 0%, #f91942 50%, #ff002f 100%);
+}
+
+.Dashboard-tab-box button.active svg path {
+  stroke: #fff;
+}
+
+.Dashboard-tab-box button.active p {
+  color: #ffffff;
+}
+
+.Overview {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 30px 0px;
+}
+
+.Overview-Users-box {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 30px;
+}
+
+.Overview-Users-card {
+  width: 24%;
+  border-radius: 15.02px;
+  border: 0.939px solid #eaeaea;
+  background: #fff;
+  box-shadow: 0 0.939px 2.816px 0 rgba(0, 0, 0, 0.1),
+    0 0.939px 1.877px -0.939px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.Overview-user-icon {
+  width: 45px;
+  height: 45px;
+  border-radius: 31498264px;
+  background: rgba(239, 114, 53, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Overview-user-title {
+  width: 75%;
+}
+
+.Overview-user-title p {
+  color: #555;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 18.774px;
+  /* 134.103% */
+}
+
+.Overview-user-title h2 {
+  color: #1a1a1a;
+  font-family: Inter;
+  font-size: 26px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 33.794px;
+  /* 129.977% */
+  padding: 8px 0px;
+}
+
+.Overview-user-title span {
+  width: 100%;
+  display: flex;
+}
+
+.Overview-user-title span svg {
+  width: 15px;
+  height: 15px;
+}
+
+.Overview-user-title span h3 {
+  color: #00a63e;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 18.774px;
+  /* 134.103% */
+}
+
+span.red-color h3 {
+  color: #f54900;
+}
+
+.Overview-user-icon.red-icon-bg {
+  background: #ffedd4;
+}
+
+.Recent-box {
+  width: 48%;
+  border-radius: 15.02px;
+  border: 0.939px solid #eaeaea;
+  background: #fff;
+  height: 415px;
+  padding: 22px;
+}
+
+.Recent-box h1 {
+  color: #1a1a1a;
+  font-family: Poppins;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 22.529px;
+  /* 112.647% */
+  padding-bottom: 35px;
+}
+
+.Recent-Activity-box {
+  width: 100%;
+  height: 280px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-right: 15px;
+  justify-content: flex-start;
+}
+
+.Recent-Activity-list {
+  width: 100%;
+  border-bottom: 0.939px solid #eaeaea;
+  padding: 15px 0px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.Recent-Activity-title {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 90%;
+  gap: 10px;
+}
+
+.Recent-Activity-icon {
+  border-radius: 31498264px;
+  background: rgba(239, 114, 53, 0.1);
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button.Remove {
+  color: #ec6d3a !important;
+}
+
+.Recent-Activity-icon svg {
+  width: 15px;
+  height: 15px;
+}
+
+.Recent-Activity-title span {
+  width: 75%;
+}
+
+.Recent-Activity-title span h2 {
+  color: #1a1a1a;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18.774px;
+  /* 117.34% */
+}
+
+.Recent-Activity-title span p {
+  color: #555;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 15.02px;
+  /* 107.283% */
+}
+
+.Recent-Activity-list h4 {
+  border-radius: 31498264px;
+  border: 0.939px solid rgba(0, 0, 0, 0);
+  background: #dcfce7;
+  color: #008236;
+  font-family: Inter;
+  font-size: 11.265px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 15.02px;
+  /* 133.333% */
+  padding: 4px 10px;
+}
+
+.Reviewers-Month-box {
+  width: 100%;
+  height: 280px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 15px;
+}
+
+.Reviewers-Month-list {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.Reviewers-Month-title {
+  width: 90%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.Reviewers-Month-title h4 {
+  color: #fff;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 22.529px;
+  /* 160.924% */
+  border-radius: 31498264px;
+  background: linear-gradient(180deg, #dd5253 0%, #f07433 100%);
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Reviewers-Month-icon {
+  width: 38px;
+  height: 38px;
+}
+
+.Reviewers-Month-icon img {
+  width: 100%;
+  height: 100%;
+}
+
+.Reviewers-Month-title span h2 {
+  color: #1a1a1a;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18.774px;
+  /* 117.34% */
+}
+
+.Reviewers-Month-title span p {
+  color: #555;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 15.02px;
+  /* 107.283% */
+}
+
+.Reviews {
+  width: 100%;
+  padding-top: 30px;
+}
+
+.Main-Reviews-box {
+  width: 100%;
+  border-radius: 15.02px;
+  border: 0.939px solid #eaeaea;
+  background: #fff;
+  padding: 24px;
+}
+
+.Reviews-heading {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 30px;
+}
+
+.Reviews-heading h1 {
+  color: #1a1a1a;
+  font-family: Poppins;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 22.529px;
+  /* 112.647% */
+}
+
+.Reviews-heading span {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.Reviews-heading span button {
+  border-radius: 15.395px;
+  border: 0.939px solid #eaeaea;
+  background: #fff;
+  color: #555;
+  font-family: Montserrat;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18.774px;
+  /* 134.103% */
+  padding: 7px 14px;
+}
+
+.Reviews-box {
+  width: 100%;
+  height: 400px;
+  overflow: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.Reviews-box-list {
+  width: 100%;
+  border-bottom: 0.939px solid #eaeaea;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 20px 0px;
+}
+
+.Reviews-box-list-title {
+  width: 75%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.Reviews-box-list-btn {
+  width: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.Reviews-box-list-dp {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.Reviews-box-list-dp span {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.Reviews-box-list-dp img {
+  width: 34px;
+  height: 34px;
+}
+
+.Reviews-box-list-dp span h2 {
+  color: #1a1a1a;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18.774px;
+  /* 117.34% */
+}
+
+.Reviews-box-list-dp span h3 {
+  color: #555;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18.774px;
+  /* 117.34% */
+}
+
+.Reviews-box-list-dp span h4 {
+  color: #ef7235;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18.774px;
+  /* 117.34% */
+}
+
+.Reviews-box-list-title p {
+  color: #1a1a1a;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 18.774px;
+  /* 134.103% */
+}
+
+.Reviews-box-list-title h3 {
+  color: #555;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 15.02px;
+  /* 107.283% */
+}
+
+.Reviews-box-list-btn button {
+  border-radius: 9.387px;
+  border: 0.939px solid #eaeaea;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 20px;
+  gap: 8px;
+  color: #00a63e;
+  font-family: Montserrat;
+  font-size: 13.142px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18.774px;
+  /* 142.857% */
+}
+
+.Reviews-box-list-name {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.Reviews-box-list-name h2 {
+  color: #1a1a1a;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 22.529px;
+  /* 140.808% */
+}
+
+.Reviews-box-list-name span {
+  display: flex;
+  align-items: flex-start;
+}
+
+.Management-box-list-btn {
+  width: 25%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  position: relative;
+}
+
+.Management-box-list-btn button {
+  border-radius: 9.387px;
+  border: 0.939px solid #eaeaea;
+  background: #fff;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  color: #555;
+  font-family: Montserrat;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18.774px;
+  /* 134.103% */
+}
+
+.actions-dropdown {
+  position: absolute;
+  right: 0px;
+  top: 45px;
+  z-index: 999;
+  border-radius: 6.8px;
+  border: 1px solid #eaeaea;
+  background: #fff;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  width: 100%;
+}
+
+.actions-dropdown ul {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.actions-dropdown ul li {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  color: #555;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  /* 142.857% */
+  cursor: pointer;
+}
+
+button.Add-User {
+  background: linear-gradient(180deg, #ff002f 0%, #ff2d54 100%) !important;
+
+  color: #fff !important;
+}
+
+li.red {
+  color: #f54900 !important;
+}
+
+li.verify {
+  color: #00a63e !important;
+}
+
+button.View-btn {
+  color: #f91942;
+}
+
+.Pending-Reports-box {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 20px;
+  height: 400px;
+  overflow: auto;
+}
+
+.Pending-Reports-list {
+  width: 100%;
+  border-radius: 15.395px;
+  border: 0.939px solid #ffd6a7;
+  background: #fff7ed;
+  padding: 15px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.Pending-Reports-title {
+  width: 90%;
+}
+
+.Pending-Reports-title span {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.Pending-Reports-title span h2 {
+  color: #1a1a1a;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 22.529px;
+  /* 140.808% */
+}
+
+.Pending-Reports-title p {
+  color: #555;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 18.774px;
+  /* 134.103% */
+  padding: 10px 0px;
+}
+
+.Pending-Reports-btn-box {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.Pending-Reports-btn-box button {
+  border-radius: 9.387px;
+  border: 0.939px solid #eaeaea;
+  background: #fff;
+  padding: 8px 12px;
+  color: #555;
+  font-family: Montserrat;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18.774px;
+  /* 134.103% */
+}
+
+button.Take {
+  border: 0.939px solid #ef7235;
+  color: #ef7235;
+}
+
+button.Dismiss {
+  color: #fff;
+  border-radius: 9.387px;
+  background: #00a63e;
+  border: 0.939px solid #00a63e;
+}
+
+.Pending-box {
+  cursor: pointer;
+  border-radius: 31498264px;
+  border: 0.939px solid rgba(0, 0, 0, 0);
+  background: #ffedd4;
+  padding: 5px 16px;
+}
+
+.Pending-box p {
+  color: #fb671e;
+  font-family: Inter;
+  font-size: 11.265px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 15.02px;
+  /* 133.333% */
+}
+
+.popup-overly-box {
+  top: 0px;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  position: fixed;
+  right: 0px;
+  width: 100%;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.popup-box {
+  border-radius: 10px;
+  border: 1px solid #eaeaea;
+  background: #fff;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  width: 895px;
+  position: relative;
+  padding: 30px;
+}
+
+.popup-heading {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 20px;
+}
+
+.popup-heading span h2 {
+  color: #1a1a1a;
+  font-family: Poppins;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 32px;
+  /* 133.333% */
+}
+
+.popup-heading span p {
+  color: #555;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  /* 142.857% */
+}
+
+.popup-heading span {
+  width: auto;
+}
+
+.popup-btn-box {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+}
+
+.popup-btn-box button {
+  border-radius: 16.4px;
+  background: linear-gradient(180deg, #ff002f 0%, #ff2d54 100%);
+
+  color: #fff;
+  font-family: Montserrat;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+  /* 142.857% */
+  border: none;
+  padding: 10px;
+  border: 1px solid #eaeaea;
+}
+
+button.no-bg {
+  border-radius: 16.4px;
+  border: 1px solid #eaeaea;
+  background: #fff;
+  color: #000;
+}
+
+.Add-New-User-box {
+  width: 100%;
+  height: 60vh;
+  overflow: auto;
+}
+
+.Profile-Photo {
+  border-radius: 16.4px;
+  border: 1px solid #eaeaea;
+  background: #fafafa;
+  padding: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 24px;
+}
+
+.Profile-Photo-dp-box {
+  height: 70px;
+  width: 70px;
+  position: relative;
+}
+
+.Profile-Photo-img {
+  width: 100%;
+  height: 100%;
+}
+
+.Profile-Photo-img img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50px;
+}
+
+.Profile-Photo-icon-uplode {
+  position: absolute;
+  border-radius: 33554400px;
+  /* background: linear-gradient(180deg, #FF002F 0%, #FF2D54 100%); */
+
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+}
+
+.Profile-Photo span h2 {
+  color: #1a1a1a;
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+  /* 150% */
+}
+
+.Profile-Photo span p {
+  color: #555;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  /* 142.857% */
+}
+
+.Add-New-User-group-box {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 25px 0px;
+  padding: 30px 0px;
+}
+
+.Add-New-User-group {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.Add-New-User-group input {
+  width: 100%;
+  border-radius: 16.4px;
+  border: 1px solid #eaeaea;
+  background: #fff;
+  padding: 14px;
+  color: #555;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.Add-New-User-group span {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.Add-New-User-group span label {
+  color: #1a1a1a;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 14px;
+  /* 100% */
+}
+
+.Add-New-User-group p {
+  color: #1a1a1a;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 14px;
+  /* 100% */
+}
+
+.Add-New-User-group textarea {
+  width: 100%;
+  border-radius: 16.4px;
+  border: 1px solid #eaeaea;
+  background: #fff;
+  padding: 14px;
+  color: #555;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  resize: none;
+  height: 140px;
+}
+
+.Add-New-User-group.Haf-width {
+  width: 48%;
+}
+
+.Report_Details_box {
+  width: 100%;
+  height: 60vh;
+  overflow: auto;
+}
+
+.Report-Type-box {
+  border-radius: 16.4px;
+  border: 1px solid #eaeaea;
+  background: #fafafa;
+  padding: 15px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px 0px;
+}
+
+.Report-Type-list {
+  width: 48%;
+}
+
+.Report-Type-list h3 {
+  color: #555;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 16px;
+  /* 114.286% */
+  padding-bottom: 8px;
+}
+
+.Report-Type-list span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.Report-Type-list span h4 {
+  color: #1a1a1a;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  /* 142.857% */
+}
+
+.Report-Type-list h5 {
+  color: #c10007;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  border-radius: 33554400px;
+  border: 1px solid rgba(0, 0, 0, 0);
+  background: #ffe2e2;
+  /* 133.333% */
+  width: fit-content;
+  padding: 4px 11px;
+}
+
+.Reported-By {
+  width: 100%;
+}
+
+.Reported-By-heading {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 30px 0px 10px 0px;
+}
+
+.Reported-By-heading h2 {
+  color: #1a1a1a;
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+  /* 150% */
+}
+
+.Reported-By-box {
+  border-radius: 16.4px;
+  border: 1px solid #eaeaea;
+  background: #fff;
+  width: 100%;
+  padding: 15px;
+}
+
+.Reported-By-box-list {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 25px;
+  border-bottom: 1px solid #80808040;
+}
+
+.Reported-By-box-list button {
+  border-radius: 10px;
+  border: 1px solid #eaeaea;
+  background: #fff;
+  color: #ef7235;
+  font-family: Montserrat;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+  /* 142.857% */
+  padding: 10px 12px;
+}
+
+.Reported-By-list-id {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 10px;
+}
+
+.Reported-By-list-id span h3 {
+  color: #1a1a1a;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  /* 150% */
+}
+
+.Reported-By-list-id span p {
+  color: #555;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  /* 142.857% */
+}
+
+.Reported-By-list-id img {
+  width: 48px;
+  height: 48px;
+  width: 48px;
+  border-radius: 33554400px;
+  border: 2px solid #ef7235;
+  background: url(<path-to-image>) lightgray 50% / cover no-repeat;
+}
+
+.Reported-By-box-list-2 {
+  width: 100%;
+  padding-top: 25px;
+}
+
+.Reported-By-box-list-2 p {
+  color: #555;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  /* 142.857% */
+}
+
+.Reported-By-box-list-2 h3 {
+  color: #1a1a1a;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  /* 142.857% */
+}
+
+.ReportInformation {
+  width: 100%;
+}
+
+.ReportInformation-box {
+  width: 100%;
+  border-radius: 16.4px;
+  border: 1px solid #eaeaea;
+  background: #fff;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.ReportInformation-box span p {
+  color: #555;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+  /* 142.857% */
+}
+
+.ReportInformation-box span h4 {
+  color: #ef7235;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 16px;
+  /* 133.333% */
+  border-radius: 33554400px;
+  border: 1px solid rgba(0, 0, 0, 0);
+  background: rgba(239, 114, 53, 0.1);
+  padding: 8px;
+  width: fit-content;
+  margin-top: 7px;
+}
+
+.ReportedContent {
+  width: 100%;
+}
+
+.ReportedContent-box-head {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 30px;
+  border-bottom: 1px solid #ef7235;
+}
+
+.ReportedContent-box {
+  border-radius: 16.4px;
+  border: 1px solid #ffd6a7;
+  background: #fff7ed;
+  padding: 15px;
+  width: 100%;
+}
+
+.Review-box {
+  width: 40%;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.Review-box {}
+
+.Review-box span {
+  color: #1a1a1a;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 16px;
+  /* 133.333% */
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0);
+  background: #fff;
+  padding: 2px 10px;
+}
+
+.Review-box p {
+  color: #555;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  /* 142.857% */
+}
+
+.ReportedContent-box-head button {
+  color: #ef7235;
+  font-family: Montserrat;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+  /* 142.857% */
+  background: transparent;
+  border: none;
+}
+
+.ReportedContent-note {
+  margin-top: 30px;
+  border-radius: 10px;
+  background: #fff;
+  padding: 15px;
+}
+
+.Content-id {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 20px;
+}
+
+.Content-dp {
+  width: 40px;
+  height: 40px;
+  border-radius: 33554400px;
+  border: 2px solid #ef7235;
+  background: url(<path-to-image>) lightgray 50% / cover no-repeat;
+}
+
+.Content-title {
+  width: 40%;
+}
+
+.Content-title span {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.Content-title span h3 {
+  color: #1a1a1a;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  /* 142.857% */
+}
+
+.Content-title span p {
+  color: #555;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  /* 142.857% */
+}
+
+.Content-title span h4 {
+  color: #ef7235;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  /* 142.857% */
+}
+
+.Content-star {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  color: #eaeaea;
+}
+
+.Content-star span {
+  color: #ef7235;
+}
+
+.ReportedContent-note h3 {
+  color: #1a1a1a;
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  /* 150% */
+}
+
+.ReportedContent-note p {
+  color: #555;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+  /* 142.857% */
+}
+
+.ReportedContent-note ul {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 20px;
+  padding-top: 11px;
+  padding-left: 20px;
+}
+
+.ReportedContent-note ul li {
+  color: #555;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 16px;
+  /* 133.333% */
+}
+
+.PreviousReportsAgainst-box {
+  width: 100%;
+  border-radius: 16.4px;
+  border: 1px solid #eaeaea;
+  background: #fff;
+  padding: 16px;
+}
+
+.PreviousReportsAgainst-list {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 10px 0px;
+}
+
+.PreviousReportsAgainst-list span h3 {
+  color: #1a1a1a;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+  /* 142.857% */
+}
+
+.PreviousReportsAgainst-list span p {
+  color: #1a1a1a;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+  /* 142.857% */
+}
+
+.PreviousReportsAgainst-list button {
+  color: #008236;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 16px;
+  /* 133.333% */
+  border-radius: 33554400px;
+  border: 1px solid rgba(0, 0, 0, 0);
+  background: #dcfce7;
+  padding: 10px 20px;
+}
+
+.PreviousReportsAgainst-list {}
+
+button.Warning {
+  border-radius: 33554400px;
+  border: 1px solid rgba(0, 0, 0, 0);
+  background: #fef9c2;
+  color: #a65f00;
+}
+
+.Evidence_Attachments {
+  width: 100%;
+}
+
+.Evidence_Attachments_box {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0px;
+}
+
+.Evidence_Attachments_list {
+  width: 48%;
+  border-radius: 16.4px;
+  border: 1px solid #eaeaea;
+  background: #fff;
+  padding: 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.Evidence_Attachments_icon {
+  border-radius: 10px;
+  background: rgba(239, 114, 53, 0.1);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Evidence_Attachments_list span h3 {
+  color: #1a1a1a;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  /* 142.857% */
+}
+
+.Evidence_Attachments_list span p {
+  color: #1a1a1a;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  /* 142.857% */
+}
+
+.popup-heading button {
+  color: #fb671e;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 16px;
+  /* 133.333% */
+  border-radius: 33554400px;
+  border: 1px solid rgba(0, 0, 0, 0);
+  background: #ffedd4;
+  padding: 5px 10px;
+}
+
+button.Dismiss_Report_btn {
+  border-radius: 16.4px;
+  border: 1px solid #00a63e;
+  background: #fff;
+  color: #00a63e;
+}
+
+.Take-Action-Report-box {
+  width: 100%;
+  height: 60vh;
+  overflow: auto;
+}
+
+.Inappropriate-Content-box {
+  border-radius: 16.4px;
+  border: 1px solid #ffd6a7;
+  background: #fff7ed;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 16px;
+}
+
+.Inappropriate-Content-icon {
+  border-radius: 33554400px;
+  background: #ef7235;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Inappropriate-Content-title span h2 {
+  color: #1a1a1a;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+  /* 150% */
+}
+
+.Inappropriate-Content-title span {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.Inappropriate-Content-title span h6 {
+  color: #fff;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 16px;
+  /* 133.333% */
+  border-radius: 33554400px;
+  border: 1px solid rgba(0, 0, 0, 0);
+  background: #ef7235;
+  padding: 5px 10px;
+}
+
+.Inappropriate-Content-title p {
+  color: #555;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  /* 142.857% */
+}
+
+.Inappropriate-Content-title h5 {
+  color: #1a1a1a;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  /* 142.857% */
+}
+
+.Select-Action {
+  width: 100%;
+  padding-top: 25px;
+}
+
+.Select-Action-title h2 {
+  color: #1a1a1a;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 14px;
+  /* 100% */
+}
+
+.Select-Action-box {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 30px;
+}
+
+.Select-Action-list {
+  width: 100%;
+  border-radius: 16.4px;
+  border: 2px solid #eaeaea;
+  background: #fff;
+  padding: 18px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 15px;
+}
+
+.Select-Action-title {
+  width: 80%;
+}
+
+.Select-Action-title span {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.Select-Action-title span h2 {
+  color: #1a1a1a;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+  /* 150% */
+}
+
+h3.medium {
+  color: #a65f00;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 16px;
+  /* 133.333% */
+  border-radius: 33554400px;
+  border: 1px solid rgba(0, 0, 0, 0);
+  background: #fef9c2;
+  padding: 2px 5px;
+}
+
+.Select-Action-title p {
+  color: #555;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  /* 142.857% */
+  padding-top: 5px;
+}
+
+h3.high {
+  border-radius: 33554400px;
+  border: 1px solid rgba(0, 0, 0, 0);
+  background: #ffedd4;
+  color: #fb671e;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 16px;
+  /* 133.333% */
+  padding: 2px 6px;
+}
+
+h3.low {
+  border-radius: 33554400px;
+  border: 1px solid rgba(0, 0, 0, 0);
+  background: #dbeafe;
+  color: #1447e6;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 16px;
+  /* 133.333% */
+  padding: 2px 9px;
+}
+
+h3.critical {
+  color: #c10007;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 16px;
+  /* 133.333% */
+  border-radius: 33554400px;
+  border: 1px solid rgba(0, 0, 0, 0);
+  background: #ffe2e2;
+  padding: 2px 8px;
+}
+
+.Select-Action-input {
+  width: 20px;
+  height: 20px;
+}
+
+.Select-Action-input input {
+  width: 100%;
+  height: 100%;
+}
+
+.Action-Impact-box {
+  border-radius: 16.4px;
+  border: 1px solid #eaeaea;
+  background: #fafafa;
+  padding: 16px;
+  width: 100%;
+}
+
+span {}
+
+.Action-Impact-box span {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.Action-Impact-box span h2 {
+  color: #1a1a1a;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+  /* 150% */
+}
+
+.Action-Impact-box ul {
+  gap: 7px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-top: 20px;
+  align-items: flex-start;
+}
+
+.Action-Impact-box ul li {
+  color: #555;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  /* 142.857% */
+  list-style: none;
+}
+
+.Reason-Action-box {
+  width: 100%;
+  padding-top: 30px;
+}
+
+.Reason-Action-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.Reason-Action-head h2 {
+  color: #1a1a1a;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 14px;
+  /* 100% */
+}
+
+.Reason-Action-head {}
+
+.Reason-Action-title {
+  width: 100%;
+  border-radius: 16.4px;
+  border: 1px solid #eaeaea;
+  background: #fff;
+  height: 173px;
+  padding: 20px;
+  color: #555;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  /* 142.857% */
+}
+
+.Additional-Options {
+  width: 100%;
+  border-radius: 16.4px;
+  border: 1px solid #eaeaea;
+  background: #fff;
+  margin-top: 30px;
+  padding: 20px;
+}
+
+.Additional-Options h2 {
+  color: #1a1a1a;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+  /* 150% */
+}
+
+.Additional-Options-box {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 30px;
+  border-bottom: 1px solid #80808047;
+  padding-top: 16px;
+  gap: 18px;
+}
+
+.Additional-Options-list {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.Additional-Options-list input {
+  width: 20px;
+  height: 20px;
+}
+
+.Additional-Options-list span h3 {
+  color: #1a1a1a;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 14px;
+  /* 100% */
+}
+
+.Additional-Options-list span p {
+  color: #555;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  /* 142.857% */
+}
+
+.The-report-box {
+  width: 100%;
+  border-radius: 10px;
+  background: #eff6ff;
+  display: flex;
+  padding: 12px;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.The-report-box p {
+  color: #1c398e;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 16px;
+  /* 133.333% */
+}
 
 /* Base Container Styles */
 .pagination-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    background-color: #ffffff; /* White background */
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* Subtle shadow like the image */
-    font-family: sans-serif;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  background-color: #ffffff;
+  /* White background */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  /* Subtle shadow like the image */
+  font-family: sans-serif;
 }
 
 /* Listing Count Text */
 .pagination-text {
-    font-size: 0.95rem;
-    color: #4a4a4a; /* Dark gray color */
+  font-size: 0.95rem;
+  color: #4a4a4a;
+  /* Dark gray color */
 }
 
 /* Controls Wrapper */
 .pagination-controls {
-    display: flex;
-    /* This assumes you want a gap between the page number group and the arrow buttons,
+  display: flex;
+  /* This assumes you want a gap between the page number group and the arrow buttons,
        but the image shows a continuous block, so we'll style the buttons closely. */
 }
 
 /* General Button Styles */
 .pagination-button {
-    background-color: #ffffff;
-    color: #4a4a4a;
-    border: 1px solid #e0e0e0;
-    padding: 0.5rem 1rem;
-    min-width: 2.5rem; /* Ensure minimum width for the number buttons */
-    height: 2.5rem;
-    cursor: pointer;
-    font-size: 1rem;
-    line-height: 1; /* Center the text vertically */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: -1px; /* Overlap borders to create a unified block look */
-    transition: background-color 0.2s, color 0.2s;
+  background-color: #ffffff;
+  color: #4a4a4a;
+  border: 1px solid #e0e0e0;
+  padding: 0.5rem 1rem;
+  min-width: 2.5rem;
+  /* Ensure minimum width for the number buttons */
+  height: 2.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  /* Center the text vertically */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: -1px;
+  /* Overlap borders to create a unified block look */
+  transition: background-color 0.2s, color 0.2s;
 }
 
 /* Remove border-radius on all buttons initially */
 .pagination-button {
-    border-radius: 0;
+  border-radius: 0;
 }
 
 /* Apply border-radius to the very first button (left arrow) */
-.pagination-controls > .pagination-button:first-child {
-    border-top-left-radius: 4px;
-    border-bottom-left-radius: 4px;
+.pagination-controls>.pagination-button:first-child {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
 }
 
 /* Apply border-radius to the very last button (right arrow) */
-.pagination-controls > .pagination-button:last-child {
-    border-top-right-radius: 4px;
-    border-bottom-right-radius: 4px;
+.pagination-controls>.pagination-button:last-child {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
 }
 
 /* Active Button (Page 1 in the image) */
 .pagination-button.active {
-    background:linear-gradient(180deg, #DD5253 0%, #F07433 100%); /* Bright orange for active state */
-    color: #ffffff; /* White text on active button */
-    border-color: #ff8c00; /* Orange border for active state */
-    z-index: 1; /* Bring active button to the front to cover border overlaps nicely */
+  background: linear-gradient(180deg, #ff002f 0%, #f91942 50%, #ff002f 100%);
+  /* Bright orange for active state */
+  color: #ffffff;
+  /* White text on active button */
+  border-color: #ff8c00;
+  /* Orange border for active state */
+  z-index: 1;
+  /* Bring active button to the front to cover border overlaps nicely */
 }
 
 /* Hover/Focus Styles for non-active buttons */
 .pagination-button:not(.active):not(:disabled):hover {
-    background-color: #f5f5f5;
+  background-color: #f5f5f5;
 }
 
 /* Disabled Button Styles */
 .pagination-button:disabled {
-    cursor: not-allowed;
-    color: #b0b0b0; /* Lighter color for disabled arrow */
-    background-color: #fcfcfc;
+  cursor: not-allowed;
+  color: #b0b0b0;
+  /* Lighter color for disabled arrow */
+  background-color: #fcfcfc;
 }
 
+@media screen and (max-width: 1024px) {
+  
+  .AdminDashboardheader-logo {
+    width: 50px;
+    height: 50px;
+  }
 
+  .AdminDashboardheader-logo img {
+    width: 100%;
+    height: 100%;
+  }
 
+  header.AdminDashboardheader {
+    padding: 12px 20px;
+  }
 
+  .AdminDashboardheader-Search input {
+    border-radius: 8px;
+  }
 
+  .AdminDashboardheader-Search {
+    width: 100%;
+  }
 
+  .AdminDashboardheader-Search input::placeholder {
+    font-size: 13px;
+  }
 
+  .AdminDashboardheader-btn-box {
+    width: 35%;
+    gap: 10px;
+  }
 
+  .Dashboard-box {
+    padding-top: 35px;
+  }
 
+  .Dashboard-container {
+    max-width: 100%;
+    padding: 0px 3%;
+  }
 
+  .Dashboard-title span h2 {
+    font-size: 22px;
+  }
 
+  .Dashboard-title span p {
+    font-size: 14px;
+  }
 
+  .Dashboard-title button {
+    font-size: 14px;
+  }
 
+  .Dashboard-tab-box button p {
+    font-size: 14px;
+  }
 
+  .Dashboard-tab-box button {
+    gap: 10px;
+  }
 
+  .Overview-Users-box {
+    padding-top: 20px;
+  }
 
+  .Overview-Users-card {
+    padding: 18px;
+    border-radius: 10px;
+  }
 
+  .Overview-user-title h2 {
+    font-size: 20px;
+    padding: 5px 0px;
+  }
 
+  .Overview-user-title span h3 {
+    font-size: 12px;
+  }
 
+  .Overview-user-icon {
+    width: 40px;
+    height: 40px;
+  }
 
+  .Overview {
+    gap: 20px 0px;
+  }
 
-    @media screen and (max-width: 1024px) {
-    .AdminDashboardheader-logo {
-        width: 50px;
-        height: 50px;
+  .Recent-box h1 {
+    font-size: 18px;
+    padding-bottom: 25px;
+  }
+
+  .Recent-Activity-title span h2 {
+    font-size: 13px;
+  }
+
+  .Recent-Activity-list {
+    padding: 14px 0px;
+  }
+
+  .Reviewers-Month-title span h2 {
+    font-size: 14px;
+  }
+
+  .Reviewers-Month-title h4 {
+    font-size: 12px;
+  }
+
+  .AdminDashboardPage {}
+
+  .AdminDashboard-box {
+    overflow: auto;
+  }
+
+  .Recent-box {
+    height: 390px;
+    padding: 18px;
+    border-radius: 8px;
+  }
+
+  .Main-Reviews-box {
+    padding: 20px;
+  }
+
+  .Reviews-box-list-dp span h2 {
+    font-size: 14px;
+  }
+
+  .Reviews-box-list-dp span h3 {
+    font-size: 14px;
+  }
+
+  .Reviews-box-list-dp span h4 {
+    font-size: 14px;
+  }
+
+  .Reviews-box-list-dp {
+    gap: 8px;
+  }
+
+  .Reviews-box-list-title {
+    gap: 5px;
+  }
+
+  .Reviews-box-list {
+    padding: 14px 0px;
+  }
+
+  .Pending-Reports-title p {
+    font-size: 12px;
+  }
+
+  .Pending-Reports-btn-box button {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .AdminDashboardheader-Search {
+    width: 80%;
+  }
+
+  .main-banner .content h1 {
+    font-size: 36px;
+  }
+
+  .content-part {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .main-banner .content p {
+    font-size: 14px;
+    width: 80%;
+  }
+
+  .main-banner .content {
+    width: 100%;
+  }
+
+  .AdminDashboardheader-Search button {
+    left: 15px;
+  }
+
+  .AdminDashboardheader-btn-box {
+    width: 40%;
+    gap: 10px;
+  }
+
+  .AdminDashboardheader-btn-box button {
+    padding: 6px 20px;
+    font-size: 12px;
+  }
+
+  .popup-heading span h2 {
+    font-size: 20px;
+  }
+
+  .popup-heading span p {
+    font-size: 12px;
+  }
+
+  .Inappropriate-Content-title span h2 {
+    font-size: 14px;
+  }
+
+  .Inappropriate-Content-title p {
+    font-size: 12px;
+  }
+
+  .Inappropriate-Content-title span h6 {
+    padding: 5px 7px;
+    font-size: 10px;
+  }
+
+  .Select-Action-title {
+    padding-bottom: 12px;
+  }
+
+  .Select-Action-list {
+    padding: 15px;
+  }
+
+  .Select-Action-title span h2 {
+    font-size: 14px;
+  }
+
+  .popup-overly-box {
+    padding: 0px 5%;
+  }
+
+  .Dashboard-tab-box button {
+    padding: 10px;
+  }
+
+  .Dashboard-tab-box button.active p {
+    font-size: 12px;
+  }
+
+  .Overview-Users-card {
+    width: 48%;
+  }
+
+  .Overview-Users-box {
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .Recent-box {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap !important;
+}
+  .filter-items {
+        display: flex;
+        gap: 23px;
+        justify-content: space-around !important;
+        flex-wrap: wrap !important;
     }
+  .Dashboard-title {
+    flex-direction: column;
+    gap: 15px;
+  }
 
-    .AdminDashboardheader-logo img {
-        width: 100%;
-        height: 100%;
-    }
+  .Dashboard-title span {
+    width: 100%;
+    text-align: center;
+  }
 
-    header.AdminDashboardheader {
-        padding: 12px 20px;
-    }
+  .Dashboard-tab-box {
+    flex-wrap: wrap;
+    gap: 10px 0px;
+  }
 
-    .AdminDashboardheader-Search input {
-        border-radius: 8px;
-    }
+  .Dashboard-tab-box button {
+    width: 48%;
+  }
 
-    .AdminDashboardheader-Search {
-        width: 45%;
-    }
+  .Overview-Users-card {
+    width: 100%;
+  }
 
-    .AdminDashboardheader-Search input::placeholder {
-        font-size: 13px;
-    }
+  .Reviews-box-list {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
 
-    .AdminDashboardheader-btn-box {
-        width: 35%;
-        gap: 10px;
-    }
+  .Reviews-box-list-title {
+    width: 100%;
+  }
 
-    .Dashboard-box {
-        padding-top: 35px;
-    }
+  .Reviews-box-list-btn {
+    width: 100%;
+  }
 
-    .Dashboard-container {
-        max-width: 100%;
-        padding: 0px 3%;
-    }
+  .Management-box-list-btn {
+    width: 100%;
+  }
 
-    .Dashboard-title span h2 {
-        font-size: 22px;
-    }
+  .Pending-Reports-list {
+    flex-direction: column-reverse;
+    gap: 20px;
+  }
 
-    .Dashboard-title span p {
-        font-size: 14px;
-    }
+  .main-banner .content h1 {
+    font-size: 30px;
+  }
 
-    .Dashboard-title button {
-        font-size: 14px;
-    }
+  .main-banner .content p {
+    font-size: 14px;
+    width: 80%;
+  }
 
-    .Dashboard-tab-box button p {
-        font-size: 14px;
-    }
+  .AdminDashboardheader-Search {
+    width: 90%;
+  }
 
-    .Dashboard-tab-box button {
-        gap: 10px;
-    }
+  .popup-box {
+    padding: 20px;
+  }
 
-    .Overview-Users-box {
-        padding-top: 20px;
-    }
+  .Profile-Photo-dp-box {
+    height: 50px;
+    width: 50px;
+  }
 
-    .Overview-Users-card {
-        padding: 18px;
-        border-radius: 10px;
-    }
+  .Profile-Photo-icon-uplode {
+    width: 20px;
+    height: 20px;
+  }
 
-    .Overview-user-title h2 {
-        font-size: 20px;
-        padding: 5px 0px;
-    }
+  .Profile-Photo span p {
+    font-size: 12px;
+  }
 
-    .Overview-user-title span h3 {
-        font-size: 12px;
-    }
+  .Profile-Photo span h2 {
+    font-size: 14px;
+  }
 
-    .Overview-user-icon {
-        width: 40px;
-        height: 40px;
-    }
+  .Add-New-User-group-box {
+    width: 100%;
+  }
 
-    .Overview {
-        gap: 20px 0px;
-    }
+  .Add-New-User-group.Haf-width {
+    width: 100%;
+  }
 
-    .Recent-box h1 {
+  .Add-New-User-group input {
+    padding: 12px;
+    border-radius: 5px;
+    font-size: 12px;
+  }
+
+  .Add-New-User-group p {
+    font-size: 12px;
+  }
+
+  .Add-New-User-group textarea {
+    border-radius: 5px;
+    padding: 12px;
+    font-size: 12px;
+  }
+
+  .Profile-Photo {
+    gap: 15px;
+  }
+
+  .popup-btn-box button {
+    font-size: 12px;
+    border-radius: 10px;
+    padding: 8px 20px;
+  }
+
+  .Add-New-User-group span label {
+    font-size: 12px;
+  }
+
+  .popup-heading span h2 {
+    font-size: 18px;
+  }
+
+  .Inappropriate-Content-box {
+    flex-direction: column;
+  }
+
+  .Reported-By-box-list {
+    flex-direction: column;
+    gap: 10px;
+    padding: 0px 0px 20px 0px;
+  }
+
+  .ReportedContent-box-head {
+    gap: 10px;
+    padding-bottom: 14px;
+  }
+
+  .Review-box {
+    width: 100%;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ReportedContent-note h3 {
+    font-size: 12px;
+  }
+
+  .ReportedContent-note p {
+    font-size: 12px;
+  }
+
+  .Reported-By-heading h2 {
+    font-size: 14px;
+  }
+
+  .PreviousReportsAgainst-list {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .Evidence_Attachments_box {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .Evidence_Attachments_list {
+    width: 100%;
+  }
+
+  .popup-btn-box {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .Content-id {
+    flex-direction: column;
+  }
+
+  .Content-title {
+    width: 100%;
+  }
+
+  .Content-title span h3 {
+    font-size: 12px;
+  }
+
+  .Content-title span h4 {
+    font-size: 12px;
+  }
+}
+ 
+
+  
+
+@media screen and (max-width: 320px) {
+  .listings-grid {
+    display: inline;
+  }
+
+  .listing-card {
+    margin-bottom: 20px;
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 16px;
+    border-top: 1px solid #e9ecef;
+    flex-wrap: wrap;
+    gap: 17px;
+  }
+
+  .top-cat-two-head h1 {
         font-size: 18px;
-        padding-bottom: 25px;
-    }
-
-    .Recent-Activity-title span h2 {
-        font-size: 13px;
-    }
-
-    .Recent-Activity-list {
-        padding: 14px 0px;
-    }
-
-    .Reviewers-Month-title span h2 {
-        font-size: 14px;
-    }
-
-    .Reviewers-Month-title h4 {
-        font-size: 12px;
-    }
-
-    .AdminDashboardPage {
-    }
-
-    .AdminDashboard-box {
-        overflow: auto;
-    }
-
-    .Recent-box {
-        height: 390px;
-        padding: 18px;
-        border-radius: 8px;
-    }
-
-
-
-    .Main-Reviews-box {
-        padding: 20px;
-    }
-
-    .Reviews-box-list-dp span h2 {
-        font-size: 14px;
-    }
-
-    .Reviews-box-list-dp span h3 {
-        font-size: 14px;
-    }
-
-    .Reviews-box-list-dp span h4 {
-        font-size: 14px;
-    }
-
-    .Reviews-box-list-dp {
-        gap: 8px;
-    }
-
-    .Reviews-box-list-title {
-        gap: 5px;
-    }
-
-    .Reviews-box-list {
-        padding: 14px 0px;
-    }
-
-    .Pending-Reports-title p {
-        font-size: 12px;
-    }
-
-    .Pending-Reports-btn-box button {
-        font-size: 12px;
-        padding: 6px 12px;
-    }
-    }
-
-    @media screen and (max-width: 768px) {
-        .AdminDashboardheader-Search {
-        width: 35%;
-    }
-
-    .AdminDashboardheader-Search input {
-        padding: 10px 10px 10px 46px;
-    }
-
-    .AdminDashboardheader-Search button {
-        left: 15px;
-    }
-
-    .AdminDashboardheader-btn-box {
-        width: 40%;
-        gap: 10px;
-    }
-
-    .AdminDashboardheader-btn-box button {
-        padding: 6px 20px;
-        font-size: 12px;
-    }
-
-    .popup-heading span h2 {
-        font-size: 20px;
-    }
-
-    .popup-heading span p {
-        font-size: 12px;
-    }
-
-    .Inappropriate-Content-title span h2 {
-        font-size: 14px;
-    }
-
-    .Inappropriate-Content-title p {
-        font-size: 12px;
-    }
-
-    .Inappropriate-Content-title span h6 {
-        padding: 5px 7px;
-        font-size: 10px;
-    }
-
-    .Select-Action-title {
-        padding-bottom: 12px;
-    }
-
-    .Select-Action-list {
-        padding: 15px;
-    }
-
-    .Select-Action-title span h2 {
-        font-size: 14px;
-    }
-
-    .popup-overly-box {
-        padding: 0px 5%;
-    }
-
-    .Dashboard-tab-box button {
-        padding: 10px;
-    }
-
-    .Dashboard-tab-box button.active p {
-        font-size: 12px;
-    }
-
-    .Overview-Users-card {
-        width: 48%;
-    }
-
-    .Overview-Users-box {
-        flex-wrap: wrap;
-        gap: 15px;
-    }
-
-    .Recent-box {
-        width: 100%;
-    }
-    }
-
-    @media screen and (max-width: 600px) {
-        .Dashboard-title {
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    .Dashboard-title span {
-        width: 100%;
-        text-align: center;
-    }
-
-    .Dashboard-tab-box {
-        flex-wrap: wrap;
-        gap: 10px 0px;
-    }
-
-    .Dashboard-tab-box button {
-        width: 48%;
-    }
-
-    .Overview-Users-card {
-        width: 100%;
-    }
-
-    .Reviews-box-list {
-        flex-direction: column;
-        align-items: center;
-        gap: 20px;
-    }
-
-    .Reviews-box-list-title {
-        width: 100%;
-    }
-
-    .Reviews-box-list-btn {
-        width: 100%;
-    }
-
-    .Management-box-list-btn {
-        width: 100%;
-    }
-
-    .Pending-Reports-list {
-        flex-direction: column-reverse;
-        gap: 20px;
-    }
-
-    .AdminDashboardheader-Search {
-        width: 68%;
-    }
-
-
-    .popup-box {
-        padding: 20px;
-    }
-
-    .Profile-Photo-dp-box {
-        height: 50px;
-        width: 50px;
-    }
-
-    .Profile-Photo-icon-uplode {
-        width: 20px;
-        height: 20px;
-    }
-
-    .Profile-Photo span p {
-        font-size: 12px;
-    }
-
-    .Profile-Photo span h2 {
-        font-size: 14px;
-    }
-
-    .Add-New-User-group-box {
-        width: 100%;
-    }
-
-    .Add-New-User-group.Haf-width {
-        width: 100%;
-    }
-
-    .Add-New-User-group input {
-        padding: 12px;
-        border-radius: 5px;
-        font-size: 12px;
-    }
-
-    .Add-New-User-group p {
-        font-size: 12px;
-    }
-
-    .Add-New-User-group textarea {
-        border-radius: 5px;
-        padding: 12px;
-        font-size: 12px;
-    }
-
-    .Profile-Photo {
-        gap: 15px;
-    }
-
-    .popup-btn-box button {
-        font-size: 12px;
-        border-radius: 10px;
-        padding: 8px 20px;
-    }
-
-    .Add-New-User-group span label {
-        font-size: 12px;
-    }
-
-    .popup-heading span h2 {
-        font-size: 18px;
-    }
-
-    .Inappropriate-Content-box {
-        flex-direction: column;
-    }
-
-    .Reported-By-box-list {
-        flex-direction: column;
-        gap: 10px;
-        padding:  0px 0px 20px 0px;
-    }
-
-    .ReportedContent-box-head {
-        gap: 10px;
-        padding-bottom: 14px;
-    }
-
-    .Review-box {
-        width: 100%;
-        text-align: center;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .ReportedContent-note h3 {
-        font-size: 12px;
-    }
-
-    .ReportedContent-note p {
-        font-size: 12px;
-    }
-
-    .Reported-By-heading h2 {
-        font-size: 14px;
-    }
-
-    .PreviousReportsAgainst-list {
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 14px;
-    }
-
-    .Evidence_Attachments_box {
-        flex-direction: column;
-        gap: 20px;
-    }
-
-    .Evidence_Attachments_list {
-        width: 100%;
-    }
-
-    .popup-btn-box {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 10px;
-    }
-
-    .Content-id {
-        flex-direction: column;
-    }
-
-    .Content-title {
-        width: 100%;
-    }
-
-    .Content-title span h3 {
-        font-size: 12px;
-    }
-
-    .Content-title span h4 {
-        font-size: 12px;
-    }
-    }
+    } 
+
+        .main-banner .content h1 {
+        font-size: 26px;
+    }
+
+    .action-buttons {
+    flex-wrap: wrap;
+}
+
+.dishes-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 12px;
+    width: 100%;
+}
+    .footer-grid {
+        grid-template-columns: repeat(1, 1fr);
+    }
+
+    .discussion-head-main {
+    display: block;
+}
+
+.discussion-head-main .heading {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.discussion-head-main button {
+    width: 100%;
+}
+
+.discussion-card .feautures {
+    display: flex;
+    margin-top: 13px;
+    gap: 13px;
+    flex-wrap: wrap;
+}
+.c-community-widgets-container{
+  padding: 0 !important;
+}
+
+.modal-footer-section {
+    display: flex;
+    flex-wrap: wrap;
+}
+.filter-items {
+        display: flex;
+    flex-wrap: wrap;
+}
+.restaurant-actions {
+    display: flex;
+    flex-wrap: wrap;
+}
+}

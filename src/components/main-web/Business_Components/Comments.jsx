@@ -4,11 +4,13 @@ import photo from "../../../assets/Images/photo.png";
 import { Like_Svg, Like_Svg2, White_Chat_Svg } from "../../Svg_components/Svgs";
 import ReactStars from "react-rating-stars-component";
 import useActionMutation from "../../../queryFunctions/useActionMutation";
-import { showError } from "../../Toaster";
+import { showError, showSuccess } from "../../Toaster";
 import useStore from "../../../stores/store";
 import { useQuery } from "@tanstack/react-query";
 import { fetchData } from "../../../queryFunctions/queryFunctions";
 import { Skeleton } from "antd";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export default function CommentsSection({ sectionTwoRef, property }) {
   const [commentText, setCommentText] = useState("");
@@ -20,7 +22,7 @@ export default function CommentsSection({ sectionTwoRef, property }) {
   const [reply_reviews_limit, setReply_reviews_limit] = useState(3);
   const [reviews_limit, setReviews_limit] = useState(3);
   const { login_required } = useStore();
-
+const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
   const { data, isLoading, refetch } = useQuery({
@@ -71,10 +73,14 @@ export default function CommentsSection({ sectionTwoRef, property }) {
         setReply_review("");
         setRating(0);
         setReply_reviews(data?.reply_reviews);
+        setCommentText("");
+
+        return;
       }
       if (data?.status) {
         refetch();
         setCommentText("");
+        showSuccess("Action submitted successfully");
       }
     },
     onErrorCallback: (errmsg) => {
@@ -84,14 +90,15 @@ export default function CommentsSection({ sectionTwoRef, property }) {
   });
 
   const handlePostReview = () => {
+    if (!token) {
+      navigate("/register");
+      return;
+    }
     if (!commentText) {
       showError("Please enter a comment");
       return;
     }
-    if (!token) {
-      showError(login_required);
-      return;
-    }
+    
 
     const reviewData = {
       property: property?._id,
@@ -131,15 +138,17 @@ export default function CommentsSection({ sectionTwoRef, property }) {
     <>
       <div className="reviews-container">
         {/* Reviews Header */}
-        <div className="reviews-header">
-          <h2 className="reviews-title">
-            Reviews ({data?.totalCount?.toLocaleString()})
-          </h2>
-          <div className="sort-dropdown">
-            <span>Newest</span>
-            <span>▼</span>
+        {data?.totalCount > 0 && (
+          <div className="reviews-header">
+            <h2 className="reviews-title">
+              Reviews ({data?.totalCount?.toLocaleString()})
+            </h2>
+            <div className="sort-dropdown">
+              <span>Newest</span>
+              <span>▼</span>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Review Card */}
         {data?.data?.length > 0
@@ -288,6 +297,7 @@ export default function CommentsSection({ sectionTwoRef, property }) {
               className="comment-input"
               placeholder="Share your thoughts..."
               value={commentText}
+              disabled={!token}
               onChange={(e) => setCommentText(e.target.value)}
             />
             <button onClick={handlePostReview} className="post-button">

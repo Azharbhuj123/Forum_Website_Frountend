@@ -12,6 +12,7 @@ import useActionMutation from "../../../queryFunctions/useActionMutation";
 import useStore from "../../../stores/store";
 import { useQuery } from "@tanstack/react-query";
 import { fetchData } from "../../../queryFunctions/queryFunctions";
+import { useNavigate } from "react-router-dom";
 
 export default function SectionOne({ data, refetch }) {
   const userData = JSON.parse(localStorage.getItem("userData"));
@@ -19,7 +20,7 @@ export default function SectionOne({ data, refetch }) {
   const [activeReplyId, setActiveReplyId] = useState(null);
   const [replyText, setReplyText] = useState("");
   const [repLoading, setRepLoading] = useState(false);
-
+  const navigate = useNavigate();
   const { login_required } = useStore();
   const comments = [
     {
@@ -92,7 +93,7 @@ export default function SectionOne({ data, refetch }) {
     }
 
     if (!userData) {
-      showError(login_required);
+      navigate("/register");
       return;
     }
     const reviewData = {
@@ -107,17 +108,16 @@ export default function SectionOne({ data, refetch }) {
   };
 
   const handleReplySubmit = (commentId) => {
-    console.log("Reply submitted for comment:", commentId, replyText);
-
+  if (!userData) {
+      navigate("/register");
+      return;
+    }
     if (!replyText) {
       showError("Please enter a comment");
       return;
     }
 
-    if (!userData) {
-      showError(login_required);
-      return;
-    }
+   
     setRepLoading(true);
     const reviewData = {
       message: replyText,
@@ -201,6 +201,8 @@ export default function SectionOne({ data, refetch }) {
         <div className="user-comment">
           <img src={userData?.profile_img} alt="" />
           <textarea
+            value={my_comment}
+            disabled={!userData}
             placeholder="Share your thoughts..."
             onChange={(e) => setMyComment(e.target.value)}
           />
