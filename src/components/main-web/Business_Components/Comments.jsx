@@ -10,7 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchData } from "../../../queryFunctions/queryFunctions";
 import { Skeleton } from "antd";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function CommentsSection({ sectionTwoRef, property }) {
   const [commentText, setCommentText] = useState("");
@@ -22,7 +22,7 @@ export default function CommentsSection({ sectionTwoRef, property }) {
   const [reply_reviews_limit, setReply_reviews_limit] = useState(3);
   const [reviews_limit, setReviews_limit] = useState(3);
   const { login_required } = useStore();
-const navigate = useNavigate();
+  const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
   const { data, isLoading, refetch } = useQuery({
@@ -98,7 +98,6 @@ const navigate = useNavigate();
       showError("Please enter a comment");
       return;
     }
-    
 
     const reviewData = {
       property: property?._id,
@@ -300,6 +299,12 @@ const navigate = useNavigate();
               disabled={!token}
               onChange={(e) => setCommentText(e.target.value)}
             />
+            {!token && (
+              <p className="msg-to-login">
+               ⚠️ Please <Link to="/register">sign in</Link> to post a comment.
+              </p>
+            )}
+
             <button onClick={handlePostReview} className="post-button">
               {loading ? "Posting..." : "Post Comment"}
             </button>

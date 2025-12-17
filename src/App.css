@@ -745,6 +745,7 @@ background-clip: text;
   padding: 28px;
   font-family: "Poppins";
   margin-bottom: 16px;
+  cursor: pointer;
 }
 
 .main-theard {

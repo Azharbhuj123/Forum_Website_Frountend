@@ -2155,7 +2155,16 @@ span {}
   line-height: 16px;
   /* 133.333% */
 }
-
+p.msg-to-login {
+    margin-bottom: 20px;
+    font-family: Inter;
+    color: red;
+    font-size: 14px;
+}
+p.msg-to-login a{
+  text-decoration: underline;
+  color:red
+}
 /* Base Container Styles */
 .pagination-container {
   display: flex;
