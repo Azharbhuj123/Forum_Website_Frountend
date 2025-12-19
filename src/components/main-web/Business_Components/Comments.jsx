@@ -11,23 +11,30 @@ import { fetchData } from "../../../queryFunctions/queryFunctions";
 import { Skeleton } from "antd";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
+import { set } from "react-hook-form";
 
 export default function CommentsSection({ sectionTwoRef, property }) {
   const [commentText, setCommentText] = useState("");
   const [rating, setRating] = useState(0);
   const [comment_id, setComment_id] = useState(null);
   const [reply_review, setReply_review] = useState("");
+  const [comments, setComments] = useState([]);
 
   const [reply_reviews, setReply_reviews] = useState([]);
   const [reply_reviews_limit, setReply_reviews_limit] = useState(3);
   const [reviews_limit, setReviews_limit] = useState(3);
+  const [postCmtLoading, setPostCmtLoading] = useState(false);
   const { login_required } = useStore();
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+  const userData = JSON.parse(localStorage.getItem("userData") || "null");
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["property-reviews", property?._id, reviews_limit],
-    queryFn: () => fetchData(`/review/${property?._id}?limit=${reviews_limit}`),
+    queryFn: () =>
+      fetchData(
+        `/review/${property?._id}?limit=${reviews_limit}&userId=${userData?._id}`
+      ),
     keepPreviousData: true,
   });
   const { data: commentData, isLoading: commentLoading } = useQuery({
@@ -39,6 +46,14 @@ export default function CommentsSection({ sectionTwoRef, property }) {
     keepPreviousData: true,
     enabled: !!comment_id,
   });
+
+  useEffect(() => {
+    if (data?.data?.length > 0) {
+      setComments(data.data);
+    } else {
+      setComments([]);
+    }
+  }, [data, property?._id]);
 
   useEffect(() => {
     if (commentData?.reply?.length > 0) {
@@ -69,6 +84,17 @@ export default function CommentsSection({ sectionTwoRef, property }) {
 
   const { triggerMutation, loading } = useActionMutation({
     onSuccessCallback: (data) => {
+      if (data?.flag) {
+        setComments((prevComments) =>
+          prevComments.map((comment) =>
+            comment._id === data?.review_id
+              ? { ...comment, isFlag: data.flagStatus }
+              : comment
+          )
+        );
+        showSuccess(data?.message);
+        return;
+      }
       if (data?.reply) {
         setReply_review("");
         setRating(0);
@@ -80,6 +106,7 @@ export default function CommentsSection({ sectionTwoRef, property }) {
       if (data?.status) {
         refetch();
         setCommentText("");
+        setPostCmtLoading(false)
         showSuccess("Action submitted successfully");
       }
     },
@@ -99,6 +126,7 @@ export default function CommentsSection({ sectionTwoRef, property }) {
       return;
     }
 
+    setPostCmtLoading(true);
     const reviewData = {
       property: property?._id,
       review: commentText,
@@ -133,6 +161,27 @@ export default function CommentsSection({ sectionTwoRef, property }) {
     });
   };
 
+  const handleFlag = (reviewId) => {
+    if (!token) {
+      navigate("/register");
+      return;
+    }
+
+    triggerMutation({
+      endPoint: `/review/flag-review`,
+      body: {
+        review_id: reviewId,
+      },
+      method: "post",
+    });
+    // Here you can also add logic to send the flag action to the server if needed
+  };
+
+  console.log(
+    comments?.map((item) => item?.isFlag),
+    "cdddddddomments"
+  );
+
   return (
     <>
       <div className="reviews-container">
@@ -150,8 +199,8 @@ export default function CommentsSection({ sectionTwoRef, property }) {
         )}
 
         {/* Review Card */}
-        {data?.data?.length > 0
-          ? data?.data?.map((item, index) => (
+        {comments?.length > 0
+          ? comments?.map((item, index) => (
               <div ref={sectionTwoRef} key={index} className="review-card">
                 <div className="review-header">
                   <div className="reviewer-info">
@@ -180,7 +229,18 @@ export default function CommentsSection({ sectionTwoRef, property }) {
                       </div>
                     </div>
                   </div>
-                  <button className="flag-button">⚑</button>
+                  {userData?._id !== item?.user?._id && (
+
+                  <button
+                    onClick={() => handleFlag(item?._id)}
+                    className={`flag-button ${
+                      item?.isFlag ? "activeFlag" : ""
+                    }`}
+                  >
+                    ⚑
+                  </button>
+                  )}
+
                 </div>
 
                 {/* <h4 className="review-title">Best Properties in Town!</h4> */}
@@ -301,12 +361,12 @@ export default function CommentsSection({ sectionTwoRef, property }) {
             />
             {!token && (
               <p className="msg-to-login">
-               ⚠️ Please <Link to="/register">sign in</Link> to post a comment.
+                ⚠️ Please <Link to="/register">sign in</Link> to post a comment.
               </p>
             )}
 
-            <button onClick={handlePostReview} className="post-button">
-              {loading ? "Posting..." : "Post Comment"}
+            <button disabled={postCmtLoading} onClick={handlePostReview} className="post-button">
+              {postCmtLoading ? "Posting..." : "Post Comment"}
             </button>
           </div>
           {/* Owner Response

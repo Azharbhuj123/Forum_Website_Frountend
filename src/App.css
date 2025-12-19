@@ -2905,7 +2905,9 @@ p.user-comment-show {
 .flag-button:hover {
   color: #666;
 }
-
+.activeFlag{
+  color: #666;
+}
 .review-title {
   margin-top: 35px !important;
   color: #1a1a1a;

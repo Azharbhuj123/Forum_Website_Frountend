@@ -2,30 +2,65 @@ import React, { useState } from "react";
 import Pending_svg from "../Svg_components/Pending_svg";
 import TakeActionReportpopup from "../Popup_components/TakeActionReportpopup";
 import ReportDetailspopup from "../Popup_components/ReportDetailspopup";
-
+import { useQuery } from "@tanstack/react-query";
+import { fetchData } from "../../queryFunctions/queryFunctions";
+import DeleteSure from "../Modals/DeleteSure";
+import { showError } from "../Toaster";
+import useActionMutation from "../../queryFunctions/useActionMutation";
+import { set } from "react-hook-form";
 
 const Reports = () => {
   const [openTakePopup, setOpenTakePopup] = useState(null);
   const [openDetailsPopup, setOpenDetailsPopup] = useState(null);
+  const [delete_id, setDelete_id] = useState(null);
+  const [diss_miss_id, setDiss_miss_id] = useState(null);
 
-  const reports = [
-    {
-      title: "Inappropriate Content Reported",
-      desc: "A user has reported a review for containing inappropriate language."
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["admin-report"],
+    queryFn: () => fetchData(`/review/flag-review`),
+    keepPreviousData: true,
+  });
+
+  
+  const { triggerMutation, loading } = useActionMutation({
+    onSuccessCallback: (res) => {
+      if (res?.dismiss) {
+       setOpenTakePopup(false);
+      refetch(); // Refresh the reports list
+      setDelete_id(null);
+setDiss_miss_id(null)
+        return;
+      }
+      setOpenTakePopup(false);
+      refetch(); // Refresh the reports list
+      setDelete_id(null);
     },
-    {
-      title: "Spam Review Detected",
-      desc: "This review appears to be automated spam."
+    onErrorCallback: (errmsg) => {
+      showError(errmsg);
     },
-    {
-      title: "Fake Information",
-      desc: "User claims the review contains false information."
-    },
-    {
-      title: "Harassment Reported",
-      desc: "Contains personal attacks on another user."
+  });
+
+  const onConfirm = async () => {
+
+    let endPoint = diss_miss_id ? `/review/dismiss-flag-review` : `/admin/reviews/${delete_id}`;
+    let method = diss_miss_id ? "post": "patch";
+    let body = { action: "rejected" };
+
+
+    if(diss_miss_id){
+     body.id = diss_miss_id;
     }
-  ];
+    triggerMutation({
+      endPoint,
+      method,
+      body,
+    });
+  };
+
+  const handleDismiss = (id) => {
+    setDiss_miss_id(id);
+    setOpenTakePopup(true);
+  };
 
   return (
     <>
@@ -34,33 +69,43 @@ const Reports = () => {
           <div className="Reviews-heading">
             <h1>Pending Reports</h1>
           </div>
-
+          {data?.data?.length === 0 && (
+            <div className="no-property">
+              <p>No Pending Reports Found!</p>
+            </div>
+          )}
           <div className="Pending-Reports-box">
-            {reports.map((item, index) => (
+            {data?.data?.map((item, index) => (
               <div className="Pending-Reports-list" key={index}>
                 <div className="Pending-Reports-title">
                   <span>
                     <Pending_svg />
-                    <h2>{item.title}</h2>
+                    <h2>{item.flagTitle}</h2>
                   </span>
 
-                  <p>{item.desc}</p>
+                  <p>{item?.flagMessage}</p>
 
                   <div className="Pending-Reports-btn-box">
-                    <button className="Dismiss">Dismiss</button>
+                    <button
+                      onClick={() => handleDismiss(item._id)}
+                      className="Dismiss"
+                    >
+                      Dismiss
+                    </button>
 
                     {/* TAKE ACTION BUTTON */}
                     <button
                       className="Take"
-                      onClick={() => setOpenTakePopup(index)}
+                      onClick={() => {
+                        setOpenTakePopup(true);
+                        setDelete_id(item._id);
+                      }}
                     >
                       Take Action
                     </button>
 
                     {/* VIEW DETAILS */}
-                    <button
-                      onClick={() => setOpenDetailsPopup(index)}
-                    >
+                    <button onClick={() => setOpenDetailsPopup(item?._id)}>
                       View Details
                     </button>
                   </div>
@@ -77,12 +122,19 @@ const Reports = () => {
 
       {/* 🔹 TAKE ACTION POPUP */}
       {openTakePopup !== null && (
-        <TakeActionReportpopup closePopup={() => setOpenTakePopup(null)} />
+        // <TakeActionReportpopup closePopup={() => setOpenTakePopup(null)} />
+        <DeleteSure
+          open={openTakePopup}
+          onConfirm={onConfirm}
+          onCancel={() => setOpenTakePopup(false)}
+          loading={loading}
+          isDimiss={diss_miss_id}
+        />
       )}
 
       {/* 🔹 REPORT DETAILS POPUP */}
       {openDetailsPopup !== null && (
-        <ReportDetailspopup closePopup={() => setOpenDetailsPopup(null)} />
+        <ReportDetailspopup closePopup={() => setOpenDetailsPopup(null)} openDetailsPopup={openDetailsPopup} />
       )}
     </>
   );

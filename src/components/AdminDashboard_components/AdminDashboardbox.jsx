@@ -63,12 +63,12 @@ const AdminDashboardbox = () => {
               <p>Users</p>
             </button>
 
-            {/* <button
+            <button
               className={activeTab === "reports" ? "active" : ""}
               onClick={() => setActiveTab("reports")}
             >
               <Reports_svg /><p>Reports</p>
-            </button> */}
+            </button>
           </div>
 
           {/* TAB CONTENTS */}
