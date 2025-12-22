@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AdminDashboardheader from "../components/AdminDashboard_components/AdminDashboardheader";
 import ChatScreen from "../components/main-web/Chat/ChatScreen";
 import Sidebar from "../components/main-dashbord/Dashboard-sidebar/Sidebar";
@@ -13,6 +13,9 @@ import Loader from "../components/Loader";
 export default function Chat() {
   const location = useLocation();
   const firstToTalk = location.state?.userId || null;
+   const [isMobile, setIsMobile] = useState(false);
+
+  
 
   const [activeConversation, setActiveConversation] = useState(firstToTalk);
   const [search, setSearch] = useState("");
@@ -38,8 +41,15 @@ export default function Chat() {
     (c) => c.userId === activeConversation
   );
 
-  console.log(activeConv, "activeConv");
-  console.log(activeConversation, "activeConv");
+useEffect(() => {
+    const checkScreen = () => {
+      setIsMobile(window.innerWidth <= 600);
+    };
+
+    checkScreen();
+    window.addEventListener("resize", checkScreen);
+    return () => window.removeEventListener("resize", checkScreen);
+  }, [window.innerWidth]);
 
   // if (isLoading) return <Loader />;
 
@@ -53,8 +63,10 @@ export default function Chat() {
           activeConversation={activeConversation}
           onSelectConversation={setActiveConversation}
           setSearch={setSearch}
+          isMobile={isMobile}
         />
-        <ChatArea conversation={activeConv} />
+         
+        <ChatArea conversation={activeConv} isMobile={isMobile} onSelectConversation={setActiveConversation} />
       </div>
 
       <Footer />

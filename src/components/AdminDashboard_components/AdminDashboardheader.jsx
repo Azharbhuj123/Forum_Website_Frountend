@@ -54,7 +54,11 @@ const AdminDashboardheader = () => {
             <img src={logo} alt="" />
           </div>
 
-         
+          {userData?.name && (
+            <div className="heading-intro">
+            <h3>Welcome, {userData?.name || "User"} 👋</h3>
+          </div>
+          )}
 
           {/* New Hamburger Button: Visible only on small screens via CSS */}
           <button
@@ -99,9 +103,9 @@ const AdminDashboardheader = () => {
             >
               <Message_svg />
             </div>
-            <div className="AdminDashboardheader-icon">
+            {/* <div className="AdminDashboardheader-icon">
               <Bell_svg />
-            </div>
+            </div> */}
             {userToken ? (
               <div
                 onClick={() => navigate("/profile")}

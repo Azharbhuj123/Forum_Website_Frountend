@@ -7,8 +7,13 @@ import { fetchData } from "../../../queryFunctions/queryFunctions";
 import Loader from "../../Loader";
 import { message, Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
+import { IoIosArrowBack } from "react-icons/io";
 
-export default function ChatArea({ conversation }) {
+export default function ChatArea({
+  conversation,
+  isMobile,
+  onSelectConversation,
+}) {
   const [messageInput, setMessageInput] = useState("");
   const navigate = useNavigate();
   const userData = JSON.parse(localStorage.getItem("userData"));
@@ -87,12 +92,24 @@ export default function ChatArea({ conversation }) {
   }, [conversation]);
 
   return (
-    <div className="chat-area">
+    <div
+      className={`chat-area  ${
+        isMobile && !conversation ? "mobile-chat-area" : ""
+      }`}
+    >
       {conversation && (
         <div className="chat-header">
-          <div onClick={() => navigate("/profile")} className="user-info">
-            <img src={conversation?.avatar} alt={conversation?.name} />
-            <div className="user-details">
+          <div  className="user-info">
+            {isMobile && conversation && (
+              <div
+                onClick={() => onSelectConversation(null)}
+                className="back-arrow"
+              >
+                <IoIosArrowBack size={30} />
+              </div>
+            )}
+            <img onClick={() => navigate("/profile")} src={conversation?.avatar} alt={conversation?.name} />
+            <div onClick={() => navigate("/profile")} className="user-details">
               <h3>{conversation?.name}</h3>
               <span className="statuss">Active now</span>
             </div>

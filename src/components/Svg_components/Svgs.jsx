@@ -115,9 +115,10 @@ export const Green_Check = () => {
   );
 };
 
-export const Like_Svg = () => {
+export const Like_Svg = ({className}) => {
   return (
     <svg
+    className={className}
       xmlns="http://www.w3.org/2000/svg"
       width="16"
       height="16"
@@ -383,9 +384,11 @@ export const Clock_gray = () => {
   );
 };
 
-export const Thumb_Svg = () => {
+export const Thumb_Svg = ({className = ""}) => {
   return (
     <svg
+    className={className}
+
       xmlns="http://www.w3.org/2000/svg"
       width="16"
       height="16"
@@ -417,9 +420,10 @@ export const Thumb_Svg = () => {
   );
 };
 
-export const Share_svg2 = () => {
+export const Share_svg2 = ({className}) => {
   return (
     <svg
+
       xmlns="http://www.w3.org/2000/svg"
       width="16"
       height="16"

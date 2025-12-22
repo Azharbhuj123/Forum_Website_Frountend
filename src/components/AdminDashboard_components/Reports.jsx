@@ -58,9 +58,19 @@ setDiss_miss_id(null)
   };
 
   const handleDismiss = (id) => {
+    setOpenDetailsPopup(null);
+
     setDiss_miss_id(id);
     setOpenTakePopup(true);
   };
+const handleTakeAction = (id) => {
+    setOpenDetailsPopup(null);
+
+  setDelete_id(id);
+  setDiss_miss_id(null); // important
+  setOpenTakePopup(true);
+
+};
 
   return (
     <>
@@ -96,10 +106,7 @@ setDiss_miss_id(null)
                     {/* TAKE ACTION BUTTON */}
                     <button
                       className="Take"
-                      onClick={() => {
-                        setOpenTakePopup(true);
-                        setDelete_id(item._id);
-                      }}
+                      onClick={() => handleTakeAction(item._id)}
                     >
                       Take Action
                     </button>
@@ -134,7 +141,9 @@ setDiss_miss_id(null)
 
       {/* 🔹 REPORT DETAILS POPUP */}
       {openDetailsPopup !== null && (
-        <ReportDetailspopup closePopup={() => setOpenDetailsPopup(null)} openDetailsPopup={openDetailsPopup} />
+        <ReportDetailspopup closePopup={() => setOpenDetailsPopup(null)} openDetailsPopup={openDetailsPopup} 
+         onDismiss={handleDismiss}
+          onTakeAction={handleTakeAction}/>
       )}
     </>
   );

@@ -11,6 +11,9 @@
 html {
   scroll-behavior: smooth;
 }
+svg.liked {
+    fill: red;
+}
 .pagination {
   display: flex;
   justify-content: center;
@@ -1412,6 +1415,8 @@ background-clip: text;
 .back-arrow {
   font-size: 24px;
   font-weight: bold;
+  display: flex;
+  color: #1a1a1a;
 }
 
 .hero-section {
@@ -3163,7 +3168,7 @@ p.user-comment-show {
 
 .chat-main {
   display: flex;
-  height: 100vh;
+  height: 80vh;
   width: 100%;
   overflow: hidden;
   margin: 56px auto !important;
@@ -6706,6 +6711,28 @@ button.see-more-btn {
 }
 
 @media (max-width: 600px) {
+  .chat-main {
+  display: flex;
+  height: 80vh;
+  width: 100%;
+  overflow: hidden;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  border: 1px solid #eaeaea;
+  border-radius: 20px;
+}
+
+ .chat-area.mobile-chat-area {
+    display: none;
+}
+
+.sidebar.mobile-sidebar-area {
+    width: 100%;
+}
+
+.sidebar.hideShow {
+    display: none;
+}
   .filter-search {
     flex-wrap: wrap;
     gap: 25px;
@@ -6815,6 +6842,12 @@ button.see-more-btn {
     z-index: 99; /* Below the toggle button */
   }
 
+.user-profile {
+  width: 30px !important;
+  height: 30px !important;
+  cursor: pointer;
+  padding: 0 !important;
+}
   /* Style individual icons/buttons for the vertical menu */
   .AdminDashboardheader-btn-box > div,
   .AdminDashboardheader-btn-box > button {

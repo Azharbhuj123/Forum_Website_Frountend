@@ -9,9 +9,15 @@ import Evidence_svg from "../Svg_components/Evidence_svg";
 import Close_svg from "../Svg_components/Close_svg";
 import { useQuery } from "@tanstack/react-query";
 import { fetchData } from "../../queryFunctions/queryFunctions";
+import useActionMutation from "../../queryFunctions/useActionMutation";
+import { showError } from "../Toaster";
+import DeleteSure from "../Modals/DeleteSure";
 
-const ReportDetailspopup = ({ closePopup, openDetailsPopup }) => {
+const ReportDetailspopup = ({ closePopup, openDetailsPopup,onDismiss,onTakeAction }) => {
   const [api_data, set_Api_data] = useState(null);
+  const [delete_id, setDelete_id] = useState(null);
+  const [diss_miss_id, setDiss_miss_id] = useState(null);
+  const [openTakePopup, setOpenTakePopup] = useState(null);
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["admin-detail", openDetailsPopup],
@@ -28,6 +34,7 @@ const ReportDetailspopup = ({ closePopup, openDetailsPopup }) => {
     }
   }, [data]);
 
+   
   if (isLoading) {
     return (
       <div className="popup-overly-box">
@@ -174,13 +181,11 @@ const ReportDetailspopup = ({ closePopup, openDetailsPopup }) => {
                     </div>
                   </div>
                 </div>
-                
-                <p>
-                  {api_data?.review}
-                </p>
+
+                <p>{api_data?.review}</p>
                 <ul>
                   <li>{api_data?.createdAt?.split("T")[0]}</li>
-                 
+
                   <li>{api_data?.reply_reviews?.length} comments</li>
                 </ul>
               </div>
@@ -242,14 +247,26 @@ const ReportDetailspopup = ({ closePopup, openDetailsPopup }) => {
           </div> */}
         </div>
 
-        {/* <div className="popup-btn-box">
+        <div className="popup-btn-box">
           <button className="no-bg" onClick={closePopup}>
             Close
           </button>
-          <button className="Dismiss_Report_btn">Dismiss Report</button>
-          <button>Take Action</button>
-        </div> */}
+          <button
+            className="Dismiss_Report_btn"
+            onClick={() => onDismiss(api_data?._id)}
+          >
+            Dismiss Report
+          </button>
+
+          <button
+            onClick={() => onTakeAction(api_data?._id)}
+          >
+            Take Action
+          </button>
+        </div>
       </div>
+
+      
     </div>
   );
 };

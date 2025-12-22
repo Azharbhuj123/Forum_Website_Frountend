@@ -64,26 +64,32 @@ export default function CommentsSection({ sectionTwoRef, property }) {
     }
   }, [commentData, comment_id]);
 
-  const [likes, setLikes] = useState({
-    helpful: 234,
-    ownerResponse: 12,
-    marcusComment: 12,
-  });
+   
 
   const handleLike = (key) => {
-    setLikes((prev) => ({
-      ...prev,
-      [key]: prev[key] + 1,
-    }));
+    if (!token) {
+      navigate("/register");
+      return;
+    }
+    triggerMutation({
+      endPoint: `/review/post-like`,
+      body: {reviewId: key},
+      method: "post",
+    });
   };
 
   const ratingChanged = (newRating) => {
+    
     console.log(newRating, "newRating");
     setRating(newRating);
   };
 
   const { triggerMutation, loading } = useActionMutation({
     onSuccessCallback: (data) => {
+      if(data?.postLike){
+        refetch();
+        return ;
+      }
       if (data?.flag) {
         setComments((prevComments) =>
           prevComments.map((comment) =>
@@ -96,6 +102,7 @@ export default function CommentsSection({ sectionTwoRef, property }) {
         return;
       }
       if (data?.reply) {
+        refetch()
         setReply_review("");
         setRating(0);
         setReply_reviews(data?.reply_reviews);
@@ -199,138 +206,134 @@ export default function CommentsSection({ sectionTwoRef, property }) {
         )}
 
         {/* Review Card */}
-        {comments?.length > 0
-          ? comments?.map((item, index) => (
-              <div ref={sectionTwoRef} key={index} className="review-card">
-                <div className="review-header">
-                  <div className="reviewer-info">
-                    <div className="reviewer-avatar">
-                      <img src={item?.user?.profile_img} alt="Sarah Mitchell" />
-                    </div>
-                    <div className="reviewer-details">
-                      <div className="reviewer-name-row">
-                        <h3 className="reviewer-name">{item?.user?.name}</h3>
-                        {/* <span className="badge badge-top">Top Reviewer</span> */}
-                        {/* <span className="badge badge-local">Local Guide</span> */}
-                      </div>
-                      <div className="review-meta">
-                        <div className="stars">
-                          {item?.rating == 0
-                            ? "N/A"
-                            : Array.from({ length: item?.rating }, (_, i) => (
-                                <span key={i} className="star">
-                                  ★
-                                </span>
-                              ))}
-                        </div>
-                        <span className="review-date">
-                          {item?.createdAt?.split("T")[0]}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  {userData?._id !== item?.user?._id && (
+      {comments?.length > 0
+  ? comments.map((item, index) => {
+      const is_like_by = item?.likedBy?.includes(userData?._id);
 
-                  <button
-                    onClick={() => handleFlag(item?._id)}
-                    className={`flag-button ${
-                      item?.isFlag ? "activeFlag" : ""
-                    }`}
-                  >
-                    ⚑
-                  </button>
-                  )}
-
-                </div>
-
-                {/* <h4 className="review-title">Best Properties in Town!</h4> */}
-
-                <p className="review-text">{item?.review}</p>
-
-                {/* <div className="review-image">
-            <img src={photo} alt="Food" />
-          </div> */}
-
-                <div className="review-actions">
-                  <button
-                    className="action-button"
-                    onClick={() => handleLike("helpful")}
-                  >
-                    <Like_Svg />
-                    <span>Helpful ({item?.likesCount})</span>
-                  </button>
-                  <button
-                    onClick={() =>
-                      setComment_id(comment_id === item?._id ? null : item?._id)
-                    }
-                    className="action-button"
-                  >
-                    <White_Chat_Svg />
-                    <span>Comment ({item?.reply_reviews?.length})</span>
-                  </button>
-                </div>
-                {comment_id === item?._id && (
-                  <>
-                    <div className="reply-comment-div">
-                      <input
-                        type="text"
-                        value={reply_review}
-                        placeholder="Add a comment"
-                        onChange={(e) => setReply_review(e.target.value)}
-                      />
-                      <button disabled={loading} onClick={handleReply}>
-                        {loading ? "Loading..." : "Reply"}
-                      </button>
-                    </div>
-                    {commentLoading ? (
-                      <Skeleton
-                        active
-                        paragraph={{ rows: 0 }}
-                        className="custom-skeleton"
-                      />
-                    ) : (
-                      <div className="replies-wrapper">
-                        {reply_reviews?.map((rev) => (
-                          <div className="comment-card owner-response">
-                            <div className="comment-header">
-                              <div className="commenter-info">
-                                <div className="commenter-details">
-                                  {rev?.user?._id?.toString() ===
-                                    property?.user?.toString() && (
-                                    <div className="reviewer-name-row">
-                                      <span className="badge badge-owner">
-                                        Owner Response
-                                      </span>
-                                    </div>
-                                  )}
-
-                                  <span className="comment-date">
-                                    {rev?.createdAt?.split("T")[0]}
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                            <p className="comment-text">{rev?.review}</p>
-                          </div>
-                        ))}
-                        {commentData?.totalReplies > reply_reviews_limit && (
-                          <div className="see-more-btn">
-                            <button
-                              onClick={() =>
-                                setReply_reviews_limit(reply_reviews_limit + 3)
-                              }
-                            >
-                              See More
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </>
-                )}
+      return (
+        <div ref={sectionTwoRef} key={index} className="review-card">
+          <div className="review-header">
+            <div className="reviewer-info">
+              <div className="reviewer-avatar">
+                <img src={item?.user?.profile_img} alt="Reviewer" />
               </div>
-            ))
-          : ""}
+
+              <div className="reviewer-details">
+                <div className="reviewer-name-row">
+                  <h3 className="reviewer-name">{item?.user?.name}</h3>
+                </div>
+
+                <div className="review-meta">
+                  <div className="stars">
+                    {item?.rating === 0
+                      ? "N/A"
+                      : Array.from({ length: item?.rating }, (_, i) => (
+                          <span key={i} className="star">★</span>
+                        ))}
+                  </div>
+
+                  <span className="review-date">
+                    {item?.createdAt?.split("T")[0]}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {userData?._id !== item?.user?._id && (
+              <button
+                onClick={() => handleFlag(item?._id)}
+                className={`flag-button ${item?.isFlag ? "activeFlag" : ""}`}
+              >
+                ⚑
+              </button>
+            )}
+          </div>
+
+          <p className="review-text">{item?.review}</p>
+
+          <div className="review-actions">
+            <button
+              className="action-button"
+              onClick={() => handleLike(item?._id)}
+            >
+              <Like_Svg className={is_like_by ? "liked" : ""} />
+              <span>Helpful ({item?.likesCount})</span>
+            </button>
+
+            <button
+              onClick={() =>
+                setComment_id(comment_id === item?._id ? null : item?._id)
+              }
+              className="action-button"
+            >
+              <White_Chat_Svg />
+              <span>Comment ({item?.reply_reviews?.length})</span>
+            </button>
+          </div>
+
+
+          {comment_id === item?._id && (
+            <>
+            {reply_reviews?.length > 0 && (
+                                        <div
+                                          className="replies-container"
+                                          style={{ marginLeft: "40px", marginTop: "8px" }}
+                                        >
+                                          {reply_reviews?.map((rep) => (
+                                            <div
+                                              key={rep._id}
+                                              className="commenter-div"
+                                              style={{
+                                                borderBottom: "1px solid #EAEAEA",
+                                                padding: "6px 0",
+                                              }}
+                                            >
+                                              <img
+                                                src={rep.user?.profile_img || dpOr}
+                                                alt={rep.userId?.name || "User"}
+                                                className="commenter-avatar"
+                                              />
+            
+                                              <div className="commenter-data">
+                                                <div className="commenter-head">
+                                                  <p className="commenter-fullname">
+                                                    {rep.user?.name}
+                                                  </p>
+                                                  <p className="commenter-where">•</p>
+                                                  <p className="comment-where">
+                                                    {new Date(
+                                                      rep.createdAt
+                                                    ).toLocaleString()}
+                                                  </p>
+                                                </div>
+            
+                                                <p className="user-comment-show">
+                                                  {rep.review}
+                                                </p>
+                                              </div>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      )}
+            
+              <div className="reply-comment-div">
+                <input
+                  type="text"
+                  value={reply_review}
+                  placeholder="Add a comment"
+                  onChange={(e) => setReply_review(e.target.value)}
+                />
+                <button disabled={loading} onClick={handleReply}>
+                  {loading ? "Loading..." : "Reply"}
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      );
+    })
+  : null}
+
 
         {data?.totalCount > reviews_limit && (
           <div className="see-more-btn">

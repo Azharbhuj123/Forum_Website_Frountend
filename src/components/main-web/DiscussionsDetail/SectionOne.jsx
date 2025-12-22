@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import dpOr from "../../../assets/Images/dp-or.png";
 import {
   Reply_Svg,
@@ -20,6 +20,9 @@ export default function SectionOne({ data, refetch }) {
   const [activeReplyId, setActiveReplyId] = useState(null);
   const [replyText, setReplyText] = useState("");
   const [repLoading, setRepLoading] = useState(false);
+  const [discussion_data, setDiscussion_data] = useState(
+    data?.discussion || null
+  );
   const navigate = useNavigate();
   const { login_required } = useStore();
   const comments = [
@@ -68,13 +71,25 @@ export default function SectionOne({ data, refetch }) {
     }
   };
 
-  const discussion_data = data?.discussion;
+  useEffect(() => {
+    setDiscussion_data(data?.discussion);
+  }, [data?.discussion]);
 
   const { triggerMutation, loading } = useActionMutation({
     onSuccessCallback: (data) => {
+      if (data?.parent_like) {
+        refetch();
+        return;
+      }
+      if (data?.child_like) {
+        refetch();
+        return;
+      }
       if (data?.reply_sent) {
+        setDiscussion_data(data?.discussion);
         setRepLoading(false);
         setReplyText("");
+        return
       }
       refetch();
     },
@@ -129,6 +144,30 @@ export default function SectionOne({ data, refetch }) {
 
     // TODO: call API to save reply
   };
+
+  const handleLike = (key) => {
+    if (!userData) {
+      navigate("/register");
+      return;
+    }
+    triggerMutation({
+      endPoint: `/discussion/post-like-child`,
+      body: { reviewId: key },
+      method: "post",
+    });
+  };
+
+  const handleLikeParent = (key) => {
+    if (!userData) {
+      navigate("/register");
+      return;
+    }
+    triggerMutation({
+      endPoint: `/discussion/post-like`,
+      body: { reviewId: key },
+      method: "post",
+    });
+  };
   return (
     <div>
       <button className="back-button" onClick={() => window.history.back()}>
@@ -178,9 +217,16 @@ export default function SectionOne({ data, refetch }) {
         </div> */}
 
         <div className="dis-meta-div">
-          <span>
-            <Thumb_Svg /> {discussion_data?.likesCount?.toLocaleString()}{" "}
-            Upvotes
+          <span
+            style={{ cursor: "pointer" }}
+            onClick={() => handleLikeParent(discussion_data?._id)}
+          >
+            <Thumb_Svg
+              className={
+                discussion_data?.likedBy?.includes(userData?._id) ? "liked" : ""
+              }
+            />{" "}
+            {discussion_data?.likesCount?.toLocaleString()} Upvotes
           </span>
 
           <span>
@@ -230,131 +276,129 @@ export default function SectionOne({ data, refetch }) {
             <p className="cmt-count">{data?.totalCount} Comments</p>
 
             <div className="comment-show-box">
-              {discussion_data?.nestedComments?.map((cmt, index) => (
-                <div
-                  className="commenter-div"
-                  style={{
-                    borderBottom:
-                      index < discussion_data.nestedComments.length - 1
-                        ? "1px solid #EAEAEA"
-                        : "1px solid #EAEAEA",
-                  }}
-                  key={cmt._id}
-                >
-                  <img
-                    src={cmt.userId?.profile_img || dpOr}
-                    alt={cmt.userId?.name || "User"}
-                    className="commenter-avatar"
-                  />
-                  <div className="commenter-data">
-                    <div className="commenter-head">
-                      <p className="commenter-fullname">{cmt.userId?.name}</p>
-                      <p className="commenter-where">•</p>
-                      <p className="comment-where">
-                        {new Date(cmt.createdAt).toLocaleString()}
-                      </p>
-                    </div>
-                    <p className="user-comment-show">{cmt.message}</p>
+              {discussion_data?.nestedComments?.map((cmt, index) => {
+                const is_like_by = cmt?.likedBy?.includes(userData?._id);
 
-                    <div className="meta-cmt-detail">
-                      <div>
-                        <Thumb_Svg /> {cmt.parent_likes}
-                      </div>
-                      <div
-                        style={{ cursor: "pointer" }}
-                        onClick={() => handleReplyClick(cmt._id)}
-                      >
-                        <Reply_Svg /> ({cmt.replies?.length}) Reply
-                      </div>
-                    </div>
+                return (
+                  <div
+                    key={cmt._id}
+                    className="commenter-div"
+                    style={{
+                      borderBottom:
+                        index < discussion_data.nestedComments.length - 1
+                          ? "1px solid #EAEAEA"
+                          : "1px solid #EAEAEA",
+                    }}
+                  >
+                    <img
+                      src={cmt.userId?.profile_img || dpOr}
+                      alt={cmt.userId?.name || "User"}
+                      className="commenter-avatar"
+                    />
 
-                    {/* Show Replies and Reply Input if active */}
-                    {activeReplyId === cmt._id && (
-                      <>
-                        {/* Replies */}
-                        {cmt.replies?.length > 0 && (
-                          <div
-                            className="replies-container"
-                            style={{ marginLeft: "40px", marginTop: "8px" }}
-                          >
-                            {cmt.replies.map((rep) => (
-                              <div
-                                key={rep._id}
-                                className="commenter-div"
-                                style={{
-                                  borderBottom: "1px solid #EAEAEA",
-                                  padding: "6px 0",
-                                }}
-                              >
-                                <img
-                                  src={rep.userId?.profile_img || dpOr}
-                                  alt={rep.userId?.name || "User"}
-                                  className="commenter-avatar"
-                                />
-                                <div className="commenter-data">
-                                  <div className="commenter-head">
-                                    <p className="commenter-fullname">
-                                      {rep.userId?.name}
-                                    </p>
-                                    <p className="commenter-where">•</p>
-                                    <p className="comment-where">
-                                      {new Date(rep.createdAt).toLocaleString()}
+                    <div className="commenter-data">
+                      <div className="commenter-head">
+                        <p className="commenter-fullname">{cmt.userId?.name}</p>
+                        <p className="commenter-where">•</p>
+                        <p className="comment-where">
+                          {new Date(cmt.createdAt).toLocaleString()}
+                        </p>
+                      </div>
+
+                      <p className="user-comment-show">{cmt.message}</p>
+
+                      <div className="meta-cmt-detail">
+                        <div
+                          style={{ cursor: "pointer" }}
+                          onClick={() => handleLike(cmt._id)}
+                        >
+                          <Thumb_Svg className={is_like_by ? "liked" : ""} />{" "}
+                          {cmt.likesCount || 0}
+                        </div>
+
+                        <div
+                          style={{ cursor: "pointer" }}
+                          onClick={() => handleReplyClick(cmt._id)}
+                        >
+                          <Reply_Svg /> ({cmt.replies?.length}) Reply
+                        </div>
+                      </div>
+
+                      {activeReplyId === cmt._id && (
+                        <>
+                          {cmt.replies?.length > 0 && (
+                            <div
+                              className="replies-container"
+                              style={{ marginLeft: "40px", marginTop: "8px" }}
+                            >
+                              {cmt.replies.map((rep) => (
+                                <div
+                                  key={rep._id}
+                                  className="commenter-div"
+                                  style={{
+                                    borderBottom: "1px solid #EAEAEA",
+                                    padding: "6px 0",
+                                  }}
+                                >
+                                  <img
+                                    src={rep.userId?.profile_img || dpOr}
+                                    alt={rep.userId?.name || "User"}
+                                    className="commenter-avatar"
+                                  />
+
+                                  <div className="commenter-data">
+                                    <div className="commenter-head">
+                                      <p className="commenter-fullname">
+                                        {rep.userId?.name}
+                                      </p>
+                                      <p className="commenter-where">•</p>
+                                      <p className="comment-where">
+                                        {new Date(
+                                          rep.createdAt
+                                        ).toLocaleString()}
+                                      </p>
+                                    </div>
+
+                                    <p className="user-comment-show">
+                                      {rep.message}
                                     </p>
                                   </div>
-                                  <p className="user-comment-show">
-                                    {rep.message}
-                                  </p>
                                 </div>
-                              </div>
-                            ))}
-                          </div>
-                        )}
+                              ))}
+                            </div>
+                          )}
 
-                        {/* Reply Input */}
-                        <div
-                          className="reply-comment-div"
-                          style={{ marginTop: "8px" }}
-                        >
-                          <input
-                            type="text"
-                            value={replyText}
-                            placeholder="Write your reply..."
-                            onChange={(e) => setReplyText(e.target.value)}
-                            style={{
-                              width: "70%",
-                              padding: "6px 8px",
-                              borderRadius: "6px",
-                              border: "1px solid #ccc",
-                              marginRight: "6px",
-                            }}
-                          />
-
-                          <button
-                            disabled={repLoading}
-                            onClick={() => handleReplySubmit(cmt._id)}
-                            style={{
-                              padding: "6px 12px",
-                              borderRadius: "6px",
-                              border: "none",
-                              backgroundColor: "#FF7A00",
-                              color: "#fff",
-                              cursor: "pointer",
-                            }}
+                          <div
+                            className="reply-comment-div"
+                            style={{ marginTop: "8px" }}
                           >
-                            {repLoading ? "Loading..." : "Reply"}
-                          </button>
-                        </div>
-                        {!userData && (
-                          <p className="msg-to-login">
-                            Please <Link to="/register">sign in</Link> to post a
-                            comment.
-                          </p>
-                        )}
-                      </>
-                    )}
+                            <input
+                              type="text"
+                              value={replyText}
+                              placeholder="Write your reply..."
+                              onChange={(e) => setReplyText(e.target.value)}
+                            />
+
+                            <button
+                              disabled={repLoading}
+                              onClick={() => handleReplySubmit(cmt._id)}
+                            >
+                              {repLoading ? "Loading..." : "Reply"}
+                            </button>
+                          </div>
+
+                          {!userData && (
+                            <p className="msg-to-login">
+                              Please <Link to="/register">sign in</Link> to post
+                              a comment.
+                            </p>
+                          )}
+                        </>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </>
         )}

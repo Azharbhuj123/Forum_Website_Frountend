@@ -5,7 +5,8 @@ export default function ChatSideBar({
   conversations,
   activeConversation,
   onSelectConversation,
-  setSearch
+  setSearch,
+  isMobile,
 }) {
   // utils/formatTime.js
   function formatTime(isoTime) {
@@ -20,7 +21,7 @@ export default function ChatSideBar({
   // console.log(conv.id,"conv.id");
 
   return (
-    <div className="sidebar">
+    <div className={`sidebar  ${isMobile && !activeConversation ? "mobile-sidebar-area" : "hideShow"}`} >
       <div className="sidebar-header">
         <h2>Messages</h2>
       </div>

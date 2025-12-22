@@ -168,11 +168,24 @@ header.AdminDashboardheader {
 }
 
 .AdminDashboardheader-logo {
-  width: 20%;
+  width: 30%;
   height: 50px;
   cursor: pointer;
 }
+.heading-intro {
+    width: 30%;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    height: 100%;
+  font-family: Montserrat;
 
+}
+.heading-intro h3 {
+    font-size: 22px;
+    text-align: center;
+    color: #4a5565;
+}
 .AdminDashboardheader-logo img {
   width: 100px;
   height: 100%;
@@ -194,7 +207,7 @@ header.AdminDashboardheader {
 }
 
 .AdminDashboardheader-btn-box {
-  width: 40%;
+  width: 30%;
   display: flex;
   justify-content: flex-end;
   gap: 15px;
@@ -2261,10 +2274,24 @@ p.msg-to-login a{
 
 @media screen and (max-width: 1024px) {
   
-  .AdminDashboardheader-logo {
-    width: 50px;
-    height: 50px;
-  }
+ .Main-AdminDashboardheader {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+    .AdminDashboardheader-logo {
+        width: 120px;
+        height: 50px;
+    }
+    .heading-intro {
+    width: 47%;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    font-family: Montserrat;
+}
 
   .AdminDashboardheader-logo img {
     width: 100%;
@@ -2287,10 +2314,10 @@ p.msg-to-login a{
     font-size: 13px;
   }
 
-  .AdminDashboardheader-btn-box {
-    width: 35%;
-    gap: 10px;
-  }
+ .AdminDashboardheader-btn-box {
+        width: 18%;
+        gap: 10px;
+    }
 
   .Dashboard-box {
     padding-top: 35px;
@@ -2420,6 +2447,18 @@ p.msg-to-login a{
 }
 
 @media screen and (max-width: 768px) {
+    .AdminDashboardheader-logo {
+        width: 141px;
+        height: 50px;
+    }
+.heading-intro h3 {
+    font-size: 16px;
+    text-align: center;
+    color: #4a5565;
+}
+
+
+
   .AdminDashboardheader-Search {
     width: 80%;
   }
@@ -2450,9 +2489,9 @@ p.msg-to-login a{
   }
 
   .AdminDashboardheader-btn-box {
-    width: 40%;
-    gap: 10px;
-  }
+        width: 30%;
+        gap: 10px;
+    }
 
   .AdminDashboardheader-btn-box button {
     padding: 6px 20px;
@@ -2519,6 +2558,18 @@ p.msg-to-login a{
 }
 
 @media screen and (max-width: 600px) {
+  .AdminDashboardheader-logo {
+        width: 47px;
+        height: 50px;
+    }
+    .heading-intro {
+        width: 80%;
+        justify-content: center;
+        display: flex;
+        align-items: center;
+        height: 100%;
+        font-family: Montserrat;
+    }
   .action-buttons {
     display: flex;
     gap: 10px;
