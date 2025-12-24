@@ -5,15 +5,16 @@ import * as yup from "yup";
 import { MdEmail } from "react-icons/md";
 import { IoMdLock, IoMdPerson } from "react-icons/io";
 import useActionMutation from "../queryFunctions/useActionMutation";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { showError } from "../components/Toaster";
+import { GoVerified } from "react-icons/go";
 
-// Yup schemas
+// ==================== Schemas ==================== //
 const signInSchema = yup.object().shape({
   email: yup.string().email("Invalid email").required("Email is required"),
   password: yup
     .string()
-    .min(6, "Password must be at least 6 characters")
+    .min(8, "Password must be at least 8 characters")
     .required("Password is required"),
 });
 
@@ -22,7 +23,7 @@ const signUpSchema = yup.object().shape({
   email: yup.string().email("Invalid email").required("Email is required"),
   password: yup
     .string()
-    .min(6, "Password must be at least 6 characters")
+    .min(8, "Password must be at least 8 characters")
     .required("Password is required"),
   confirmPassword: yup
     .string()
@@ -30,71 +31,26 @@ const signUpSchema = yup.object().shape({
     .required("Confirm password is required"),
 });
 
-const AuthPages = () => {
-  const [currentPage, setCurrentPage] = useState("signin");
+const forgotSchema = yup.object().shape({
+  email: yup.string().email("Invalid email").required("Email is required"),
+});
 
-  // React Hook Form setup
-  const {
-    register: signInRegister,
-    handleSubmit: handleSignInSubmit,
-    reset: signInReset,
-    formState: { errors: signInErrors },
-  } = useForm({
-    resolver: yupResolver(signInSchema),
-  });
+const resetSchema = yup.object().shape({
+  email: yup.string().email("Invalid email").required("Email is required"),
+  password: yup
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .required("Password is required"),
+  oldPass: yup
+    .string() 
+    .required("Old Password is required"),
+  otp: yup.string().required("OTP is required"),
+});
 
-  const {
-    register: signUpRegister,
-    handleSubmit: handleSignUpSubmit,
-    reset: signUpReset,
-    formState: { errors: signUpErrors },
-  } = useForm({
-    resolver: yupResolver(signUpSchema),
-  });
-
-  const navigate = useNavigate();
-
-  const { triggerMutation, loading } = useActionMutation({
-    onSuccessCallback: (data) => {
-      if (data?.token) {
-        const role  = data?.user?.role
-         
-        navigate(role && role === "Admin" ? "/AdminDashboard":"/");
-        localStorage.setItem("token", data?.token);
-        localStorage.setItem("userData", JSON.stringify(data?.user));
-      }
-      setCurrentPage("signin");
-      signUpReset();
-      signInReset();
-    },
-    onErrorCallback: (errmsg) => {
-      showError(errmsg);
-    },
-  });
-
-  const onSignIn = (data) => {
-    console.log("Signin data:", data);
-
-    triggerMutation({
-      endPoint: "/auth/login",
-      body: data,
-      method: "post",
-    });
-
-    // handle sign in API call
-  };
-
-  const onSignUp = (data) => {
-    console.log("Signup data:", data);
-    // handle sign up API call
-    triggerMutation({
-      endPoint: "/auth/register",
-      body: data,
-      method: "post",
-    });
-  };
-
-  const SignInPage = () => (
+// ==================== Page Components (Outside Main Component) ==================== //
+const SignInPage = ({ signInForm, handleSubmit, onSignIn, loading, setCurrentPage }) => {
+  const { register, formState } = signInForm;
+  return (
     <div className="auth-page-container">
       <div className="auth-visual-section">
         <div className="auth-visual-content">
@@ -118,53 +74,52 @@ const AuthPages = () => {
             </p>
           </div>
 
-          <form className="auth-form" onSubmit={handleSignInSubmit(onSignIn)}>
+          <form className="auth-form" onSubmit={handleSubmit(onSignIn)}>
             <div className="auth-input-group">
-              <label className="auth-label" htmlFor="signin-email">
-                Email Address
-              </label>
+              <label className="auth-label">Email Address</label>
               <div className="auth-input-wrapper">
                 <span className="auth-input-icon">
                   <MdEmail />
                 </span>
                 <input
                   type="email"
-                  id="signin-email"
                   className="auth-input"
                   placeholder="Enter your email"
-                  {...signInRegister("email")}
+                  {...register("email")}
                 />
               </div>
-              {signInErrors.email && (
-                <p className="error-text">{signInErrors.email.message}</p>
+              {formState.errors.email && (
+                <p className="error-text">{formState.errors.email.message}</p>
               )}
             </div>
 
             <div className="auth-input-group">
-              <label className="auth-label" htmlFor="signin-password">
-                Password
-              </label>
+              <label className="auth-label">Password</label>
               <div className="auth-input-wrapper">
                 <span className="auth-input-icon">
                   <IoMdLock />
                 </span>
                 <input
                   type="password"
-                  id="signin-password"
                   className="auth-input"
                   placeholder="Enter your password"
-                  {...signInRegister("password")}
+                  {...register("password")}
                 />
               </div>
-              {signInErrors.password && (
-                <p className="error-text">{signInErrors.password.message}</p>
+              {formState.errors.password && (
+                <p className="error-text">
+                  {formState.errors.password.message}
+                </p>
               )}
             </div>
 
             <div className="auth-forgot-link">
-              <a href="#" className="auth-link-text">
+              <div
+                onClick={() => setCurrentPage("forgot")}
+                className="auth-link-text"
+              >
                 Forgot password?
-              </a>
+              </div>
             </div>
 
             <button
@@ -172,7 +127,6 @@ const AuthPages = () => {
               className="auth-primary-button"
               disabled={loading}
             >
-              {" "}
               {loading ? "Signing In..." : "Sign In"}
             </button>
           </form>
@@ -194,8 +148,11 @@ const AuthPages = () => {
       </div>
     </div>
   );
+};
 
-  const SignUpPage = () => (
+const SignUpPage = ({ signUpForm, handleSubmit, onSignUp, loading, setCurrentPage }) => {
+  const { register, formState } = signUpForm;
+  return (
     <div className="auth-page-container">
       <div className="auth-visual-section">
         <div className="auth-visual-content">
@@ -218,99 +175,87 @@ const AuthPages = () => {
             </p>
           </div>
 
-          <form className="auth-form" onSubmit={handleSignUpSubmit(onSignUp)}>
+          <form className="auth-form" onSubmit={handleSubmit(onSignUp)}>
             <div className="auth-input-group">
-              <label className="auth-label" htmlFor="signup-name">
-                Full Name
-              </label>
+              <label className="auth-label">Full Name</label>
               <div className="auth-input-wrapper">
                 <span className="auth-input-icon">
                   <IoMdPerson />
                 </span>
                 <input
                   type="text"
-                  id="signup-name"
                   className="auth-input"
                   placeholder="Enter your full name"
-                  {...signUpRegister("name")}
+                  {...register("name")}
                 />
               </div>
-              {signUpErrors.name && (
-                <p className="error-text">{signUpErrors.name.message}</p>
+              {formState.errors.name && (
+                <p className="error-text">{formState.errors.name.message}</p>
               )}
             </div>
 
             <div className="auth-input-group">
-              <label className="auth-label" htmlFor="signup-email">
-                Email Address
-              </label>
+              <label className="auth-label">Email Address</label>
               <div className="auth-input-wrapper">
                 <span className="auth-input-icon">
                   <MdEmail />
                 </span>
                 <input
                   type="email"
-                  id="signup-email"
                   className="auth-input"
                   placeholder="Enter your email"
-                  {...signUpRegister("email")}
+                  {...register("email")}
                 />
               </div>
-              {signUpErrors.email && (
-                <p className="error-text">{signUpErrors.email.message}</p>
+              {formState.errors.email && (
+                <p className="error-text">{formState.errors.email.message}</p>
               )}
             </div>
 
             <div className="auth-input-group">
-              <label className="auth-label" htmlFor="signup-password">
-                Password
-              </label>
+              <label className="auth-label">Password</label>
               <div className="auth-input-wrapper">
                 <span className="auth-input-icon">
                   <IoMdLock />
                 </span>
                 <input
                   type="password"
-                  id="signup-password"
                   className="auth-input"
                   placeholder="Create a password"
-                  {...signUpRegister("password")}
+                  {...register("password")}
                 />
               </div>
-              {signUpErrors.password && (
-                <p className="error-text">{signUpErrors.password.message}</p>
+              {formState.errors.password && (
+                <p className="error-text">{formState.errors.password.message}</p>
               )}
             </div>
 
             <div className="auth-input-group">
-              <label className="auth-label" htmlFor="signup-confirm-password">
-                Confirm Password
-              </label>
+              <label className="auth-label">Confirm Password</label>
               <div className="auth-input-wrapper">
                 <span className="auth-input-icon">
                   <IoMdLock />
                 </span>
                 <input
                   type="password"
-                  id="signup-confirm-password"
                   className="auth-input"
                   placeholder="Confirm your password"
-                  {...signUpRegister("confirmPassword")}
+                  {...register("confirmPassword")}
                 />
               </div>
-              {signUpErrors.confirmPassword && (
+              {formState.errors.confirmPassword && (
                 <p className="error-text">
-                  {signUpErrors.confirmPassword.message}
+                  {formState.errors.confirmPassword.message}
                 </p>
               )}
             </div>
 
             <button
               type="submit"
-              disabled={loading}
               className="auth-primary-button"
+              disabled={loading}
             >
-              {loading ? "Loading..." : "Create Account"}
+              {loading ? "Creating..." : "Create Account"}
             </button>
           </form>
 
@@ -331,8 +276,309 @@ const AuthPages = () => {
       </div>
     </div>
   );
+};
 
-  return <>{currentPage === "signin" ? <SignInPage /> : <SignUpPage />}</>;
+const ForgotPage = ({ forgotForm, handleSubmit, onForgot, loading, setCurrentPage }) => {
+  const { register, formState } = forgotForm;
+  return (
+    <div className="auth-page-container">
+      <div className="auth-visual-section">
+        <div className="auth-visual-content">
+          <div className="auth-illustration-circle"></div>
+          <div className="auth-illustration-dots"></div>
+          <h2 className="auth-visual-title">Reset Your Password</h2>
+          <p className="auth-visual-description">
+            Enter your email and we'll send you a verification code to reset
+            your password
+          </p>
+        </div>
+      </div>
+
+      <div className="auth-form-section">
+        <div className="auth-form-wrapper">
+          <div className="auth-header">
+            <h1 className="auth-title">Forgot Password</h1>
+            <p className="auth-subtitle">
+              Don't worry — it happens. We'll help you reset it.
+            </p>
+          </div>
+
+          <form className="auth-form" onSubmit={handleSubmit(onForgot)}>
+            <div className="auth-input-group">
+              <label className="auth-label">Email Address</label>
+              <div className="auth-input-wrapper">
+                <span className="auth-input-icon">
+                  <MdEmail />
+                </span>
+                <input
+                  type="email"
+                  className="auth-input"
+                  placeholder="Enter your email"
+                  {...register("email")}
+                />
+              </div>
+              {formState.errors.email && (
+                <p className="error-text">{formState.errors.email.message}</p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              className="auth-primary-button"
+              disabled={loading}
+            >
+              {loading ? "Sending..." : "Send Reset Code"}
+            </button>
+          </form>
+
+          <p style={{ marginTop: "20px" }} className="auth-switch-text">
+            Remember your password?{" "}
+            <button
+              onClick={() => setCurrentPage("signin")}
+              className="auth-link-button"
+            >
+              Back to Sign In
+            </button>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ResetPage = ({ resetForm, handleSubmit, onReset, loading, setCurrentPage }) => {
+  const { register, formState } = resetForm;
+  return (
+    <div className="auth-page-container">
+      <div className="auth-visual-section">
+        <div className="auth-visual-content">
+          <div className="auth-illustration-circle"></div>
+          <div className="auth-illustration-dots"></div>
+          <h2 className="auth-visual-title">Reset Your Password</h2>
+          <p className="auth-visual-description">
+            Enter your email and the OTP to reset your password
+          </p>
+        </div>
+      </div>
+
+      <div className="auth-form-section">
+        <div className="auth-form-wrapper">
+          <div className="auth-header">
+            <h1 className="auth-title">Reset Password</h1>
+            <p className="auth-subtitle">
+              Don't worry — it happens. We'll help you reset it.
+            </p>
+          </div>
+
+          <form className="auth-form" onSubmit={handleSubmit(onReset)}>
+            <div className="auth-input-group">
+              <label className="auth-label">Email Address</label>
+              <div className="auth-input-wrapper">
+                <span className="auth-input-icon">
+                  <MdEmail />
+                </span>
+                <input
+                  type="email"
+                  className="auth-input"
+                  placeholder="Enter your email"
+                  {...register("email")}
+                />
+              </div>
+              {formState.errors.email && (
+                <p className="error-text">{formState.errors.email.message}</p>
+              )}
+            </div>
+
+            <div className="auth-input-group">
+              <label className="auth-label">Verification Code</label>
+              <div className="auth-input-wrapper">
+                <span className="auth-input-icon">
+                  <GoVerified />
+                </span>
+                <input
+                  type="text"
+                  className="auth-input"
+                  placeholder="Enter verification code"
+                  {...register("otp")}
+                />
+              </div>
+              {formState.errors.otp && (
+                <p className="error-text">{formState.errors.otp.message}</p>
+              )}
+            </div>
+
+            <div className="auth-input-group">
+              <label className="auth-label">Old Password</label>
+              <div className="auth-input-wrapper">
+                <span className="auth-input-icon">
+                  <IoMdLock />
+                </span>
+                <input
+                  type="password"
+                  className="auth-input"
+                  placeholder="Enter your old password"
+                  {...register("oldPass")}
+                />
+              </div>
+              {formState.errors.oldPass && (
+                <p className="error-text">{formState.errors.oldPass.message}</p>
+              )}
+            </div>
+
+            <div className="auth-input-group">
+              <label className="auth-label">New Password</label>
+              <div className="auth-input-wrapper">
+                <span className="auth-input-icon">
+                  <IoMdLock />
+                </span>
+                <input
+                  type="password"
+                  className="auth-input"
+                  placeholder="Enter your password"
+                  {...register("password")}
+                />
+              </div>
+              {formState.errors.password && (
+                <p className="error-text">{formState.errors.password.message}</p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              className="auth-primary-button"
+              disabled={loading}
+            >
+              {loading ? "Resetting..." : "Reset Password"}
+            </button>
+          </form>
+
+          <p style={{ marginTop: "20px" }} className="auth-switch-text">
+            Remember your password?{" "}
+            <button
+              onClick={() => setCurrentPage("signin")}
+              className="auth-link-button"
+            >
+              Back to Sign In
+            </button>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ==================== Main Component ==================== //
+const AuthPages = () => {
+  const [currentPage, setCurrentPage] = useState("signin");
+  const navigate = useNavigate();
+
+  // ------------- React Hook Form ------------- //
+  const signInForm = useForm({ resolver: yupResolver(signInSchema), mode: "onSubmit" });
+  const signUpForm = useForm({ resolver: yupResolver(signUpSchema), mode: "onSubmit" });
+  const forgotForm = useForm({ resolver: yupResolver(forgotSchema), mode: "onSubmit" });
+  const resetForm = useForm({
+    resolver: yupResolver(resetSchema),
+    defaultValues: {
+      email: "",
+    },
+    mode: "onSubmit"
+  });
+
+  const { triggerMutation, loading } = useActionMutation({
+    onSuccessCallback: (data) => {
+      if (data?.forgot) {
+        resetForm.reset({ email: forgotForm.getValues("email") });
+        setCurrentPage("reset");
+        return;
+      }
+      if (data?.token) {
+        const role = data?.user?.role;
+        navigate(role === "Admin" ? "/AdminDashboard" : "/");
+        localStorage.setItem("token", data?.token);
+        localStorage.setItem("userData", JSON.stringify(data?.user));
+      }
+      setCurrentPage("signin");
+      signInForm.reset();
+      signUpForm.reset();
+      forgotForm.reset();
+      resetForm.reset();
+    },
+    onErrorCallback: (errmsg) => showError(errmsg),
+  });
+
+  // ==================== Handlers ==================== //
+  const onSignIn = (data) => {
+    triggerMutation({
+      endPoint: "/auth/login",
+      body: data,
+      method: "post",
+    });
+  };
+
+  const onSignUp = (data) => {
+    triggerMutation({
+      endPoint: "/auth/register",
+      body: data,
+      method: "post",
+    });
+  };
+
+  const onForgot = (data) => {
+    triggerMutation({
+      endPoint: "/auth/forgot-password",
+      body: data,
+      method: "post",
+    });
+  };
+
+  const onReset = (data) => {
+    triggerMutation({
+      endPoint: "/auth/reset-password",
+      body: data,
+      method: "post",
+    });
+  };
+
+  return (
+    <>
+      {currentPage === "signin" && (
+        <SignInPage 
+          signInForm={signInForm}
+          handleSubmit={signInForm.handleSubmit}
+          onSignIn={onSignIn}
+          loading={loading}
+          setCurrentPage={setCurrentPage}
+        />
+      )}
+      {currentPage === "signup" && (
+        <SignUpPage 
+          signUpForm={signUpForm}
+          handleSubmit={signUpForm.handleSubmit}
+          onSignUp={onSignUp}
+          loading={loading}
+          setCurrentPage={setCurrentPage}
+        />
+      )}
+      {currentPage === "forgot" && (
+        <ForgotPage 
+          forgotForm={forgotForm}
+          handleSubmit={forgotForm.handleSubmit}
+          onForgot={onForgot}
+          loading={loading}
+          setCurrentPage={setCurrentPage}
+        />
+      )}
+      {currentPage === "reset" && (
+        <ResetPage 
+          resetForm={resetForm}
+          handleSubmit={resetForm.handleSubmit}
+          onReset={onReset}
+          loading={loading}
+          setCurrentPage={setCurrentPage}
+        />
+      )}
+    </>
+  );
 };
 
 export default AuthPages;

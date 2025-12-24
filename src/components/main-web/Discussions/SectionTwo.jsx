@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Chart2_Svg from "../../Svg_components/Chart2_Svg";
 import dpOr from "../../../assets/Images/dp-or.png";
 import {
@@ -12,6 +12,12 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { fetchData } from "../../../queryFunctions/queryFunctions";
 import { Skeleton } from "antd";
+import useStore from "../../../stores/store";
+import { MdDelete } from "react-icons/md";
+import DeleteSure from "../../Modals/DeleteSure";
+import useActionMutation from "../../../queryFunctions/useActionMutation";
+import { showError, showSuccess } from "../../Toaster";
+import { set } from "react-hook-form";
 
 function formatDate(inputDate) {
   const date = new Date(inputDate);
@@ -49,12 +55,17 @@ function formatDate(inputDate) {
   return `${d}/${m}/${y}`;
 }
 
-export default function SectionTwo() {
+export default function SectionTwo({fectch_func}) {
   const [filterState, setFilter] = useState("All");
   const [search, setSearch] = useState("");
   const [limit, setLimit] = useState(4);
+  const [del_id ,setDelId] = useState(null);
+  const [open ,setOpen] = useState(false);
+  const { setDiscussionRefetch } = useStore();
+  const userData = JSON.parse(localStorage.getItem("userData"));
 
-  const { data, isLoading } = useQuery({
+
+  const { data, isLoading ,refetch } = useQuery({
     queryKey: ["user-discussion", search, filterState, limit],
     queryFn: () =>
       fetchData(
@@ -62,6 +73,11 @@ export default function SectionTwo() {
       ),
     keepPreviousData: true,
   });
+
+   // send refetch function to store **once**
+  useEffect(() => {
+    setDiscussionRefetch(refetch);
+  }, [refetch, setDiscussionRefetch]);
 
   const filters = [
     "All",
@@ -116,6 +132,28 @@ export default function SectionTwo() {
   ];
 
   const navigate = useNavigate();
+const { triggerMutation, loading } = useActionMutation({
+    onSuccessCallback: (res) => {
+         refetch()
+         setOpen(false)
+         showSuccess("Discussion deleted successfully")
+    },
+    onErrorCallback: (errmsg) => {
+      showError(errmsg);
+    },
+  });
+
+  const handleDelete = (id)=>{
+    setDelId(id)
+    setOpen(true)
+  }
+
+  const onConfirm = ()=>{
+    triggerMutation({
+      endPoint: `/discussion/${del_id}`,
+      method: "delete",
+    });
+  }
 
   return (
     <div className="discussion-main-card">
@@ -154,12 +192,27 @@ export default function SectionTwo() {
           data?.data.map((card) => (
             <div
               className="discussion-card"
-              key={card.id}
+              key={card._id}
               onClick={() => navigate(`/discussions-detail/${card._id}`)}
             >
               <div className="head">
                 <h1>{card.title}</h1>
+                <div style={{
+                  display:"flex",
+                  justifyContent:"center",
+                  alignItems:"center",
+                  gap:"5px"
+                }}>
+
                 <Chart2_Svg />
+                {userData?._id === card?.user?._id && 
+                <MdDelete 
+                onClick={(e) => {
+            e.stopPropagation(); // ✅ Stop card click
+            handleDelete(card._id);
+          }} size={18} color="#FF002F "/> 
+          }
+                </div>
               </div>
               <div className="reply-user padding">
                 <img src={card?.user?.profile_img} alt="" />
@@ -194,6 +247,7 @@ export default function SectionTwo() {
           </button>
         </div>
       )}
+      <DeleteSure open={open} onConfirm={onConfirm} onCancel={()=>setOpen(false)} loading={loading} />
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { baseurl } from "../BaseUrl";
+import { showError } from "../components/Toaster";
 
 
 
@@ -18,6 +19,24 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
   
 );
+
+api.interceptors.response.use(
+  (response) => {
+return response
+  },
+  (error) => {
+    
+     if (error?.response.data?.is_suspend) {
+      localStorage.removeItem("token");
+        localStorage.removeItem("userData");
+      window.location.href = "/register"; // redirect to register page
+      
+      showError(error?.response.data?.message)
+    }
+    return Promise.reject(error);
+  }
+);
+
 
 // api.interceptors.response.use(
 //   (response) => response,
@@ -42,6 +61,8 @@ export const fetchData = async (endPoint) => {
 // POST PUT DELETE
 export const actionData = async (endPoint, method, body) => {
   let headers = {};
+  console.log(endPoint, method, body);
+  
   const isFormData = body instanceof FormData;
   if (!isFormData && body) {
     headers["Content-Type"] = "application/json";

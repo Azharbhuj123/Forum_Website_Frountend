@@ -140,16 +140,16 @@ const Users = () => {
                   {openMenu === index && (
                     <div className="actions-dropdown">
                       <ul>
-                        <li>
+                        {/* <li>
                           <SendEmail_svg /> Send Email
-                        </li>
+                        </li> */}
 
                         <li
                           onClick={() => handleSuspend(user?._id)}
                           className="red"
                         >
                           <SuspendAccount_svg />{" "}
-                          {user?.is_suspend ? "Un Suspend" : "Suspend"}
+                          {user?.is_suspend ? "UnSuspend" : "Suspend"}
                         </li>
 
                         <li

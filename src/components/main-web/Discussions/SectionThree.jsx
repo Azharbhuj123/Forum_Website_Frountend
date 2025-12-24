@@ -3,17 +3,30 @@ import Chart2_Svg from '../../Svg_components/Chart2_Svg';
 import { Green_Check } from '../../Svg_components/Svgs';
 import Sponser from '../Sponser';
 import Guidelines from '../Business_Components/Guidelines';
+import { useQuery } from '@tanstack/react-query';
+import { fetchData } from '../../../queryFunctions/queryFunctions';
  
  
  
 
  export default function SectionThree() {
-  const trendingTopics = [
-    { id: 't1', name: 'Best Tacos in Town', status: 'Hot' },
-    { id: 't2', name: 'Affordable Gyms', status: 'Hot' },
-    { id: 't3', name: 'Work from Home Tips', status: 'Hot' },
-    { id: 't4', name: 'Weekend Getaways', status: 'Hot' },
-  ];
+
+   const { data, isLoading ,refetch } = useQuery({
+    queryKey: ["trending-tops"],
+    queryFn: () =>
+      fetchData(`/discussion/trending-topics`),
+    keepPreviousData: true,
+  });
+
+const trendingTopics =
+  data?.data?.map((topic, index) => ({
+    id: `${topic.tag}-${index ?? index}`,
+    name: topic.tag,
+    status: "Hot",
+  })) || [];
+
+ 
+ 
 
 
 

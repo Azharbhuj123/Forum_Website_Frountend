@@ -81,7 +81,7 @@ const Overview = () => {
     },
     {
       title: `Pending Reports`,
-      value: `0`,
+      value: data?.total_report || 0,
       change: `Requires attention`,
       icon: <PendingReports_svg />,
       changeIcon: <Attention_svg />,

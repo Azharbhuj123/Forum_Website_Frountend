@@ -18,6 +18,11 @@ export default function UpperSecton() {
     queryFn: () => fetchData(`/auth/my-detail`),
     keepPreviousData: true,
   });
+  const { data:myStats, isLoading:myStatsLoading, refetch:myStatsRefetch } = useQuery({
+    queryKey: ["user-stats"],
+    queryFn: () => fetchData(`/auth/user-stats`),
+    keepPreviousData: true,
+  });
 
   const navigate = useNavigate();
 
@@ -86,19 +91,19 @@ export default function UpperSecton() {
             <div class="smitchell-profile-stats">
               <div class="smitchell-profile-stat-item">
                 <span class="smitchell-profile-stat-value">
-                  <Star_OR_Svg /> {data?.rating}
+                  <Star_OR_Svg /> {myStats?.my_total_reviews}
                 </span>
                 <span class="smitchell-profile-stat-label">Reviews</span>
               </div>
-              <div class="smitchell-profile-stat-item">
+              {/* <div class="smitchell-profile-stat-item">
                 <span class="smitchell-profile-stat-value">
                   <Followers_Svg /> {data?.followersCount || 0}
                 </span>
                 <span class="smitchell-profile-stat-label">Followers</span>
-              </div>
+              </div> */}
               <div class="smitchell-profile-stat-item">
                 <span class="smitchell-profile-stat-value">
-                  <Thumb_Svg_OR /> {data?.likesCount}
+                  <Thumb_Svg_OR /> {myStats?.final_values}
                 </span>
                 <span class="smitchell-profile-stat-label">Helpful Votes</span>
               </div>

@@ -41,6 +41,7 @@ const userData = JSON.parse(localStorage.getItem("userData") || "null");
           rental_data={data?.data}
           otherProperties={otherProperties}
           alreadySaved={data?.isSaved}
+          refetch={refetch}
         />
         <div className="res786">
           <SectionTwo

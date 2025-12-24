@@ -2858,3 +2858,64 @@ p.msg-to-login a{
     flex-wrap: wrap;
 }
 }
+
+
+
+.mention-modal {
+  position: absolute;
+  width: 260px;
+  max-height: 220px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  overflow-y: auto;
+  z-index: 999;
+}
+
+.mention-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.mention-user:hover {
+  background: #f1f5f9;
+}
+
+.mention-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.mention-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.empty-text {
+  padding: 12px;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 13px;
+}
+span.star1{
+  color:#fff
+}
+span.star1.filled {
+    color: yellow;
+}
+
+/* Mobile friendly */
+@media (max-width: 480px) {
+  .mention-modal {
+    width: 90vw;
+    left: 5vw !important;
+  }
+}
+

@@ -13,7 +13,7 @@ import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { set } from "react-hook-form";
 
-export default function CommentsSection({ sectionTwoRef, property }) {
+export default function CommentsSection({ sectionTwoRef, property,refetchProp }) {
   const [commentText, setCommentText] = useState("");
   const [rating, setRating] = useState(0);
   const [comment_id, setComment_id] = useState(null);
@@ -112,6 +112,9 @@ export default function CommentsSection({ sectionTwoRef, property }) {
       }
       if (data?.status) {
         refetch();
+        refetchProp();
+        setRating(0);
+
         setCommentText("");
         setPostCmtLoading(false)
         showSuccess("Action submitted successfully");
@@ -120,6 +123,8 @@ export default function CommentsSection({ sectionTwoRef, property }) {
     onErrorCallback: (errmsg) => {
       console.log(errmsg);
       showError(errmsg);
+        setPostCmtLoading(false)
+
     },
   });
 
@@ -191,17 +196,17 @@ export default function CommentsSection({ sectionTwoRef, property }) {
 
   return (
     <>
-      <div className="reviews-container">
+      <div className="reviews-container" ref={sectionTwoRef}>
         {/* Reviews Header */}
         {data?.totalCount > 0 && (
           <div className="reviews-header">
             <h2 className="reviews-title">
               Reviews ({data?.totalCount?.toLocaleString()})
             </h2>
-            <div className="sort-dropdown">
+            {/* <div className="sort-dropdown">
               <span>Newest</span>
               <span>▼</span>
-            </div>
+            </div> */}
           </div>
         )}
 
@@ -211,7 +216,7 @@ export default function CommentsSection({ sectionTwoRef, property }) {
       const is_like_by = item?.likedBy?.includes(userData?._id);
 
       return (
-        <div ref={sectionTwoRef} key={index} className="review-card">
+        <div  key={index} className="review-card">
           <div className="review-header">
             <div className="reviewer-info">
               <div className="reviewer-avatar">

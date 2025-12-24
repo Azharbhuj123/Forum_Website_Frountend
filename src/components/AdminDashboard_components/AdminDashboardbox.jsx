@@ -47,13 +47,13 @@ const AdminDashboardbox = () => {
               <p>Listings</p>
             </button>
 
-            <button
+            {/* <button
               className={activeTab === "reviews" ? "active" : ""}
               onClick={() => setActiveTab("reviews")}
             >
               <Reviews_svg />
               <p>Reviews</p>
-            </button>
+            </button> */}
 
             <button
               className={activeTab === "users" ? "active" : ""}

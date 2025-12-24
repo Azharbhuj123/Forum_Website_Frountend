@@ -27,6 +27,7 @@ const Routes = () => {
     },
 
     { path: "/register", element: <AuthPages /> },
+    // { path: "/forget-pass", element: <ForgotPass /> },
     { path: "/search-rental", element: <SearchBusiness /> },
     { path: "/discussions", element: <Discussions /> },
     { path: "/discussions-detail/:id", element: <DiscussionsDetail /> },

@@ -13,6 +13,7 @@ import useStore from "../../../stores/store";
 import { useQuery } from "@tanstack/react-query";
 import { fetchData } from "../../../queryFunctions/queryFunctions";
 import { Link, useNavigate } from "react-router-dom";
+import ThreadedDiscussion from "../Business_Components/ThreadedDiscussion";
 
 export default function SectionOne({ data, refetch }) {
   const userData = JSON.parse(localStorage.getItem("userData"));
@@ -168,6 +169,20 @@ export default function SectionOne({ data, refetch }) {
       method: "post",
     });
   };
+  const handleNativeShare = () => {
+    if (navigator.share) {
+      navigator
+        .share({
+          title: discussion_data?.title,
+          text: discussion_data?.description,
+          url: window.location.href,
+        })
+        .then(() => console.log("Shared successfully"))
+        .catch((error) => console.error("Error sharing", error));
+    } else {
+      showError("Sharing is not supported in this browser.");
+    }
+  };
   return (
     <div>
       <button className="back-button" onClick={() => window.history.back()}>
@@ -233,45 +248,17 @@ export default function SectionOne({ data, refetch }) {
             <Reply_Svg /> {discussion_data?.comments?.length} Comments
           </span>
 
-          <span>
+          <span style={{cursor:"pointer"}} onClick={handleNativeShare}>
             <Share_svg2 />
             Share
           </span>
         </div>
       </div>
 
-      <div className="post-comment">
-        <p>Add your Comment</p>
-
-        <div className="user-comment">
-          <img
-            src={
-              userData?.profile_img ||
-              "https://forum-backend-production-47c5.up.railway.app/uploads/1763980553327-download.png"
-            }
-            alt=""
-          />
-          <textarea
-            value={my_comment}
-            disabled={!userData}
-            placeholder="Share your thoughts..."
-            onChange={(e) => setMyComment(e.target.value)}
-          />
-        </div>
-        {!userData && (
-          <p className="msg-to-login">
-            ⚠️ Please <Link to="/register">sign in</Link> to post a comment.
-          </p>
-        )}
-        <div className="user-cmt-btn">
-          <button disabled={loading} onClick={handlePostComment}>
-            {loading ? "Posting..." : "Post Comment"}
-          </button>
-        </div>
-      </div>
+    
 
       <div className="comment-show">
-        {discussion_data?.nestedComments?.length > 0 && (
+        {/* {discussion_data?.nestedComments?.length > 0 && (
           <>
             <p className="cmt-count">{data?.totalCount} Comments</p>
 
@@ -401,7 +388,9 @@ export default function SectionOne({ data, refetch }) {
               })}
             </div>
           </>
-        )}
+        )} */}
+
+         <ThreadedDiscussion discussionId={discussion_data?._id} userData={userData} />
       </div>
     </div>
   );

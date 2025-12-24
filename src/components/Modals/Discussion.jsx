@@ -4,7 +4,7 @@ import { showError } from "../Toaster";
 import useActionMutation from "../../queryFunctions/useActionMutation";
 import useStore from "../../stores/store";
 
-export default function Discussion({ isOpen, setIsOpen }) {
+export default function Discussion({ isOpen, setIsOpen,discussionRefetch}) {
   const {
     register,
     handleSubmit,
@@ -15,7 +15,7 @@ export default function Discussion({ isOpen, setIsOpen }) {
     formState: { errors },
   } = useForm();
   const token = localStorage.getItem('token')
-const {login_required} =useStore()
+const {login_required,triggerDiscussionRefetch} =useStore()
   const [filePreviews, setFilePreviews] = useState([]);
 
   const categories = [
@@ -66,6 +66,7 @@ const {login_required} =useStore()
   const { triggerMutation, loading } = useActionMutation({
     onSuccessCallback: (data) => {
       reset();
+      triggerDiscussionRefetch();
       setIsOpen(false);
       setFilePreviews([])
     },
@@ -218,7 +219,7 @@ const {login_required} =useStore()
           </div>
 
           {/* Attachments */}
-          <div className="form-field-group">
+          {/* <div className="form-field-group">
             <label className="field-label">Attachments (Optional)</label>
 
             <Controller
@@ -247,7 +248,7 @@ const {login_required} =useStore()
 
                 return (
                   <>
-                    {/* Hidden Input */}
+                    Hidden Input
                     <input
                       ref={(el) => {
                         field.ref(el);
@@ -260,7 +261,7 @@ const {login_required} =useStore()
                       onChange={handleFileChange}
                     />
 
-                    {/* Upload UI */}
+                    Upload UI
                     <div
                       className="upload-area"
                       onClick={() => fileInputRef.current.click()}
@@ -295,7 +296,7 @@ const {login_required} =useStore()
                       <p className="upload-text">+ Add Photos (Max 4)</p>
                     </div>
 
-                    {/* Preview */}
+                    Preview
                     <div className="preview-container">
                       {filePreviews.map((src, i) => (
                         <img
@@ -310,7 +311,7 @@ const {login_required} =useStore()
                 );
               }}
             />
-          </div>
+          </div> */}
         </div>
 
         {/* Footer */}

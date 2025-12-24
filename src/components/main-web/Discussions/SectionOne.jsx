@@ -4,7 +4,7 @@ import Discussion from "../../Modals/Discussion";
 import { FaPlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 
-export default function SectionOne() {
+export default function SectionOne({discussionRefetch}) {
   const [showPopup, setShowPopup] = useState(false);
   const token = localStorage.getItem('token')
   const navigate = useNavigate();
@@ -29,7 +29,7 @@ export default function SectionOne() {
         <button onClick={handleClick}>
          <FaPlus size={20}/>Start Discussion
         </button>
-        <Discussion setIsOpen={setShowPopup} isOpen={showPopup} />
+        <Discussion setIsOpen={setShowPopup} isOpen={showPopup}  />
       </div>
     </div>
   );

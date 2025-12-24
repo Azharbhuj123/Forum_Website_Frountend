@@ -66,6 +66,10 @@ svg.liked {
     border-radius: 16.4px;
     background: linear-gradient(180deg, #FF002F 0%, #FF2D54 100%);
 }
+.mention {
+  color: #ff2d54;
+  font-weight: 600;
+}
 
 
 :where(.css-dev-only-do-not-override-198drv2).ant-pagination
@@ -347,6 +351,7 @@ h3.ant-skeleton-title {
   text-decoration: none;
   font-weight: 500;
   transition: color 0.3s ease;
+  cursor: pointer;
 }
 .auth-link-text:hover {
   color: #ee6f38;
@@ -879,11 +884,24 @@ background-clip: text;
 }
 
 .footer-copyright {
-  text-align: center;
-  padding-top: 24px;
-  border-top: 1px solid #e5e5e5;
+    text-align: center;
+    padding-top: 24px;
+    border-top: 1px solid #e5e5e5;
+    width: 100%;
+}
+.main-footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
+nav.footer-nav {display: flex;justify-content: space-between;gap: 40px;color: #FF0A37;margin: 20px 0px;}
+
+nav.footer-nav a {
+    color: #FF0A37;
+    text-decoration: none;
+}
 .footer-copyright p {
   font-size: 12px;
   color: #7a7a7a;
@@ -1572,7 +1590,7 @@ background-clip: text;
   background: linear-gradient(180deg, #FF002F 0%, #FF2D54 100%);
 
   display: flex;
-  padding: 9px 18px 7px 12px;
+  padding: 7px 18px 7px 12px;
   align-items: center;
   gap: 10px;
 }
@@ -3920,7 +3938,7 @@ background: linear-gradient(180deg, #FF002F 0%, #F91942 50%, #FF002F 100%);  bor
   font-size: 18px;
   font-weight: bold;
   color: #333;
-  margin: 25px 0 15px 0;
+  /* margin: 25px 0 15px 0; */
 
   color: #1a1a1a;
   font-family: Poppins;
@@ -6312,11 +6330,11 @@ label.upload-label {
 }
 
 .ds-delete {
-  background: linear-gradient(180deg, #dd5253 0%, #f07433 100%);
+  background: linear-gradient(180deg, #FF002F 0%, #FF2D54 100%);
   color: white;
 }
 .ds-delete:hover {
-  background: linear-gradient(100deg, #dd5253 0%, #f07433 100%);
+  background: linear-gradient(180deg, #FF002F 0%, #FF2D54 100%);
 }
 
 /* DeleteSure.css */
@@ -6711,6 +6729,21 @@ button.see-more-btn {
 }
 
 @media (max-width: 600px) {
+  nav.footer-nav {
+    display: flex;
+        justify-content: center;
+
+    gap: 22px;
+    color: #FF0A37;
+    margin: 20px 0px;
+    flex-wrap: wrap;
+}
+.discussion-card .feautures {
+    display: flex;
+    margin-top: 13px;
+    gap: 13px;
+    flex-wrap: wrap;
+}
   .chat-main {
   display: flex;
   height: 80vh;
@@ -6868,7 +6901,14 @@ button.see-more-btn {
 
 @media (max-width: 480px) {
 
-
+nav.footer-nav {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    color: #FF0A37;
+    margin: 20px 0px;
+    flex-wrap: wrap;
+}
  
 
 .divider {

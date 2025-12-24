@@ -21,6 +21,7 @@ export default function SectionOne({
   rental_data,
   otherProperties,
   alreadySaved,
+  refetch
 }) {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [isSaved, setIsSaved] = useState(alreadySaved);
@@ -49,6 +50,11 @@ export default function SectionOne({
   const sectionTwoRef = useRef(null);
 
   const gotoReview = () => {
+if (!userData) {
+      showError(login_required);
+      return;
+    }
+    
     // Scroll to the div smoothly
     sectionTwoRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -90,6 +96,21 @@ export default function SectionOne({
     });
   };
 
+  const handleNativeShare = () => {
+    if (navigator.share) {
+      navigator
+        .share({
+          title: rental_data?.listingTitle,
+          text: rental_data?.description,
+          url: window.location.href,
+        })
+        .then(() => console.log("Shared successfully"))
+        .catch((error) => console.error("Error sharing", error));
+    } else {
+      showError("Sharing is not supported in this browser.");
+    }
+  };
+
   return (
     <>
       <div className="restaurant-container">
@@ -109,20 +130,27 @@ export default function SectionOne({
             <h1 className="restaurant-name1">{rental_data?.listingTitle}</h1>
 
             <div className="rating-section">
-              <div className="stars0">
-                <span className="star1 filled">★</span>
-                <span className="star1 filled">★</span>
-                <span className="star1 filled">★</span>
-                <span className="star1 filled">★</span>
-                <span className="star1 half">★</span>
-              </div>
-              <span className="rating-text">
-                {rental_data?.rating || "N/A"}
-              </span>
-              <span className="reviews-count">
-                ({rental_data?.total_review || "N/A"} reviews)
-              </span>
-            </div>
+  <div className="stars0">
+    {Array.from({ length: 5 }, (_, index) => {
+      const rating = rental_data?.rating || 0;
+      if (index + 1 <= Math.floor(rating)) {
+        // full star
+        return <span key={index} className="star1 filled">★</span>;
+      } else if (index < rating) {
+        // half star
+        return <span key={index} className="star1 half">★</span>;
+      } else {
+        // empty star
+        return <span key={index} className="star1">★</span>;
+      }
+    })}
+  </div>
+  <span className="rating-text">{rental_data?.rating || "N/A"}</span>
+  <span className="reviews-count">
+    ({rental_data?.total_review || "N/A"} reviews)
+  </span>
+</div>
+
 
             <div className="restaurant-type">
               <span className="type-text">{rental_data?.category}</span>
@@ -134,9 +162,9 @@ export default function SectionOne({
                 <span className="btn-icon">
                   <Star2 />
                 </span>
-                Write a Review
+                Write a Comment
               </button>
-              <button className="btn btn-tertiary">
+              <button onClick={handleNativeShare} className="btn btn-tertiary">
                 <span className="btn-icon">
                   <Share_svg />
                 </span>
@@ -150,10 +178,10 @@ export default function SectionOne({
               </button> */}
               <button onClick={handleSaved} className="btn btn-secondary">
                 <Save_svgs />
-                {isSaved ? "Un Save" : "Save"}
+                {isSaved ? "Unsaved" : "Save"}
               </button>
             </div>
-            {userData?._id !== rental_data?.user?._id && (
+            {/* {userData?._id !== rental_data?.user?._id && (
               <div className="secondary-buttons">
                 <button className="btn btn-tertiary" onClick={handleMessage}>
                   <span className="btn-icon">
@@ -162,7 +190,7 @@ export default function SectionOne({
                   Message
                 </button>
               </div>
-            )}
+            )} */}
           </div>
         </div>
         <div className="res786Done">
@@ -229,7 +257,7 @@ export default function SectionOne({
           </div>
         </div>
 
-        <CommentsSection sectionTwoRef={sectionTwoRef} property={rental_data} />
+        <CommentsSection sectionTwoRef={sectionTwoRef} property={rental_data} refetchProp={refetch} />
       </div>
     </>
   );

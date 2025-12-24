@@ -11,6 +11,7 @@ import useActionMutation from "../queryFunctions/useActionMutation";
 import { showError, showSuccess } from "../components/Toaster";
 import { useQuery } from "@tanstack/react-query";
 import { fetchData } from "../queryFunctions/queryFunctions";
+import { useNavigate } from "react-router-dom";
 
 const profileSchema = yup.object({
   name: yup.string().required("Display name is required"),
@@ -32,12 +33,24 @@ password: yup
     "password-length",
     "Password must be at least 6 characters",
     function (value) {
-      if (!value) return true; // user ne password nahi dala → OK
-      return value.length >= 6; // user ne dala → length check
+      if (!value) return true; // password empty → OK
+      return value.length >= 6; // password entered → min length
     }
   ),
+
+currentPass: yup
+  .string()
+  .nullable()
+  .when("password", {
+    is: (password) => !!password, // agar password dala hai
+    then: (schema) =>
+      schema.required("Current password is required"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+
+
   // twofactor: yup.string(),
-  coverPhoto: yup.mixed(),
+  coverPhoto: yup.mixed().optional(),
   profilePhoto: yup.mixed(),
 });
 
@@ -49,7 +62,7 @@ export default function EditProfile() {
   const [preview, setPreview] = useState(userData?.profile_img);
   const [preview_cover, setPreviewCover] = useState(null);
 
-
+  const navigate = useNavigate()
   const { data, isLoading } = useQuery({
     queryKey: ["user-detail"],
     queryFn: () =>
@@ -82,6 +95,7 @@ export default function EditProfile() {
     },
   });
 
+console.log(errors);
 
 
   useEffect(() => {
@@ -95,7 +109,8 @@ export default function EditProfile() {
       phone: data.phone_number || "",
       coverPhoto: data.cover_img || null,
       profilePhoto: data.profile_img || null,
-      password: "" // leave blank for security
+      password: "", // leave blank for security
+      currentPass: "" // leave blank for security
     });
     setPublicProfile(data.privacy_settings?.public_profile)
     setShowEmailPublic(data.privacy_settings?.public_email)
@@ -113,6 +128,8 @@ export default function EditProfile() {
 
 const { triggerMutation, loading } = useActionMutation({
     onSuccessCallback: (data) => {
+        localStorage.setItem("userData", JSON.stringify(data?.user));
+
        showSuccess("Profile updated successfully");
     },
     onErrorCallback: (errmsg) => {
@@ -133,6 +150,7 @@ const { triggerMutation, loading } = useActionMutation({
   formData.append("email", data.email);
   formData.append("phone", data.phone);
   formData.append("password", data.password);
+  formData.append("currentPass", data.currentPass);
 
   // Append boolean values (must convert to string)
   formData.append("publicProfile", publicProfile ? "true" : "false");
@@ -176,12 +194,12 @@ const { triggerMutation, loading } = useActionMutation({
           <div className="smitchell-edit-container">
             <h1 className="smitchell-edit-title">Edit Profile</h1>
             <div className="cover-contianer">
-              <h2 className="smitchell-edit-section-header">
+              {/* <h2 className="smitchell-edit-section-header">
                 Profile & Cover Photos
-              </h2>
+              </h2> */}
 
               {/* --- Cover Photo Section --- */}
-              <div className="smitchell-edit-cover-photo-section">
+              {/* <div className="smitchell-edit-cover-photo-section">
                 <p className="smitchell-edit-label">Cover Photo</p>
 
                 <Controller
@@ -280,7 +298,10 @@ const { triggerMutation, loading } = useActionMutation({
                     </div>
                   )}
                 />
-              </div>
+                 {errors.coverPhoto && (
+                <span className="error-text">{errors.coverPhoto.message}</span>
+              )}
+              </div> */}
 
               {/* --- Profile Photo Section --- */}
               <h2 className="smitchell-edit-section-header">Profile Photo</h2>
@@ -434,7 +455,6 @@ const { triggerMutation, loading } = useActionMutation({
                 className="form-input unique-display-name-input"
                 placeholder="Enter your email address"
                 {...register("email")}
-                disabled
               />
               {errors.email && (
                 <span className="error-text">{errors.email.message}</span>
@@ -459,7 +479,7 @@ const { triggerMutation, loading } = useActionMutation({
           </div>
 
           {/* PRIVACY SETTINGS */}
-          <div className="basic-info-form-container unique-form-wrapper">
+          {/* <div className="basic-info-form-container unique-form-wrapper">
             <h2 className="basic-info-form-title custom-section-title">
               Privacy Settings
             </h2>
@@ -519,14 +539,25 @@ const { triggerMutation, loading } = useActionMutation({
                 offHandleColor="#fff"
               />
             </div>
-          </div>
+          </div> */}
 
           {/* ACCOUNT SETTINGS */}
           <div className="basic-info-form-container unique-form-wrapper">
             <h2 className="basic-info-form-title custom-section-title">
-              Account Settings
+              Password
             </h2>
-
+<div className="form-field-group">
+              <input
+                type="password"
+                id="password"
+                placeholder="Current Password"
+                className="form-input unique-display-name-input"
+                {...register("currentPass")}
+              />
+              {errors.currentPass && (
+                <span className="error-text">{errors.currentPass.message}</span>
+              )}
+            </div>
             <div className="form-field-group">
               <input
                 type="password"
@@ -557,7 +588,7 @@ const { triggerMutation, loading } = useActionMutation({
           </div>
 
           <div className="actions-button-pro">
-            <button type="button" className="close">
+            <button onClick={()=>navigate("/profile")} type="button" className="close">
               Close
             </button>
             <button disabled={loading} type="submit" className="save">
