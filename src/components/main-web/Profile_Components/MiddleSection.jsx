@@ -6,6 +6,9 @@ import TabNavigation from "../common/TabNavigation";
 import { Skeleton } from "antd";
 import FeaturedCard from "../Features/FeaturedCard";
 import Listings from "../../AdminDashboard_components/Listings";
+import { FaEye, FaPencilAlt, FaTrashAlt } from "react-icons/fa";
+import { showError, showSuccess } from "../../Toaster";
+import useActionMutation from "../../../queryFunctions/useActionMutation";
 
 const TABS = [
   { id: "reviews", label: "Reviews" },
@@ -19,7 +22,7 @@ export default function MiddleSection() {
   const userData = JSON.parse(localStorage.getItem("userData"));
   const [limit, setLimit] = useState(5);
 
-  const { data: reviewsData, isLoading: reviewsLoading } = useQuery({
+  const { data: reviewsData, isLoading: reviewsLoading ,refetch:reviewre } = useQuery({
     queryKey: ["my-reviews", limit],
     queryFn: () =>
       fetchData(`/review/${userData?._id}?forme=true&limit=${limit}`),
@@ -45,6 +48,25 @@ export default function MiddleSection() {
     setActiveTab(tabId);
   }, []);
 
+    const { triggerMutation, loading } = useActionMutation({
+      onSuccessCallback: (res) => {
+        reviewre()
+        showSuccess("Deleted successfully")
+      },
+      onErrorCallback: (errmsg) => {
+        showError(errmsg);
+      },
+    });
+
+
+  const handleDelete = (id)=>{
+    triggerMutation({
+      endPoint:`/review/delete/${id}`,
+      method:"delete",
+     
+    });
+  }
+
   return (
     <div className="smitchell-review-component">
       <TabNavigation
@@ -58,10 +80,13 @@ export default function MiddleSection() {
           {reviewsData?.data?.map((review) => (
             <div key={review._id} className="smitchell-review-item">
               {/* Place / Property Name */}
+              <div className="styling-new">
               <h3 className="smitchell-review-place-name">
                 {review?.property?.listingTitle || "Property Name"}{" "}
                 {/* you may need to fetch or map propertyName */}
               </h3>
+              <FaTrashAlt style={{cursor:"pointer"}} onClick={()=>handleDelete(review._id)}/>
+              </div>
 
               {/* Rating & Date */}
               <div className="smitchell-review-rating">

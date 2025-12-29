@@ -24,9 +24,9 @@ const AdminDashboardbox = () => {
               <p>Manage and moderate your community</p>
             </span>
 
-            <button>
+            {/* <button>
               <CiSettings szie={50} /> Settings
-            </button>
+            </button> */}
           </div>
 
           {/* TAB BUTTONS */}

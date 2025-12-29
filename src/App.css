@@ -7127,3 +7127,12 @@ button.search-btn {
     padding: 6px 12px;
   }
 } */
+
+svg.star-icon {
+    fill: red;
+}
+.styling-new {
+    display: flex;
+    empty-cells: ju;
+    justify-content: space-between;
+}

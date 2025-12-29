@@ -33,7 +33,7 @@ export default function FilterBox({ setFinalQuery, final_query }) {
                 onChange={() => setFinalQuery({ ...final_query, rating: star })}
               />
               <label>
-                <Star_Svg />
+                <Star_Svg className="star-icon" />
                 {star}+ Stars
               </label>
             </div>

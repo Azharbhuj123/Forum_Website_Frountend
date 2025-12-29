@@ -41,9 +41,9 @@ const resetSchema = yup.object().shape({
     .string()
     .min(8, "Password must be at least 8 characters")
     .required("Password is required"),
-  oldPass: yup
-    .string() 
-    .required("Old Password is required"),
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref("password"), null], "Passwords must match"),
   otp: yup.string().required("OTP is required"),
 });
 
@@ -382,6 +382,7 @@ const ResetPage = ({ resetForm, handleSubmit, onReset, loading, setCurrentPage }
                   className="auth-input"
                   placeholder="Enter your email"
                   {...register("email")}
+                  disabled
                 />
               </div>
               {formState.errors.email && (
@@ -407,23 +408,7 @@ const ResetPage = ({ resetForm, handleSubmit, onReset, loading, setCurrentPage }
               )}
             </div>
 
-            <div className="auth-input-group">
-              <label className="auth-label">Old Password</label>
-              <div className="auth-input-wrapper">
-                <span className="auth-input-icon">
-                  <IoMdLock />
-                </span>
-                <input
-                  type="password"
-                  className="auth-input"
-                  placeholder="Enter your old password"
-                  {...register("oldPass")}
-                />
-              </div>
-              {formState.errors.oldPass && (
-                <p className="error-text">{formState.errors.oldPass.message}</p>
-              )}
-            </div>
+          
 
             <div className="auth-input-group">
               <label className="auth-label">New Password</label>
@@ -440,6 +425,23 @@ const ResetPage = ({ resetForm, handleSubmit, onReset, loading, setCurrentPage }
               </div>
               {formState.errors.password && (
                 <p className="error-text">{formState.errors.password.message}</p>
+              )}
+            </div>
+              <div className="auth-input-group">
+              <label className="auth-label">Confirm Password</label>
+              <div className="auth-input-wrapper">
+                <span className="auth-input-icon">
+                  <IoMdLock />
+                </span>
+                <input
+                  type="password"
+                  className="auth-input"
+                  placeholder="Confirm Password"
+                  {...register("confirmPassword")}
+                />
+              </div>
+              {formState.errors.confirmPassword && (
+                <p className="error-text">{formState.errors.confirmPassword.message}</p>
               )}
             </div>
 

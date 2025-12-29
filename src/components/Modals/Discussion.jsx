@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { showError } from "../Toaster";
+import { showError, showSuccess } from "../Toaster";
 import useActionMutation from "../../queryFunctions/useActionMutation";
 import useStore from "../../stores/store";
 
@@ -69,6 +69,7 @@ const {login_required,triggerDiscussionRefetch} =useStore()
       triggerDiscussionRefetch();
       setIsOpen(false);
       setFilePreviews([])
+      showSuccess("Successfully Added")
     },
     onErrorCallback: (errmsg) => {
       console.log(errmsg);
