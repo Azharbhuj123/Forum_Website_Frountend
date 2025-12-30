@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import dpOr from "../../../assets/Images/dp-or.png";
 import {
   Reply_Svg,
@@ -25,6 +25,15 @@ export default function SectionOne({ data, refetch }) {
     data?.discussion || null
   );
   const navigate = useNavigate();
+  const discussionRef = useRef(null);
+
+  const scrollToDiscussion = () => {
+    discussionRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
+
   const { login_required } = useStore();
   const comments = [
     {
@@ -244,18 +253,21 @@ export default function SectionOne({ data, refetch }) {
             {discussion_data?.likesCount?.toLocaleString()} Upvotes
           </span>
 
-          <span>
+          <span
+            onClick={scrollToDiscussion}
+            style={{ cursor: "pointer" }}
+          >
             <Reply_Svg /> {discussion_data?.comments?.length} Comments
           </span>
 
-          <span style={{cursor:"pointer"}} onClick={handleNativeShare}>
+          <span style={{ cursor: "pointer" }} onClick={handleNativeShare}>
             <Share_svg2 />
             Share
           </span>
         </div>
       </div>
 
-    
+
 
       <div className="comment-show">
         {/* {discussion_data?.nestedComments?.length > 0 && (
@@ -390,7 +402,9 @@ export default function SectionOne({ data, refetch }) {
           </>
         )} */}
 
-         <ThreadedDiscussion discussionId={discussion_data?._id} userData={userData} />
+        <div ref={discussionRef}>
+          <ThreadedDiscussion discussionId={discussion_data?._id} userData={userData} />
+        </div>
       </div>
     </div>
   );

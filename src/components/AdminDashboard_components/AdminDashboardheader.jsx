@@ -41,8 +41,6 @@ const AdminDashboardheader = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  
-
   return (
     <>
       <header className="AdminDashboardheader">
@@ -76,6 +74,8 @@ const AdminDashboardheader = () => {
               isMenuOpen ? "open" : ""
             }`}
           >
+            {userData?.role !== "Admin" && 
+            <>
             <div
               className="AdminDashboardheader-icon"
               onClick={() => {
@@ -103,6 +103,8 @@ const AdminDashboardheader = () => {
             >
               <Message_svg />
             </div>
+            </>
+            }
             {/* <div className="AdminDashboardheader-icon">
               <Bell_svg />
             </div> */}

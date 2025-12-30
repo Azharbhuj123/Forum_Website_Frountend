@@ -41,7 +41,7 @@ const schema = yup.object().shape({
 
  photos: yup
     .array()
-    .min(4, "Please upload at least 4 images")
+    // .min(4, "Please upload at least 4 images")
     .max(4, "You can upload up to 4 images")
     .test("fileType", "Only PNG or JPG images are allowed", (files) => {
       if (!files) return true;

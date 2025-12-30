@@ -50,11 +50,11 @@ export default function SectionOne({
   const sectionTwoRef = useRef(null);
 
   const gotoReview = () => {
-if (!userData) {
+    if (!userData) {
       showError(login_required);
       return;
     }
-    
+
     // Scroll to the div smoothly
     sectionTwoRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -83,12 +83,12 @@ if (!userData) {
   };
 
   const handleMessage = () => {
-     if (!userData) {
+    if (!userData) {
       navigate("/register");
       return;
     }
 
-    
+
     navigate("/chat", {
       state: {
         userId: rental_data?.user?._id,
@@ -129,27 +129,27 @@ if (!userData) {
           <div className="restaurant-info1">
             <h1 className="restaurant-name1">{rental_data?.listingTitle}</h1>
 
-            <div className="rating-section">
-  <div className="stars0">
-    {Array.from({ length: 5 }, (_, index) => {
-      const rating = rental_data?.rating || 0;
-      if (index + 1 <= Math.floor(rating)) {
-        // full star
-        return <span key={index} className="star1 filled">★</span>;
-      } else if (index < rating) {
-        // half star
-        return <span key={index} className="star1 half">★</span>;
-      } else {
-        // empty star
-        return <span key={index} className="star1">★</span>;
-      }
-    })}
-  </div>
-  <span className="rating-text">{rental_data?.rating || "N/A"}</span>
-  <span className="reviews-count">
-    ({rental_data?.total_review || "N/A"} reviews)
-  </span>
-</div>
+            <div className="rating-section" onClick={gotoReview} style={{cursor: 'pointer'}}>
+              <div className="stars0">
+                {Array.from({ length: 5 }, (_, index) => {
+                  const rating = rental_data?.rating || 0;
+                  if (index + 1 <= Math.floor(rating)) {
+                    // full star
+                    return <span key={index} className="star1 filled">★</span>;
+                  } else if (index < rating) {
+                    // half star
+                    return <span key={index} className="star1 half">★</span>;
+                  } else {
+                    // empty star
+                    return <span key={index} className="star1">★</span>;
+                  }
+                })}
+              </div>
+              <span className="rating-text">{rental_data?.rating || "N/A"}</span>
+              <span className="reviews-count">
+                ({rental_data?.total_review || "N/A"} reviews)
+              </span>
+            </div>
 
 
             <div className="restaurant-type">

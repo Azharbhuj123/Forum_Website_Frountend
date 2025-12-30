@@ -7,7 +7,7 @@ export default function FeaturedCard({ listings }) {
   return (
     <div className="listings-grid">
       {listings?.map((listing) => (
-        <div key={listing._id} className="listing-card">
+        <div key={listing._id} className="listing-card" onClick={()=>navigate(`/rental-detail/${listing._id}`)} style={{cursor: "pointer"}}>
           <div className="card-image-wrapper">
             <img
               src={listing?.photos[0]}
