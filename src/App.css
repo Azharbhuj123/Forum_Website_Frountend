@@ -2916,6 +2916,12 @@ p.user-comment-show {
   font-size: 13px;
 }
 
+button.flag-button.discussions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    width: 100%;
+}
 .flag-button {
   background: none;
   border: none;

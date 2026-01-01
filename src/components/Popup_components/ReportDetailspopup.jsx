@@ -13,7 +13,7 @@ import useActionMutation from "../../queryFunctions/useActionMutation";
 import { showError } from "../Toaster";
 import DeleteSure from "../Modals/DeleteSure";
 
-const ReportDetailspopup = ({ closePopup, openDetailsPopup,onDismiss,onTakeAction }) => {
+const ReportDetailspopup = ({ closePopup, openDetailsPopup,onDismiss,onTakeAction, discussionFlag }) => {
   const [api_data, set_Api_data] = useState(null);
   const [delete_id, setDelete_id] = useState(null);
   const [diss_miss_id, setDiss_miss_id] = useState(null);
@@ -21,7 +21,7 @@ const ReportDetailspopup = ({ closePopup, openDetailsPopup,onDismiss,onTakeActio
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["admin-detail", openDetailsPopup],
-    queryFn: () => fetchData(`/review/get-id/${openDetailsPopup}`),
+    queryFn: () => fetchData(`/review/get-id/${openDetailsPopup}/?discussionFlag=${discussionFlag}`),
     keepPreviousData: true,
     enabled: openDetailsPopup !== null,
   });
@@ -176,7 +176,7 @@ const ReportDetailspopup = ({ closePopup, openDetailsPopup,onDismiss,onTakeActio
                           </span>
                         ))
                       ) : (
-                        <p>N/A</p>
+                        null
                       )}
                     </div>
                   </div>

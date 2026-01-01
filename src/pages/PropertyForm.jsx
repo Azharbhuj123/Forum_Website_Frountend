@@ -19,7 +19,7 @@ const schema = yup.object().shape({
   tags: yup.string(),
   zipcode: yup.string().required("Zipcode is required"),
   fullAddress: yup.string().required("Full Address is required"),
-   rooms: yup
+  rooms: yup
     .number()
     .typeError("Must be a number")
     .required("Rooms required"),
@@ -39,7 +39,7 @@ const schema = yup.object().shape({
   maintenanceCharges: yup.number().typeError("Must be a number"),
   amenities: yup.array().of(yup.string()),
 
- photos: yup
+  photos: yup
     .array()
     // .min(4, "Please upload at least 4 images")
     .max(4, "You can upload up to 4 images")
@@ -104,17 +104,17 @@ export default function PropertyForm() {
   const property_id = location?.search?.split("=")[1];
 
 
-   const { data, isLoading, refetch } = useQuery({
-      queryKey: ["admin-property", property_id],
-      queryFn: () => fetchData(`/property/${property_id}`),
-      keepPreviousData: true,
-      enabled: !!property_id,
-    });
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["admin-property", property_id],
+    queryFn: () => fetchData(`/property/${property_id}`),
+    keepPreviousData: true,
+    enabled: !!property_id,
+  });
 
-    useEffect(() => {
+  useEffect(() => {
     if (property_id && data?.data) {
       console.log("API Data received:", data.data);
-      
+
       // Reset form with API data
       reset({
         ...data.data,
@@ -129,43 +129,112 @@ export default function PropertyForm() {
       navigate(`/property-detail/${data?.data?._id}`);
     },
     onErrorCallback: (errmsg) => {
-        showError(errmsg)
+      showError(errmsg)
     },
   });
+
+  // const onSubmit = (data, type) => {
+  //   const formData = new FormData();
+
+  //   // Append only real File objects
+  //   if (data.photos && data.photos.length) {
+  //     data.photos.forEach((item) => {
+  //       if (item instanceof File) {
+  //         formData.append("photos[]", item);
+  //       }
+  //     });
+  //   }
+
+  //   // Amenities
+  //   if (data.amenities && data.amenities.length) {
+  //     data.amenities.forEach((a) => formData.append("amenities[]", a));
+  //   }
+
+  //   // Other fields
+  //   Object.keys(data).forEach((key) => {
+  //     if (key !== "photos" && key !== "amenities" && data[key] !== undefined && data[key] !== null) {
+  //       formData.append(key, data[key]);
+  //     }
+  //   });
+  //   if(!property_id){
+  //   formData.append("is_publish", type === "publish");
+  //   }
+
+  //   triggerMutation({
+  //     endPoint: property_id ? `/property/${property_id}` : "/property/" ,
+  //     body: formData,
+  //     method: property_id ? "put" : "post",
+  //   });
+  // };
 
   const onSubmit = (data, type) => {
     const formData = new FormData();
 
-    // Append only real File objects
-    if (data.photos && data.photos.length) {
+    // 1. Photos (only NEW files)
+    if (Array.isArray(data.photos)) {
       data.photos.forEach((item) => {
         if (item instanceof File) {
-          formData.append("photos[]", item);
+          formData.append("photos", item);
         }
       });
     }
 
-    // Amenities
-    if (data.amenities && data.amenities.length) {
-      data.amenities.forEach((a) => formData.append("amenities[]", a));
+    // 2. Amenities (only if not empty)
+    if (Array.isArray(data.amenities) && data.amenities.length > 0) {
+      data.amenities.forEach((a) => {
+        if (a) formData.append("amenities[]", a);
+      });
     }
 
-    // Other fields
-    Object.keys(data).forEach((key) => {
-      if (key !== "photos" && key !== "amenities" && data[key] !== undefined && data[key] !== null) {
-        formData.append(key, data[key]);
+    // 3. Other fields (skip empty values)
+    Object.entries(data).forEach(([key, value]) => {
+      if (
+        value === undefined ||
+        value === null ||
+        value === "" ||
+        key === "photos" ||
+        key === "amenities"
+      ) {
+        return;
+      }
+
+      if (key === "user" && typeof value === "object" && value._id) {
+        formData.append("user", value._id);
+        return;
+      }
+
+      if (key === "saved_by") {
+        if (Array.isArray(value) && value.length > 0) {
+          value.forEach((id) => {
+            if (typeof id === "string") {
+              formData.append("saved_by[]", id);
+            }
+          });
+        }
+        return;
+      }
+
+      if (typeof value === "object") {
+        formData.append(key, JSON.stringify(value));
+      } else {
+        formData.append(key, value);
       }
     });
-    if(!property_id){
-    formData.append("is_publish", type === "publish");
+
+
+
+    // 4. Publish flag (only on create)
+    if (!property_id) {
+      formData.append("is_publish", type === "publish");
     }
 
     triggerMutation({
-      endPoint: property_id ? `/property/${property_id}` : "/property/" ,
+      endPoint: property_id ? `/property/${property_id}` : "/property",
       body: formData,
       method: property_id ? "put" : "post",
     });
   };
+
 
   return (
     <>
@@ -296,12 +365,12 @@ export default function PropertyForm() {
                 <p className="error-text">{errors.bathrooms?.message}</p>
               </div>
 
-             
+
             </div>
 
             <div className="three-column-grid">
-              
- <div className="input-field-wrapper">
+
+              <div className="input-field-wrapper">
                 <label className="input-field-label">Year Built</label>
                 <input
                   type="text"
@@ -422,7 +491,7 @@ export default function PropertyForm() {
           </section>
 
           {/* Upload Photos Section */}
-         <section className="form-section-block">
+          <section className="form-section-block">
             <h2 className="section-heading-title">Upload Photos</h2>
 
             <Controller
@@ -515,40 +584,40 @@ export default function PropertyForm() {
           {
             property_id ? (
               <div className="form-actions-footer">
-            
 
-            <button
-              disabled={loading}
-              type="button"
-              className="btn-submit-action"
-              onClick={handleSubmit((data) => onSubmit(data, "publish"))}
-            >
-              {loading ? "Submitting..." : "Save Changes"}
-            </button>
-          </div>
-            ):(
-<div className="form-actions-footer">
-            <button
-              disabled={loading}
-              type="button"
-              onClick={handleSubmit((data) => onSubmit(data, "draft"))}
-              className="btn-cancel-action"
-            >
-              {loading ? "Submitting..." : "Save as draft"}
-            </button>
 
-            <button
-              disabled={loading}
-              type="button"
-              className="btn-submit-action"
-              onClick={handleSubmit((data) => onSubmit(data, "publish"))}
-            >
-              {loading ? "Submitting..." : "Publish"}
-            </button>
-          </div>
+                <button
+                  disabled={loading}
+                  type="button"
+                  className="btn-submit-action"
+                  onClick={handleSubmit((data) => onSubmit(data, "publish"))}
+                >
+                  {loading ? "Submitting..." : "Save Changes"}
+                </button>
+              </div>
+            ) : (
+              <div className="form-actions-footer">
+                <button
+                  disabled={loading}
+                  type="button"
+                  onClick={handleSubmit((data) => onSubmit(data, "draft"))}
+                  className="btn-cancel-action"
+                >
+                  {loading ? "Submitting..." : "Save as draft"}
+                </button>
+
+                <button
+                  disabled={loading}
+                  type="button"
+                  className="btn-submit-action"
+                  onClick={handleSubmit((data) => onSubmit(data, "publish"))}
+                >
+                  {loading ? "Submitting..." : "Publish"}
+                </button>
+              </div>
             )
           }
-          
+
         </div>
       </div>
     </>

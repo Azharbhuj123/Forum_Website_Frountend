@@ -14,6 +14,7 @@ const Reports = () => {
   const [openDetailsPopup, setOpenDetailsPopup] = useState(null);
   const [delete_id, setDelete_id] = useState(null);
   const [diss_miss_id, setDiss_miss_id] = useState(null);
+  const [discussionFlag, setDiscussionFlag] = useState(false);
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["admin-report"],
@@ -21,14 +22,15 @@ const Reports = () => {
     keepPreviousData: true,
   });
 
-  
+
   const { triggerMutation, loading } = useActionMutation({
     onSuccessCallback: (res) => {
       if (res?.dismiss) {
-       setOpenTakePopup(false);
-      refetch(); // Refresh the reports list
-      setDelete_id(null);
-setDiss_miss_id(null)
+        setOpenTakePopup(false);
+        refetch(); // Refresh the reports list
+        setDelete_id(null);
+        setDiss_miss_id(null)
+        setDiscussionFlag(false)
         return;
       }
       setOpenTakePopup(false);
@@ -43,12 +45,12 @@ setDiss_miss_id(null)
   const onConfirm = async () => {
 
     let endPoint = diss_miss_id ? `/review/dismiss-flag-review` : `/admin/reviews/${delete_id}`;
-    let method = diss_miss_id ? "post": "patch";
-    let body = { action: "rejected" };
+    let method = diss_miss_id ? "post" : "patch";
+    let body = { action: "rejected", discussionFlag };
 
 
-    if(diss_miss_id){
-     body.id = diss_miss_id;
+    if (diss_miss_id) {
+      body.id = diss_miss_id;
     }
     triggerMutation({
       endPoint,
@@ -63,14 +65,14 @@ setDiss_miss_id(null)
     setDiss_miss_id(id);
     setOpenTakePopup(true);
   };
-const handleTakeAction = (id) => {
+  const handleTakeAction = (id) => {
     setOpenDetailsPopup(null);
 
-  setDelete_id(id);
-  setDiss_miss_id(null); // important
-  setOpenTakePopup(true);
+    setDelete_id(id);
+    setDiss_miss_id(null); // important
+    setOpenTakePopup(true);
 
-};
+  };
 
   return (
     <>
@@ -97,7 +99,7 @@ const handleTakeAction = (id) => {
 
                   <div className="Pending-Reports-btn-box">
                     <button
-                      onClick={() => handleDismiss(item._id)}
+                      onClick={() => handleDismiss(item._id, setDiscussionFlag(false))}
                       className="Dismiss"
                     >
                       Dismiss
@@ -106,13 +108,13 @@ const handleTakeAction = (id) => {
                     {/* TAKE ACTION BUTTON */}
                     <button
                       className="Take"
-                      onClick={() => handleTakeAction(item._id)}
+                      onClick={() => handleTakeAction(item._id, setDiscussionFlag(false))}
                     >
                       Take Action
                     </button>
 
                     {/* VIEW DETAILS */}
-                    <button onClick={() => setOpenDetailsPopup(item?._id)}>
+                    <button onClick={() => setOpenDetailsPopup(item?._id, setDiscussionFlag(false))}>
                       View Details
                     </button>
                   </div>
@@ -124,6 +126,50 @@ const handleTakeAction = (id) => {
               </div>
             ))}
           </div>
+          <div className="Reviews-heading">
+            <h1>Threads</h1>
+          </div>
+            <div className="Pending-Reports-box">
+              {data?.discussionFlag?.map((item, index) => (
+                <div className="Pending-Reports-list" key={index}>
+                  <div className="Pending-Reports-title">
+                    <span>
+                      <Pending_svg />
+                      <h2>{item.flagTitle}</h2>
+                    </span>
+
+                    <p>{item?.flagMessage}</p>
+
+                    <div className="Pending-Reports-btn-box">
+                      <button
+                        onClick={() => handleDismiss(item._id, setDiscussionFlag(true))}
+                        className="Dismiss"
+                      >
+                        Dismiss
+                      </button>
+
+                      {/* TAKE ACTION BUTTON */}
+                      <button
+                        className="Take"
+                        onClick={() => handleTakeAction(item._id, setDiscussionFlag(true))}
+                      >
+                        Take Action
+                      </button>
+
+                      {/* VIEW DETAILS */}
+                      <button onClick={() => setOpenDetailsPopup(item?._id, setDiscussionFlag(true))}>
+                        View Details
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="Pending-box">
+                    <p>Pending</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
         </div>
       </div>
 
@@ -141,9 +187,12 @@ const handleTakeAction = (id) => {
 
       {/* 🔹 REPORT DETAILS POPUP */}
       {openDetailsPopup !== null && (
-        <ReportDetailspopup closePopup={() => setOpenDetailsPopup(null)} openDetailsPopup={openDetailsPopup} 
-         onDismiss={handleDismiss}
-          onTakeAction={handleTakeAction}/>
+        <ReportDetailspopup closePopup={() => setOpenDetailsPopup(null)}
+          openDetailsPopup={openDetailsPopup}
+          discussionFlag={discussionFlag}
+          onDismiss={handleDismiss}
+          onTakeAction={handleTakeAction} />
+
       )}
     </>
   );

@@ -50,6 +50,19 @@ const commentApi = {
     }
   },
 
+  handleFlag: async (commentId) => {
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}/discussion/flag-review`,
+        { reviewId: commentId },
+        { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+      );
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  },
+
   // Toggle like on a comment
   toggleLike: async (commentId) => {
     try {
@@ -71,31 +84,31 @@ const ThreadedDiscussion = ({ discussionId, userData }) => {
   const [replyText, setReplyText] = useState("");
   const [expandedReplies, setExpandedReplies] = useState(new Set());
   const [newComment, setNewComment] = useState("");
-const [showMention, setShowMention] = useState(false);
-const [mentionQuery, setMentionQuery] = useState("");
-const [cursorPos, setCursorPos] = useState(0);
+  const [showMention, setShowMention] = useState(false);
+  const [mentionQuery, setMentionQuery] = useState("");
+  const [cursorPos, setCursorPos] = useState(0);
 
-const fetchUsers = async ({ queryKey }) => {
-  const [_key, search] = queryKey;
-  if (!search) return [];
+  const fetchUsers = async ({ queryKey }) => {
+    const [_key, search] = queryKey;
+    if (!search) return [];
 
-  const res = await fetchData(`/auth/user-names?name=${search}`);
-  return res.user;
-};
+    const res = await fetchData(`/auth/user-names?name=${search}`);
+    return res.user;
+  };
 
-const { data: users = [], isFetching } = useQuery({
-  queryKey: ["mention-users", mentionQuery],
-  queryFn: fetchUsers,
-  enabled: showMention && mentionQuery.length >= 0,
-  staleTime: 5 * 60 * 1000,
-  keepPreviousData: true,
-});
+  const { data: users = [], isFetching } = useQuery({
+    queryKey: ["mention-users", mentionQuery],
+    queryFn: fetchUsers,
+    enabled: showMention && mentionQuery.length >= 0,
+    staleTime: 5 * 60 * 1000,
+    keepPreviousData: true,
+  });
 
 
 
   const [loading, setLoading] = useState(true);
   const [likedComments, setLikedComments] = useState(new Set());
-  
+
   // New state for optimistic updates
   const [optimisticComments, setOptimisticComments] = useState([]);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -125,41 +138,41 @@ const { data: users = [], isFetching } = useQuery({
     setLoading(false);
   };
 
- const handleChange = (e) => {
-  const value = e.target.value;
-  const caret = e.target.selectionStart;
+  const handleChange = (e) => {
+    const value = e.target.value;
+    const caret = e.target.selectionStart;
 
-  setNewComment(value);
-  setCursorPos(caret);
+    setNewComment(value);
+    setCursorPos(caret);
 
-  const textBeforeCursor = value.slice(0, caret);
-  const match = textBeforeCursor.match(/@(\w*)$/);
+    const textBeforeCursor = value.slice(0, caret);
+    const match = textBeforeCursor.match(/@(\w*)$/);
 
-  if (match) {
-    setShowMention(true);
-    setMentionQuery(match[1]);
-  } else {
+    if (match) {
+      setShowMention(true);
+      setMentionQuery(match[1]);
+    } else {
+      setShowMention(false);
+      setMentionQuery("");
+    }
+  };
+  const insertMention = (user) => {
+    const textarea = textareaRef.current;
+
+    const before = newComment
+      .slice(0, cursorPos)
+      .replace(/@(\w*)$/, `@${user.name} `);
+
+    const after = newComment.slice(cursorPos);
+
+    setNewComment(before + after);
     setShowMention(false);
-    setMentionQuery("");
-  }
-};
-const insertMention = (user) => {
-  const textarea = textareaRef.current;
 
-  const before = newComment
-    .slice(0, cursorPos)
-    .replace(/@(\w*)$/, `@${user.name} `);
-
-  const after = newComment.slice(cursorPos);
-
-  setNewComment(before + after);
-  setShowMention(false);
-
-  requestAnimationFrame(() => {
-    textarea.focus();
-    textarea.setSelectionRange(before.length, before.length);
-  });
-};
+    requestAnimationFrame(() => {
+      textarea.focus();
+      textarea.setSelectionRange(before.length, before.length);
+    });
+  };
 
 
 
@@ -233,27 +246,27 @@ const insertMention = (user) => {
     const updatedComments = addReplyToComments([...optimisticComments]);
     setOptimisticComments(updatedComments);
     setExpandedReplies((s) => new Set([...s, parentId]));
-    
+
     return updatedComments;
   };
 
   const submitReply = async (parentId) => {
     if (!replyText.trim() || !userData) return;
-    
+
     setIsUpdating(true);
     const previousComments = optimisticComments;
-    
+
     try {
       // Optimistic update
       const optimisticComments = addOptimisticReply(parentId, replyText);
-      
+
       // Clear reply state
       setReplyingTo(null);
       setReplyText("");
-      
+
       // API call
       await commentApi.replyToComment(parentId, replyText);
-      
+
       // Refresh comments to get actual data
       await fetchComments();
     } catch (error) {
@@ -282,23 +295,23 @@ const insertMention = (user) => {
 
     const updatedComments = [newComment, ...optimisticComments];
     setOptimisticComments(updatedComments);
-    
+
     return updatedComments;
   };
 
   const submitComment = async () => {
     if (!newComment.trim() || !userData) return;
-    
+
     setIsUpdating(true);
     const previousComments = optimisticComments;
-    
+
     try {
       // Optimistic update
       addOptimisticComment(newComment);
-      
+
       // Clear input
       setNewComment("");
-      
+
       // API call
       await commentApi.createComment(discussionId, newComment);
       showSuccess("Comment submitted successfully");
@@ -318,10 +331,10 @@ const insertMention = (user) => {
       return commentList.map(comment => {
         if (comment._id === commentId) {
           const isCurrentlyLiked = likedComments.has(commentId);
-          const newLikesCount = isCurrentlyLiked 
+          const newLikesCount = isCurrentlyLiked
             ? Math.max(0, (comment.likesCount || 0) - 1)
             : (comment.likesCount || 0) + 1;
-          
+
           return {
             ...comment,
             likesCount: newLikesCount
@@ -344,24 +357,24 @@ const insertMention = (user) => {
       s.has(commentId) ? s.delete(commentId) : s.add(commentId);
       return s;
     });
-    
+
     return updatedComments;
   };
 
   const handleLike = async (commentId) => {
     if (!userData) return navigate("/register");
-    
+
     setIsUpdating(true);
     const previousComments = optimisticComments;
     const previousLikes = likedComments;
-    
+
     try {
       // Optimistic update
       updateOptimisticLike(commentId);
-      
+
       // API call
       await commentApi.toggleLike(commentId);
-      
+
       // Refresh comments to get actual data
       await fetchComments();
     } catch (error) {
@@ -373,24 +386,53 @@ const insertMention = (user) => {
       setIsUpdating(false);
     }
   };
+  const handleFlag = async (commentId) => {
+    if (!userData) return navigate("/register");
+    setIsUpdating(true);
+
+    try {
+      await commentApi.handleFlag(commentId);
+      showSuccess("Updated");
+      await fetchComments();
+    } catch (error) {
+      console.error('Error toggling like:', error);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
 
   const CommentItem = ({ comment, depth = 0 }) => {
     const hasReplies = comment.replies?.length > 0;
     const isOpen = expandedReplies.has(comment._id);
     const isLiked = likedComments.has(comment._id);
-    
+
     // Limit visual depth to prevent overflow
     const visualDepth = Math.min(depth, 6);
     const showConnector = depth > 0;
 
     return (
       <div className="comment-wrapper">
-        <div 
+        {comment?.userId?._id !== userData?._id && (
+          <button
+            onClick={() => handleFlag(comment?._id)}
+            className={`flag-button discussions ${comment?.flaggedBy?.some(
+              (id) => id?.toString() === userData?._id
+            )
+                ? "activeFlag"
+                : ""
+              }`}
+
+          >
+            ⚑
+          </button>
+        )}
+        <div
           className={`comment-item ${showConnector ? 'nested' : ''} ${comment.isOptimistic ? 'optimistic' : ''}`}
           style={{ paddingLeft: `${visualDepth * 28}px` }}
         >
           {showConnector && <div className="connector-line" />}
-          
+
           <div className="comment-content">
             <img
               src={comment.userId?.profile_img || "https://forum-backend-production-47c5.up.railway.app/uploads/1763980553327-download.png"}
@@ -399,6 +441,8 @@ const insertMention = (user) => {
             />
 
             <div className="content">
+
+
               <div className="header">
                 <strong>{comment.userId?.name || "Anonymous"}</strong>
                 <span className="time">· {formatDate(comment.createdAt)}</span>
@@ -408,7 +452,7 @@ const insertMention = (user) => {
               <div className="text">{comment.message}</div>
 
               <div className="actions">
-                <button 
+                <button
                   className={`action-btn ${isLiked ? 'liked' : ''}`}
                   onClick={() => handleLike(comment._id)}
                   disabled={isUpdating || comment.isOptimistic}
@@ -416,7 +460,7 @@ const insertMention = (user) => {
                   <ThumbsUp size={14} />
                   <span>{comment.likesCount || 0}</span>
                 </button>
-                <button 
+                <button
                   className="action-btn"
                   onClick={() => handleReply(comment)}
                   disabled={isUpdating || comment.isOptimistic}
@@ -425,7 +469,7 @@ const insertMention = (user) => {
                   <span>Reply</span>
                 </button>
                 {hasReplies && (
-                  <button 
+                  <button
                     className="action-btn toggle-btn"
                     onClick={() => toggleReplies(comment._id)}
                     disabled={isUpdating}
@@ -457,14 +501,14 @@ const insertMention = (user) => {
                       disabled={isUpdating}
                     />
                     <div className="reply-actions">
-                      <button 
+                      <button
                         className="btn-cancel"
                         onClick={() => setReplyingTo(null)}
                         disabled={isUpdating}
                       >
                         Cancel
                       </button>
-                      <button 
+                      <button
                         className="btn-submit"
                         onClick={() => submitReply(comment._id)}
                         disabled={!replyText.trim() || isUpdating}
@@ -854,8 +898,8 @@ const insertMention = (user) => {
         }
       `}</style>
 
-      
-        <>
+
+      <>
         <div className="post-comment">
           <p>Add your Comment</p>
           <div className="user-comment">
@@ -873,15 +917,15 @@ const insertMention = (user) => {
       />
     )} */}
             <textarea
-    value={newComment}
-    placeholder="Share your thoughts..."
-    onChange={handleChange}
-    disabled={isUpdating}
-  />
+              value={newComment}
+              placeholder="Share your thoughts..."
+              onChange={handleChange}
+              disabled={isUpdating}
+            />
           </div>
           <div className="user-cmt-btn">
-            <button 
-              disabled={loading || !newComment.trim() || isUpdating} 
+            <button
+              disabled={loading || !newComment.trim() || isUpdating}
               onClick={submitComment}
             >
               {isUpdating ? "Posting..." : "Post Comment"}
@@ -890,15 +934,15 @@ const insertMention = (user) => {
           {
             !userData && (
 
-           
-          <p className="msg-to-login">
-            ⚠️ Please <Link to="/register">sign in</Link> to post a comment.
-          </p>
-           )
+
+              <p className="msg-to-login">
+                ⚠️ Please <Link to="/register">sign in</Link> to post a comment.
+              </p>
+            )
           }
         </div>
-        </>
-       
+      </>
+
 
       <div className="all-boss">
         {displayComments.length === 0 ? (

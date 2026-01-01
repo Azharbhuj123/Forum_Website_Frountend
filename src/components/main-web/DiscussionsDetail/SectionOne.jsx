@@ -24,6 +24,8 @@ export default function SectionOne({ data, refetch }) {
   const [discussion_data, setDiscussion_data] = useState(
     data?.discussion || null
   );
+
+  console.log('dataDiscussion', discussion_data);
   const navigate = useNavigate();
   const discussionRef = useRef(null);
 
@@ -192,6 +194,7 @@ export default function SectionOne({ data, refetch }) {
       showError("Sharing is not supported in this browser.");
     }
   };
+
   return (
     <div>
       <button className="back-button" onClick={() => window.history.back()}>
@@ -199,6 +202,7 @@ export default function SectionOne({ data, refetch }) {
       </button>
 
       <div className="main-discussion">
+       
         <p className="category">{discussion_data?.category}</p>
         <h3>{discussion_data?.title}</h3>
 

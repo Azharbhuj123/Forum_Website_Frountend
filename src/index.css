@@ -919,7 +919,7 @@ button.View-btn {
   align-items: center;
   justify-content: flex-start;
   gap: 20px;
-  height: 400px;
+  min-height: 200px;
   overflow: auto;
 }
 
