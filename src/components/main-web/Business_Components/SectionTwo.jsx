@@ -8,6 +8,7 @@ import {
 import photo from "../../../assets/Images/photo.png";
 import Sponser from "../Sponser";
 import { useNavigate } from "react-router-dom";
+import { openGoogleMaps, PropertyMapPreview } from "../Features/PropertyAddressInput";
 
 export default function SectionTwo({ rental_data, otherProperties }) {
   const navigate = useNavigate();
@@ -17,21 +18,29 @@ export default function SectionTwo({ rental_data, otherProperties }) {
     { name: "The Purple Garden", rating: 5, reviews: 285 },
   ];
 
+  console.log('rental_data', rental_data);
+
   return (
     <>
       <div className="business-info-container">
         {/* Business Information Card */}
         <div className="info-card">
           <h3 className="card-title">Business Information</h3>
-          {rental_data?.user?.basic_info?.location && (
+          {rental_data?.fullAddress && (
             <div className="info-item  margin">
               <Location_Svg />
 
               <div className="info-content">
                 <p className="info-text">
-                  {rental_data?.user?.basic_info?.location || ""}
+                  {rental_data?.fullAddress || ""}
                 </p>
-                <p className="info-label">Get Directions</p>
+                <p
+                  className="info-label"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => openGoogleMaps({ rental_data })}
+                >
+                  Get Directions
+                </p>
               </div>
             </div>
           )}
@@ -49,15 +58,15 @@ export default function SectionTwo({ rental_data, otherProperties }) {
 
           {rental_data?.user?.basic_info?.website && (
 
-          <div className="info-item">
-            <Webiste_SVg />
+            <div className="info-item">
+              <Webiste_SVg />
 
-            <div className="info-content">
-              <p className="info-text">
-                {rental_data?.user?.basic_info?.website || ""}
-              </p>
+              <div className="info-content">
+                <p className="info-text">
+                  {rental_data?.user?.basic_info?.website || ""}
+                </p>
+              </div>
             </div>
-          </div>
           )}
 
 
@@ -71,12 +80,15 @@ export default function SectionTwo({ rental_data, otherProperties }) {
             </div>
           </div> */}
 
-          <div className="map-section">
-            <button className="map-button">
+          {/* <div className="map-section"> */}
+          {/* <button className="map-button">
               <span className="map-icon">📍</span>
               <span>Map View</span>
-            </button>
-          </div>
+            </button> */}
+          {/* </div> */}
+          <PropertyMapPreview lat={Array.isArray(rental_data?.property_location?.coordinates) ? rental_data.property_location.coordinates[1] : ""}
+            lng={Array.isArray(rental_data?.property_location?.coordinates) ? rental_data.property_location.coordinates[0] : ""}
+          />
         </div>
 
         {/* Related Businesses Card */}

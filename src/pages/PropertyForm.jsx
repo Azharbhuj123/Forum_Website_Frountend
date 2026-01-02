@@ -10,6 +10,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { fetchData } from "../queryFunctions/queryFunctions";
 import { showError } from "../components/Toaster";
+import { PropertyAddressInput, PropertyMapPreview } from "../components/main-web/Features/PropertyAddressInput";
 
 // Yup validation schema
 const schema = yup.object().shape({
@@ -73,6 +74,8 @@ export default function PropertyForm() {
     handleSubmit,
     control,
     reset,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
@@ -83,6 +86,8 @@ export default function PropertyForm() {
       tags: "",
       zipcode: "",
       fullAddress: "",
+      latitude: null,
+      longitude: null,
       amenities: [],
       bedrooms: "",
       bathrooms: "",
@@ -98,6 +103,12 @@ export default function PropertyForm() {
       maintenanceCharges: "",
     },
   });
+
+
+  const lat = watch("latitude");
+  const lng = watch("longitude");
+  const address = watch("fullAddress");
+
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -110,6 +121,7 @@ export default function PropertyForm() {
     keepPreviousData: true,
     enabled: !!property_id,
   });
+
 
   useEffect(() => {
     if (property_id && data?.data) {
@@ -221,6 +233,20 @@ export default function PropertyForm() {
       }
     });
 
+     /* -------------------- Property Location -------------------- */
+    if (data.latitude && data.longitude && data.fullAddress) {
+      const propertyLocation = {
+        type: "Point",
+        coordinates: [
+          Number(data.longitude), // GeoJSON order
+          Number(data.latitude),
+        ],
+        address: data.fullAddress,
+      };
+      formData.set("property_location", JSON.stringify(propertyLocation));
+    }
+
+
 
 
     // 4. Publish flag (only on create)
@@ -311,24 +337,27 @@ export default function PropertyForm() {
 
               <div className="input-field-wrapper">
                 <label className="input-field-label">Full Address</label>
-                <input
+                {/* <input
                   type="text"
                   className="form-text-input"
                   placeholder="Enter full address"
                   {...register("fullAddress")}
-                />
+                /> */}
+
+                <PropertyAddressInput setValue={setValue} address={address} />
                 <p className="error-text">{errors.fullAddress?.message}</p>
               </div>
             </div>
 
-            <div className="map-placeholder-section">
+            {/* <div className="map-placeholder-section">
               <div className="map-icon-container">
                 <Location_svg />
               </div>
               <p className="map-placeholder-text">
                 Map preview will appear here
               </p>
-            </div>
+            </div> */}
+            <PropertyMapPreview lat={lat} lng={lng} />
           </section>
 
           {/* Property Details Section */}

@@ -1,12 +1,15 @@
 import React from "react";
 import FilterBox from "./FilterBox";
 import BusinessCard from "./BusinessCard";
-import MapView from "./MapView";
+
 import { Pagination, Skeleton } from "antd";
+import { MapView, PropertyMapPreview } from "./Features/PropertyAddressInput";
 
 export default function SearchItems({ data, isLoading , setPage ,setFinalQuery,final_query }) {
   const start = (data?.currentPage - 1) * 3 + 1;
   const end = Math.min(data?.currentPage * 3, data?.totalItems);
+
+  console.log('data', data);
 
  
   
@@ -45,7 +48,7 @@ export default function SearchItems({ data, isLoading , setPage ,setFinalQuery,f
         )}
       </div>
       <div className="search-items-right">
-        <MapView />
+        <MapView properties={data?.data || []} />
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import nextIcon from "../Svg_components/next.svg";
 import { useNavigate } from "react-router-dom";
 import Search_Svg from "../Svg_components/Search_Svg";
 import { Location_Svg } from "../Svg_components/Svgs";
+import { LocationSearchBar } from "./Features/PropertyAddressInput";
 
 function Banner() {
   const navigate = useNavigate();
@@ -47,20 +48,10 @@ function Banner() {
 
             <div className="divider"></div>
 
-            <div className="SearchBar-section">
-              <Location_Svg />
-              <input
-                type="text"
-                value={searchQuery.location}
-                onChange={(e) =>
-                  setSearchQuery({
-                    ...searchQuery,
-                    location: e.target.value,
-                  })
-                }
-                placeholder="Enter city or location"
-              />
-            </div>
+            <LocationSearchBar
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+            />
 
             <button type="submit" className="search-btn">
               Search

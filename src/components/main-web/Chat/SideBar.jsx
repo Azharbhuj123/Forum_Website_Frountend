@@ -42,7 +42,7 @@ export default function ChatSideBar({
               onSelectConversation(conv.userId);
             }}
           >
-            <img src={conv.avatar} alt={conv.name} />
+            <img src={conv.avatar } alt={conv.name} />
             <div className="conversation-info">
               <div className="conversation-header">
                 <span className="name">{conv.name}</span>

@@ -2916,6 +2916,18 @@ p.user-comment-show {
   font-size: 13px;
 }
 
+ul.suggestions {
+    background: #FFF;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    padding: 20px;
+}
+
+ul.suggestions li {
+    padding: 10px 0px 0px 0px;
+    font-family: 'DM Sans';
+    cursor: pointer;
+}
+
 button.flag-button.discussions {
     display: flex;
     justify-content: flex-end;

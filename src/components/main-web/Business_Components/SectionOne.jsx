@@ -123,7 +123,7 @@ export default function SectionOne({
 
         <div className="hero-section">
           <div className="hero-image">
-            <img src={rental_data?.photos[0]} alt="Restaurant interior" />
+            <img src={rental_data?.photos[0] ? rental_data?.photos[0] : "https://forum-backend-production-47c5.up.railway.app/uploads/1764087857600-download%20(43).png"} alt="Restaurant interior" />
           </div>
 
           <div className="restaurant-info1">
@@ -205,7 +205,7 @@ export default function SectionOne({
             </button>
             <div className="photo-container">
               <img
-                src={photos[currentPhotoIndex]}
+                src={photos.length !== 0 ? photos[currentPhotoIndex] : "https://forum-backend-production-47c5.up.railway.app/uploads/1764087857600-download%20(43).png"}
                 alt="Food"
                 className="carousel-image"
               />
@@ -228,7 +228,7 @@ export default function SectionOne({
                   className="dish-card"
                 >
                   <div className="dish-image">
-                    <img src={data?.photos[0]} alt={data.listingTitle} />
+                    <img src={data?.photos.length !== 0 ?data?.photos[0] : "https://forum-backend-production-47c5.up.railway.app/uploads/1764087857600-download%20(43).png"} alt={data.listingTitle} />
                   </div>
                   <div className="dish-info">
                     <h3 className="dish-name">{data.listingTitle}</h3>

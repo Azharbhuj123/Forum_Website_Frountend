@@ -48,7 +48,7 @@ export default function UpperSecton() {
           <div class="smitchell-profile-info-container">
             <div class="smitchell-profile-avatar-wrapper">
               <img
-                src={data?.profile_img}
+                src={data?.profile_img || <i class="fa-solid fa-user"></i>}
                 alt="Sarah Mitchell"
                 class="smitchell-profile-avatar"
               />

@@ -33,6 +33,7 @@ import Loader from "../components/Loader";
 import useActionMutation from "../queryFunctions/useActionMutation";
 import DeleteSure from "../components/Modals/DeleteSure";
 import { showError } from "../components/Toaster";
+import { PropertyMapPreview } from "../components/main-web/Features/PropertyAddressInput";
 
 const PropertyDetail = () => {
   const params = useParams();
@@ -57,8 +58,8 @@ const PropertyDetail = () => {
 
   const { triggerMutation, loading } = useActionMutation({
     onSuccessCallback: (data) => {
-      if(data?.delete){
-         navigate('/profile') 
+      if (data?.delete) {
+        navigate('/profile')
         return;
       }
       refetch();
@@ -78,8 +79,8 @@ const PropertyDetail = () => {
 
 
 
-  const  handleDelete = ()=>{
-      triggerMutation({
+  const handleDelete = () => {
+    triggerMutation({
       endPoint: `/property/${params.id}`,
       method: "delete",
     });
@@ -92,7 +93,7 @@ const PropertyDetail = () => {
       <AdminDashboardheader />
 
       <div className="property-listing-container Dashboard-container">
-        <button className="back-button" onClick={() => navigate(userData?.role === "Admin"? '/' :'/')}>
+        <button className="back-button" onClick={() => navigate(userData?.role === "Admin" ? '/' : '/')}>
           <span className="back-arrow">‹</span> Back
         </button>
 
@@ -119,7 +120,7 @@ const PropertyDetail = () => {
             <button onClick={handleToogle} className="action-btn">
               {property?.is_publish ? "Unpublish" : "Publish"}
             </button>
-            <button onClick={()=>setDeleteModal(true)}  className="action-btn">
+            <button onClick={() => setDeleteModal(true)} className="action-btn">
               <MdDelete size={18} />
               Delete
             </button>
@@ -160,19 +161,22 @@ const PropertyDetail = () => {
 
             {/* Coordinates */}
             <p>
-  Lat: {Array.isArray(property?.property_location?.coordinates) ? property.property_location.coordinates[1] : ""} — Lng:{" "}
-  {Array.isArray(property?.property_location?.coordinates) ? property.property_location.coordinates[0] : ""}
-</p>
+              Lat: {Array.isArray(property?.property_location?.coordinates) ? property.property_location.coordinates[1] : ""} — Lng:{" "}
+              {Array.isArray(property?.property_location?.coordinates) ? property.property_location.coordinates[0] : ""}
+            </p>
 
           </div>
         </div>
 
-        <div className="map-placeholder-section">
+        {/* <div className="map-placeholder-section">
           <div className="map-icon-container">
             <Location_svg />
           </div>
           <p className="map-placeholder-text">Map preview will appear here</p>
-        </div>
+        </div> */}
+        <PropertyMapPreview lat={Array.isArray(property?.property_location?.coordinates) ? property.property_location.coordinates[1] : ""} 
+        lng={Array.isArray(property?.property_location?.coordinates) ? property.property_location.coordinates[0] : ""}
+         />
 
         {/* PROPERTY DETAILS */}
         <h2 className="section-title">Property Details</h2>

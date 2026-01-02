@@ -10,7 +10,7 @@ export default function FeaturedCard({ listings }) {
         <div key={listing._id} className="listing-card" onClick={()=>navigate(`/rental-detail/${listing._id}`)} style={{cursor: "pointer"}}>
           <div className="card-image-wrapper">
             <img
-              src={listing?.photos[0]}
+              src={listing?.photos[0] || "https://forum-backend-production-47c5.up.railway.app/uploads/1764087857600-download%20(43).png"}
               alt={listing.title}
               className="card-image"
             />
