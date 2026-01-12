@@ -38,7 +38,19 @@
 svg path {
   stroke: #f91942;
 }
+/* Google button */
+.google-login-btn svg path {
+  stroke: none !important;
+}
 
+/* Facebook button */
+.facebook-login-btn svg path {
+  stroke: none !important;
+}
+
+path#Shape {
+    stroke: none !important;
+}
 .plus_svg {
   stroke: #fff !important;
 }

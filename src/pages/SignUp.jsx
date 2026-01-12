@@ -18,6 +18,11 @@ import {
 } from "firebase/auth";
 import { auth, GOOGLE_CLIENT_ID } from "../firebase/firebase";
 import { FcGoogle } from "react-icons/fc";
+import GoogleButton from "react-google-button";
+import {
+  FacebookLoginButton,
+  GoogleLoginButton,
+} from "react-social-login-buttons";
 
 // ==================== Schemas ==================== //
 const signInSchema = yup.object().shape({
@@ -152,7 +157,7 @@ const SignInPage = ({
           <div className="auth-divider">
             <span className="auth-divider-text">or</span>
           </div>
-          <button
+          {/* <button
             onClick={onSignInGoogle}
             className="auth-primary-button google-btn new"
             style={{
@@ -165,10 +170,20 @@ const SignInPage = ({
             }}
           >
             <FcGoogle size={30} color="#4285F4" /> Sign in with Google
-          </button>
+          </button> */}
 
-          <button
+          <GoogleLoginButton
+            className="google-login-btn"
+            onClick={onSignInGoogle}
+          />
+
+          <FacebookLoginButton
+            className="facebook-login-btn"
             onClick={onSignInFacebook}
+          />
+
+          {/* <button
+           onClick={onSignInGoogle}
             className="auth-primary-button facebook-btn new"
             style={{
               background: "#FFF",
@@ -180,7 +195,7 @@ const SignInPage = ({
             }}
           >
             <SiFacebook size={24} color="" /> Continue with Facebook
-          </button>
+          </button> */}
           <div className="auth-divider">
             <span className="auth-divider-text">or</span>
           </div>
