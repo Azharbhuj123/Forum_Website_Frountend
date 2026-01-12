@@ -16,6 +16,7 @@ import EditProfile from "../pages/EditProfile";
 import PropertyForm from "../pages/PropertyForm";
 import PropertyDetail from "../pages/PropertyDetail";
 import AuthPages from "../pages/SignUp";
+import PrivacyPolicy from "../pages/Privacy_Policy";
 
 const Routes = () => {
   const userData = JSON.parse(localStorage.getItem("userData") || "null");
@@ -44,6 +45,9 @@ const Routes = () => {
     { path: "/Singup", element: <Singup /> },
     { path: "/dashboard/*", element: <Dashboard /> },
     { path: "/pending-report", element: <Dashboard /> },
+    
+    { path: "/privacy-policy", element: <PrivacyPolicy /> },
+
   ]);
 };
 

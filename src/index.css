@@ -912,6 +912,35 @@ button.View-btn {
   color: #f91942;
 }
 
+.PrivacyPolicy {
+  width: 100%;
+}
+
+.PrivacyPolicy h1 {
+  padding: 10px 0px;
+  font-family: 'DM Sans';
+}
+
+.PrivacyPolicy p {
+  font-family: sans-serif;
+  line-height: 30px;
+}
+
+.PrivacyPolicy h2 {
+  padding: 10px 0px;
+  font-family: 'DM Sans';
+}
+
+.PrivacyPolicy ul {
+  padding: 10px 0px;
+}
+
+.PrivacyPolicy ul li {
+  list-style: disc;
+  line-height: 30px;
+  font-family: 'DM Sans';
+}
+
 .Pending-Reports-box {
   width: 100%;
   display: flex;

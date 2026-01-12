@@ -4,10 +4,15 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { MdEmail } from "react-icons/md";
 import { IoMdLock, IoMdPerson } from "react-icons/io";
+import { SiFacebook, SiGoogle } from "react-icons/si";
+
 import useActionMutation from "../queryFunctions/useActionMutation";
 import { Link, useNavigate } from "react-router-dom";
 import { showError } from "../components/Toaster";
 import { GoVerified } from "react-icons/go";
+import { getAuth,FacebookAuthProvider, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth, GOOGLE_CLIENT_ID } from "../firebase/firebase";
+
 
 // ==================== Schemas ==================== //
 const signInSchema = yup.object().shape({
@@ -48,7 +53,7 @@ const resetSchema = yup.object().shape({
 });
 
 // ==================== Page Components (Outside Main Component) ==================== //
-const SignInPage = ({ signInForm, handleSubmit, onSignIn, loading, setCurrentPage }) => {
+const SignInPage = ({ signInForm, handleSubmit, onSignIn, loading, setCurrentPage, onSignInGoogle, onSignInFacebook }) => {
   const { register, formState } = signInForm;
   return (
     <div className="auth-page-container">
@@ -131,6 +136,17 @@ const SignInPage = ({ signInForm, handleSubmit, onSignIn, loading, setCurrentPag
             </button>
           </form>
 
+          <div className="auth-divider">
+            <span className="auth-divider-text">or</span>
+          </div>
+          <button onClick={onSignInGoogle} className="auth-primary-button"
+           style={{background: "#FFF", color: "#000", display: "flex", alignItems: "center", justifyContent: "center", gap: '5px'}}>
+            <SiGoogle size={24} color="#4285F4" /> Sign in with Google
+          </button>
+          <button onClick={onSignInFacebook} className="auth-primary-button"
+           style={{background: "#FFF", color: "#000", display: "flex", alignItems: "center", justifyContent: "center", gap: '5px'}}>
+            <SiFacebook size={24} color="#4285F4" /> Sign in with Facebook
+          </button>
           <div className="auth-divider">
             <span className="auth-divider-text">or</span>
           </div>
@@ -408,7 +424,7 @@ const ResetPage = ({ resetForm, handleSubmit, onReset, loading, setCurrentPage }
               )}
             </div>
 
-          
+
 
             <div className="auth-input-group">
               <label className="auth-label">New Password</label>
@@ -427,7 +443,7 @@ const ResetPage = ({ resetForm, handleSubmit, onReset, loading, setCurrentPage }
                 <p className="error-text">{formState.errors.password.message}</p>
               )}
             </div>
-              <div className="auth-input-group">
+            <div className="auth-input-group">
               <label className="auth-label">Confirm Password</label>
               <div className="auth-input-wrapper">
                 <span className="auth-input-icon">
@@ -517,6 +533,51 @@ const AuthPages = () => {
     });
   };
 
+  const onSignInGoogle = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      const data = {
+        name: user.displayName,
+        email: user.email,
+        profile_img: user.photoURL,
+      };
+
+      // Hit your backend
+      triggerMutation({
+        endPoint: "/auth/login-google",
+        body: data,
+        method: "post",
+      });
+    } catch (error) {
+      console.error("Google sign-in error:", error);
+    }
+  }
+  const onSignInFacebook = async () => {
+    const facebookProvider = new FacebookAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, facebookProvider);
+      const user = result.user;
+
+      const data = {
+        name: user.displayName,
+        email: user.email,
+        profile_img: user.photoURL,
+      };
+
+      // Hit your backend
+      triggerMutation({
+        endPoint: "/auth/login-google",
+        body: data,
+        method: "post",
+      });
+    } catch (error) {
+      console.error("Google sign-in error:", error);
+    }
+  }
+
   const onSignUp = (data) => {
     triggerMutation({
       endPoint: "/auth/register",
@@ -544,16 +605,18 @@ const AuthPages = () => {
   return (
     <>
       {currentPage === "signin" && (
-        <SignInPage 
+        <SignInPage
           signInForm={signInForm}
           handleSubmit={signInForm.handleSubmit}
           onSignIn={onSignIn}
+          onSignInGoogle={onSignInGoogle}
+          onSignInFacebook={onSignInFacebook}
           loading={loading}
           setCurrentPage={setCurrentPage}
         />
       )}
       {currentPage === "signup" && (
-        <SignUpPage 
+        <SignUpPage
           signUpForm={signUpForm}
           handleSubmit={signUpForm.handleSubmit}
           onSignUp={onSignUp}
@@ -562,7 +625,7 @@ const AuthPages = () => {
         />
       )}
       {currentPage === "forgot" && (
-        <ForgotPage 
+        <ForgotPage
           forgotForm={forgotForm}
           handleSubmit={forgotForm.handleSubmit}
           onForgot={onForgot}
@@ -571,7 +634,7 @@ const AuthPages = () => {
         />
       )}
       {currentPage === "reset" && (
-        <ResetPage 
+        <ResetPage
           resetForm={resetForm}
           handleSubmit={resetForm.handleSubmit}
           onReset={onReset}
