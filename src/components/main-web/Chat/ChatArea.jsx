@@ -170,7 +170,8 @@ export default function ChatArea({
             </div>
           ))}
       </div>
-
+ {!isLoading &&
+          messages?.length > 0 &&
       <div className="input-container">
         <input
           type="text"
@@ -183,6 +184,8 @@ export default function ChatArea({
           ➤
         </button>
       </div>
+          }
+
     </div>
   );
 }

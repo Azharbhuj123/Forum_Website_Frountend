@@ -4,15 +4,20 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { MdEmail } from "react-icons/md";
 import { IoMdLock, IoMdPerson } from "react-icons/io";
-import { SiFacebook, SiGoogle } from "react-icons/si";
+import { SiFacebook } from "react-icons/si";
 
 import useActionMutation from "../queryFunctions/useActionMutation";
 import { Link, useNavigate } from "react-router-dom";
 import { showError } from "../components/Toaster";
 import { GoVerified } from "react-icons/go";
-import { getAuth,FacebookAuthProvider, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import {
+  getAuth,
+  FacebookAuthProvider,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
 import { auth, GOOGLE_CLIENT_ID } from "../firebase/firebase";
-
+import { FcGoogle } from "react-icons/fc";
 
 // ==================== Schemas ==================== //
 const signInSchema = yup.object().shape({
@@ -53,7 +58,15 @@ const resetSchema = yup.object().shape({
 });
 
 // ==================== Page Components (Outside Main Component) ==================== //
-const SignInPage = ({ signInForm, handleSubmit, onSignIn, loading, setCurrentPage, onSignInGoogle, onSignInFacebook }) => {
+const SignInPage = ({
+  signInForm,
+  handleSubmit,
+  onSignIn,
+  loading,
+  setCurrentPage,
+  onSignInGoogle,
+  onSignInFacebook,
+}) => {
   const { register, formState } = signInForm;
   return (
     <div className="auth-page-container">
@@ -139,13 +152,34 @@ const SignInPage = ({ signInForm, handleSubmit, onSignIn, loading, setCurrentPag
           <div className="auth-divider">
             <span className="auth-divider-text">or</span>
           </div>
-          <button onClick={onSignInGoogle} className="auth-primary-button"
-           style={{background: "#FFF", color: "#000", display: "flex", alignItems: "center", justifyContent: "center", gap: '5px'}}>
-            <SiGoogle size={24} color="#4285F4" /> Sign in with Google
+          <button
+            onClick={onSignInGoogle}
+            className="auth-primary-button google-btn new"
+            style={{
+              background: "#FFF",
+              color: "#000",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "5px",
+            }}
+          >
+            <FcGoogle size={30} color="#4285F4" /> Sign in with Google
           </button>
-          <button onClick={onSignInFacebook} className="auth-primary-button"
-           style={{background: "#FFF", color: "#000", display: "flex", alignItems: "center", justifyContent: "center", gap: '5px'}}>
-            <SiFacebook size={24} color="#4285F4" /> Sign in with Facebook
+
+          <button
+            onClick={onSignInFacebook}
+            className="auth-primary-button facebook-btn new"
+            style={{
+              background: "#FFF",
+              color: "#000",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "5px",
+            }}
+          >
+            <SiFacebook size={24} color="" /> Continue with Facebook
           </button>
           <div className="auth-divider">
             <span className="auth-divider-text">or</span>
@@ -166,7 +200,13 @@ const SignInPage = ({ signInForm, handleSubmit, onSignIn, loading, setCurrentPag
   );
 };
 
-const SignUpPage = ({ signUpForm, handleSubmit, onSignUp, loading, setCurrentPage }) => {
+const SignUpPage = ({
+  signUpForm,
+  handleSubmit,
+  onSignUp,
+  loading,
+  setCurrentPage,
+}) => {
   const { register, formState } = signUpForm;
   return (
     <div className="auth-page-container">
@@ -242,7 +282,9 @@ const SignUpPage = ({ signUpForm, handleSubmit, onSignUp, loading, setCurrentPag
                 />
               </div>
               {formState.errors.password && (
-                <p className="error-text">{formState.errors.password.message}</p>
+                <p className="error-text">
+                  {formState.errors.password.message}
+                </p>
               )}
             </div>
 
@@ -294,7 +336,13 @@ const SignUpPage = ({ signUpForm, handleSubmit, onSignUp, loading, setCurrentPag
   );
 };
 
-const ForgotPage = ({ forgotForm, handleSubmit, onForgot, loading, setCurrentPage }) => {
+const ForgotPage = ({
+  forgotForm,
+  handleSubmit,
+  onForgot,
+  loading,
+  setCurrentPage,
+}) => {
   const { register, formState } = forgotForm;
   return (
     <div className="auth-page-container">
@@ -362,7 +410,13 @@ const ForgotPage = ({ forgotForm, handleSubmit, onForgot, loading, setCurrentPag
   );
 };
 
-const ResetPage = ({ resetForm, handleSubmit, onReset, loading, setCurrentPage }) => {
+const ResetPage = ({
+  resetForm,
+  handleSubmit,
+  onReset,
+  loading,
+  setCurrentPage,
+}) => {
   const { register, formState } = resetForm;
   return (
     <div className="auth-page-container">
@@ -424,8 +478,6 @@ const ResetPage = ({ resetForm, handleSubmit, onReset, loading, setCurrentPage }
               )}
             </div>
 
-
-
             <div className="auth-input-group">
               <label className="auth-label">New Password</label>
               <div className="auth-input-wrapper">
@@ -440,7 +492,9 @@ const ResetPage = ({ resetForm, handleSubmit, onReset, loading, setCurrentPage }
                 />
               </div>
               {formState.errors.password && (
-                <p className="error-text">{formState.errors.password.message}</p>
+                <p className="error-text">
+                  {formState.errors.password.message}
+                </p>
               )}
             </div>
             <div className="auth-input-group">
@@ -457,7 +511,9 @@ const ResetPage = ({ resetForm, handleSubmit, onReset, loading, setCurrentPage }
                 />
               </div>
               {formState.errors.confirmPassword && (
-                <p className="error-text">{formState.errors.confirmPassword.message}</p>
+                <p className="error-text">
+                  {formState.errors.confirmPassword.message}
+                </p>
               )}
             </div>
 
@@ -491,15 +547,24 @@ const AuthPages = () => {
   const navigate = useNavigate();
 
   // ------------- React Hook Form ------------- //
-  const signInForm = useForm({ resolver: yupResolver(signInSchema), mode: "onSubmit" });
-  const signUpForm = useForm({ resolver: yupResolver(signUpSchema), mode: "onSubmit" });
-  const forgotForm = useForm({ resolver: yupResolver(forgotSchema), mode: "onSubmit" });
+  const signInForm = useForm({
+    resolver: yupResolver(signInSchema),
+    mode: "onSubmit",
+  });
+  const signUpForm = useForm({
+    resolver: yupResolver(signUpSchema),
+    mode: "onSubmit",
+  });
+  const forgotForm = useForm({
+    resolver: yupResolver(forgotSchema),
+    mode: "onSubmit",
+  });
   const resetForm = useForm({
     resolver: yupResolver(resetSchema),
     defaultValues: {
       email: "",
     },
-    mode: "onSubmit"
+    mode: "onSubmit",
   });
 
   const { triggerMutation, loading } = useActionMutation({
@@ -554,7 +619,7 @@ const AuthPages = () => {
     } catch (error) {
       console.error("Google sign-in error:", error);
     }
-  }
+  };
   const onSignInFacebook = async () => {
     const facebookProvider = new FacebookAuthProvider();
     try {
@@ -576,7 +641,7 @@ const AuthPages = () => {
     } catch (error) {
       console.error("Google sign-in error:", error);
     }
-  }
+  };
 
   const onSignUp = (data) => {
     triggerMutation({
