@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -73,6 +73,15 @@ const SignInPage = ({
   onSignInFacebook,
 }) => {
   const { register, formState } = signInForm;
+
+useEffect(() => {
+    const interval = setInterval(() => {
+      if (window.FB) {
+        window.FB.XFBML.parse();
+        clearInterval(interval);
+      }
+    }, 100);
+  }, []);
   return (
     <div className="auth-page-container">
       <div className="auth-visual-section">
@@ -172,15 +181,53 @@ const SignInPage = ({
             <FcGoogle size={30} color="#4285F4" /> Sign in with Google
           </button> */}
 
-          <GoogleLoginButton
+          {/* <GoogleLoginButton
             className="google-login-btn"
             onClick={onSignInGoogle}
-          />
+          /> */}
 
-          <FacebookLoginButton
+            <div className="social-btn-div">
+
+          <button onClick={onSignInGoogle} className="gsi-material-button">
+  <div className="gsi-material-button-state"></div>
+  <div className="gsi-material-button-content-wrapper">
+    <div className=" google-login-btn gsi-material-button-icon">
+      <svg
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 48 48"
+        xmlnsXlink="http://www.w3.org/1999/xlink"
+        style={{ display: "block",stroke: "none" }}
+        className="google-login-btn"
+      >
+        <path stroke="none" fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
+        <path   stroke="none"  fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
+        <path  stroke="none"  fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
+        <path   stroke="none" fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
+        <path   stroke="none" fill="none" d="M0 0h48v48H0z" />
+      </svg>
+    </div>
+    <span className="gsi-material-button-contents">Sign in with Google</span>
+    <span style={{ display: "none" }}>Sign in with Google</span>
+  </div>
+</button>
+
+      <button onClick={onSignInFacebook} className="fb-login-btn">
+        <svg className="fb-icon" viewBox="0 0 36 36" fill="white" height="24" width="24">
+          <path d="M20.181 35.87C29.094 34.791 36 27.202 36 18c0-9.941-8.059-18-18-18S0 8.059 0 18c0 9.202 6.906 16.791 15.819 17.87v-12.65H11.07v-5.22h4.749v-3.978c0-4.691 2.794-7.281 7.073-7.281 2.049 0 4.194.365 4.194.365v4.608h-2.363c-2.328 0-3.054 1.445-3.054 2.927v3.359h5.199l-.831 5.22h-4.368v12.65z" />
+        </svg>
+        <span className="fb-text">Continue with Facebook</span>
+      </button>
+            </div>
+
+
+
+ 
+
+          {/* <FacebookLoginButton
             className="facebook-login-btn"
             onClick={onSignInFacebook}
-          />
+          /> */}
 
           {/* <button
            onClick={onSignInGoogle}
