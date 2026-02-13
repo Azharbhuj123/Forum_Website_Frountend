@@ -684,6 +684,7 @@ const AuthPages = () => {
   };
   const onSignInFacebook = async () => {
     const facebookProvider = new FacebookAuthProvider();
+     facebookProvider.addScope("email");
     try {
       const result = await signInWithPopup(auth, facebookProvider);
       const user = result.user;
@@ -694,6 +695,8 @@ const AuthPages = () => {
         profile_img: user.photoURL,
       };
 
+      
+      console.log('user', data);
       // Hit your backend
       triggerMutation({
         endPoint: "/auth/login-google",
