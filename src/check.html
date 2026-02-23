@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Token</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="https://fonts.cdnfonts.com/css/circular-std" rel="stylesheet">
+</head>
+
+<body style="
+margin: 0;
+padding: 0;
+">
+  <div style="background: #fff; width: 320px; padding:  20px 8px;">
+    <table cellpadding="0" cellspacing="0" style= "width: 100%">
+      <tbody>
+        <tr style="text-align: center;">
+          <td style="padding-top:15px; padding-right: 80px; color: #000;font-family: Circular Std;font-size: 15px;font-style: normal;font-weight:600;line-height: normal;">
+            Token No
+          </td>
+        </tr>  
+        <tr style="text-align: center;">
+          
+          <td style="    -webkit-text-stroke-width: 4px;  -webkit-text-stroke-color: black;color: #313131; font-family: Circular Std;font-size: 63px; padding-right: 80px; font-style: normal;font-weight:900;line-height: normal;">
+            {token_no}
+          </td>
+        </tr>  
+        <tr style="text-align: center;">
+          <td style="padding-bottom: 15px; color: #000;font-family: Circular Std;font-size: 15px; padding-right: 80px; font-style: normal;font-weight: 600;line-height: normal;">
+            ^{clinic_name}
+          </td>
+        </tr>  
+         <tr style="text-align: left;">
+          <td
+            style="padding: 4px 0; color: #000;font-family: Circular Std;font-size: 15px;font-style: normal;font-weight: 600;line-height: normal;">
+            Date: ^{date} ^{time}<br>
+        <tr style="text-align: left;">
+          <td
+            style="padding: 4px 0; color: #000;font-family: Circular Std;font-size: 15px;font-style: normal;font-weight: 600;line-height: normal;">
+            Patient Name: ^{patient_name} </td>
+        </tr>
+        <tr style="text-align: left;">
+          <td
+            style="padding: 4px 0; color: #000;font-family: Circular Std;font-size: 15px;font-style: normal;font-weight: 600;line-height: normal;">
+            Appt ID: ^{appt_id} </td>
+        </tr>
+        <tr style="text-align: left;">
+          <td
+            style="padding: 4px 0; color: #000;font-family: Circular Std;font-size: 15px;font-style: normal;font-weight: 600;line-height: normal;">
+            Mr No: ^{mr_no} </td>
+        </tr>
+        <tr style="text-align: left;">
+          <td
+            style="padding: 4px 0; color: #000;font-family: Circular Std;font-size: 15px;font-style: normal;font-weight: 600;line-height: normal;">
+            Phone: ^{phone} </td>
+        </tr>
+        <tr style="text-align: left;">
+          <td
+            style="padding: 4px 0; color: #000;font-family: Circular Std;font-size: 15px;font-style: normal;font-weight: 600;line-height: normal;">
+            Doctor Name: ^{doctor_name} </td>
+        </tr>
+		<!--InvoiceSection-->
+        <tr style="text-align: left;">
+          <td
+            style="padding: 4px 0; color: #000;font-family: Circular Std;font-size: 15px;font-style: normal;font-weight: 600;line-height: normal;">
+            Amount: Rs. ^{grand_total} </td>
+        </tr>
+        <tr style="text-align: left;">
+          <td
+            style="padding: 4px 0; color: #000;font-family: Circular Std;font-size: 15px;font-style: normal;font-weight: 600;line-height: normal;">
+            Payment: ^{payment_method} </td>
+        </tr>
+        <tr style="text-align: left;">
+          <td
+            style="padding: 4px 0; color: #000;font-family: Circular Std;font-size: 15px;font-style: normal;font-weight: 600;line-height: normal;">
+            Amount Paid: Rs. ^{amount_receive} </td>
+        </tr>
+        <tr style="text-align: left;">
+          <td
+            style="padding: 4px 0; color: #000;font-family: Circular Std;font-size: 15px;font-style: normal;font-weight: 600;line-height: normal;">
+            Amount Due: Rs. ^{remaining_total}
+          </td>
+        </tr>
+		<!--InvoiceSection-->
+      </tbody>
+    </table>
+  </div>
+</body>
+
+</html>

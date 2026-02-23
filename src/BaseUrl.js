@@ -4,5 +4,5 @@
 
 // client url
 export const baseurl="https://forum-backend-production-498e.up.railway.app/api"
-
-export const GOOGLE_PLACES_API_KEY = 'AIzaSyD0s3-mEKBypeL1z_jFhoCa0NfqVK80U-8';
+// 
+export const GOOGLE_PLACES_API_KEY = 'AIzaSyAO096xo1HoduYAuLsAwrHkNUNRedReQkQ';

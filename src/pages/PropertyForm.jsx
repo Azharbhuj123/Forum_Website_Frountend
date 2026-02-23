@@ -10,7 +10,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { fetchData } from "../queryFunctions/queryFunctions";
 import { showError } from "../components/Toaster";
-import { PropertyAddressInput, PropertyMapPreview } from "../components/main-web/Features/PropertyAddressInput";
+import {
+  PropertyAddressInput,
+  PropertyMapPreview,
+} from "../components/main-web/Features/PropertyAddressInput";
 
 // Yup validation schema
 const schema = yup.object().shape({
@@ -20,10 +23,7 @@ const schema = yup.object().shape({
   tags: yup.string(),
   zipcode: yup.string().required("Zipcode is required"),
   fullAddress: yup.string().required("Full Address is required"),
-  rooms: yup
-    .number()
-    .typeError("Must be a number")
-    .required("Rooms required"),
+  rooms: yup.number().typeError("Must be a number").required("Rooms required"),
   bedrooms: yup
     .number()
     .typeError("Must be a number")
@@ -39,15 +39,15 @@ const schema = yup.object().shape({
   securityDeposit: yup.number().typeError("Must be a number"),
   maintenanceCharges: yup.number().typeError("Must be a number"),
   amenities: yup.array().of(yup.string()),
-
   photos: yup
     .array()
-    // .min(4, "Please upload at least 4 images")
+    .required("Please upload at least 1 image")
+    .min(1, "Please upload at least 1 image")
     .max(4, "You can upload up to 4 images")
     .test("fileType", "Only PNG or JPG images are allowed", (files) => {
-      if (!files) return true;
+      if (!files || files.length === 0) return true;
+
       return files.every((file) => {
-        // file can be a File object OR a string (url) when editing
         if (typeof file === "string") return true;
         return ["image/jpeg", "image/png"].includes(file.type);
       });
@@ -104,6 +104,7 @@ export default function PropertyForm() {
     },
   });
 
+  console.log(errors, "errors");
 
   const lat = watch("latitude");
   const lng = watch("longitude");
@@ -114,14 +115,12 @@ export default function PropertyForm() {
 
   const property_id = location?.search?.split("=")[1];
 
-
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["admin-property", property_id],
     queryFn: () => fetchData(`/property/${property_id}`),
     keepPreviousData: true,
     enabled: !!property_id,
   });
-
 
   useEffect(() => {
     if (property_id && data?.data) {
@@ -131,7 +130,7 @@ export default function PropertyForm() {
       reset({
         ...data.data,
         // Ensure photos array is properly handled
-        photos: data.data.photos || []
+        photos: data.data.photos || [],
       });
     }
   }, [property_id, data?.data]);
@@ -141,7 +140,7 @@ export default function PropertyForm() {
       navigate(`/property-detail/${data?.data?._id}`);
     },
     onErrorCallback: (errmsg) => {
-      showError(errmsg)
+      showError(errmsg);
     },
   });
 
@@ -186,7 +185,7 @@ export default function PropertyForm() {
     if (Array.isArray(data.photos)) {
       data.photos.forEach((item) => {
         if (item instanceof File) {
-          formData.append("photos", item);
+          formData.append("photos[]", item);
         }
       });
     }
@@ -233,7 +232,7 @@ export default function PropertyForm() {
       }
     });
 
-     /* -------------------- Property Location -------------------- */
+    /* -------------------- Property Location -------------------- */
     if (data.latitude && data.longitude && data.fullAddress) {
       const propertyLocation = {
         type: "Point",
@@ -246,8 +245,12 @@ export default function PropertyForm() {
       formData.set("property_location", JSON.stringify(propertyLocation));
     }
 
-
-
+    const existingPhotos = data.photos.filter(
+      (item) => typeof item === "string",
+    );
+    if (existingPhotos.length > 0) {
+      formData.append("existing_photos", JSON.stringify(existingPhotos));
+    }
 
     // 4. Publish flag (only on create)
     if (!property_id) {
@@ -260,7 +263,6 @@ export default function PropertyForm() {
       method: property_id ? "put" : "post",
     });
   };
-
 
   return (
     <>
@@ -393,12 +395,9 @@ export default function PropertyForm() {
                 />
                 <p className="error-text">{errors.bathrooms?.message}</p>
               </div>
-
-
             </div>
 
             <div className="three-column-grid">
-
               <div className="input-field-wrapper">
                 <label className="input-field-label">Year Built</label>
                 <input
@@ -450,7 +449,7 @@ export default function PropertyForm() {
                             onChange={() => {
                               if (field.value.includes(amenity)) {
                                 field.onChange(
-                                  field.value.filter((a) => a !== amenity)
+                                  field.value.filter((a) => a !== amenity),
                                 );
                               } else {
                                 field.onChange([...field.value, amenity]);
@@ -505,7 +504,7 @@ export default function PropertyForm() {
                   Maintenance Charges (Inclusive)
                 </label>
                 <div aclassName="price-input-wrapper">
-                  <span className="currency-symbol">$</span>
+                  {/* <span className="currency-symbol">$</span> */}
                   <input
                     type="text"
                     className="form-text-input price-input"
@@ -550,7 +549,10 @@ export default function PropertyForm() {
                 useEffect(() => {
                   return () => {
                     files.forEach((f) => {
-                      if ((f instanceof File || f instanceof Blob) && f.previewUrl) {
+                      if (
+                        (f instanceof File || f instanceof Blob) &&
+                        f.previewUrl
+                      ) {
                         URL.revokeObjectURL(f.previewUrl);
                       }
                     });
@@ -606,47 +608,44 @@ export default function PropertyForm() {
               }}
             />
 
-            {errors.photos && <p className="error-text">{errors.photos.message}</p>}
+            {errors.photos && (
+              <p className="error-text">{errors.photos.message}</p>
+            )}
           </section>
 
           {/* Action Buttons */}
-          {
-            property_id ? (
-              <div className="form-actions-footer">
+          {property_id ? (
+            <div className="form-actions-footer">
+              <button
+                disabled={loading}
+                type="button"
+                className="btn-submit-action"
+                onClick={handleSubmit((data) => onSubmit(data, "publish"))}
+              >
+                {loading ? "Submitting..." : "Save Changes"}
+              </button>
+            </div>
+          ) : (
+            <div className="form-actions-footer">
+              <button
+                disabled={loading}
+                type="button"
+                onClick={handleSubmit((data) => onSubmit(data, "draft"))}
+                className="btn-cancel-action"
+              >
+                {loading ? "Submitting..." : "Save as draft"}
+              </button>
 
-
-                <button
-                  disabled={loading}
-                  type="button"
-                  className="btn-submit-action"
-                  onClick={handleSubmit((data) => onSubmit(data, "publish"))}
-                >
-                  {loading ? "Submitting..." : "Save Changes"}
-                </button>
-              </div>
-            ) : (
-              <div className="form-actions-footer">
-                <button
-                  disabled={loading}
-                  type="button"
-                  onClick={handleSubmit((data) => onSubmit(data, "draft"))}
-                  className="btn-cancel-action"
-                >
-                  {loading ? "Submitting..." : "Save as draft"}
-                </button>
-
-                <button
-                  disabled={loading}
-                  type="button"
-                  className="btn-submit-action"
-                  onClick={handleSubmit((data) => onSubmit(data, "publish"))}
-                >
-                  {loading ? "Submitting..." : "Publish"}
-                </button>
-              </div>
-            )
-          }
-
+              <button
+                disabled={loading}
+                type="button"
+                className="btn-submit-action"
+                onClick={handleSubmit((data) => onSubmit(data, "publish"))}
+              >
+                {loading ? "Submitting..." : "Publish"}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </>

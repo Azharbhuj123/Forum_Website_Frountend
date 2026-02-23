@@ -25,33 +25,31 @@ const profileSchema = yup.object({
   phone: yup
     .string()
     .matches(/^[+]?[\d\s\-()]*$/, "Please enter a valid phone number"),
-password: yup
-  .string()
-  .nullable()
-  .notRequired()
-  .test(
-    "password-length",
-    "Password must be at least 6 characters",
-    function (value) {
-      if (!value) return true; // password empty → OK
-      return value.length >= 6; // password entered → min length
-    }
-  ),
+  password: yup
+    .string()
+    .nullable()
+    .notRequired()
+    .test(
+      "password-length",
+      "Password must be at least 6 characters",
+      function (value) {
+        if (!value) return true; // password empty → OK
+        return value.length >= 6; // password entered → min length
+      },
+    ),
 
-currentPass: yup
-  .string()
-  .nullable()
-  .when("password", {
-    is: (password) => !!password, // agar password dala hai
-    then: (schema) =>
-      schema.required("Current password is required"),
-    otherwise: (schema) => schema.notRequired(),
-  }),
-
+  currentPass: yup
+    .string()
+    .nullable()
+    .when("password", {
+      is: (password) => !!password, // agar password dala hai
+      then: (schema) => schema.required("Current password is required"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
 
   // twofactor: yup.string(),
-  coverPhoto: yup.mixed().optional(),
-  profilePhoto: yup.mixed(),
+  coverPhoto: yup.mixed().optional().nullable(),
+  profilePhoto: yup.string(),
 });
 
 export default function EditProfile() {
@@ -62,13 +60,10 @@ export default function EditProfile() {
   const [preview, setPreview] = useState(userData?.profile_img);
   const [preview_cover, setPreviewCover] = useState(null);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { data, isLoading } = useQuery({
     queryKey: ["user-detail"],
-    queryFn: () =>
-      fetchData(
-        `/auth/my-detail`
-      ),
+    queryFn: () => fetchData(`/auth/my-detail`),
     keepPreviousData: true,
   });
 
@@ -78,7 +73,8 @@ export default function EditProfile() {
     formState: { errors },
     control,
     watch,
-    reset
+    setValue,
+    reset,
   } = useForm({
     resolver: yupResolver(profileSchema),
     defaultValues: {
@@ -95,42 +91,52 @@ export default function EditProfile() {
     },
   });
 
-console.log(errors);
-
+  console.log(errors);
 
   useEffect(() => {
-  if (data) {
-    reset({
-      name: data.name || "",
-      bio: data.basic_info?.bio || "",
-      location: data.basic_info?.location || "",
-      website: data.basic_info?.website || "",
-      email: data.email || "",
-      phone: data.phone_number || "",
-      coverPhoto: data.cover_img || null,
-      profilePhoto: data.profile_img || null,
-      password: "", // leave blank for security
-      currentPass: "" // leave blank for security
+    if (data) {
+      reset({
+        name: data.name || "",
+        bio: data.basic_info?.bio || "",
+        location: data.basic_info?.location || "",
+        website: data.basic_info?.website || "",
+        email: data.email || "",
+        phone: data.phone_number || "",
+        coverPhoto: data.cover_img || null,
+        password: "", // leave blank for security
+        currentPass: "", // leave blank for security
+      });
+      setPublicProfile(data.privacy_settings?.public_profile);
+      setShowEmailPublic(data.privacy_settings?.public_email);
+      setNotifyByEmail(data.privacy_settings?.email_notify);
+      setPreview(data?.profile_img);
+      setPreviewCover(data?.cover_img);
+    }
+  }, [data]);
+
+  const handleUpload = (e) => {
+    const file = e.target.files[0];
+
+    const formData = new FormData();
+    formData.append("image", file);
+    showSuccess("Uploading...");
+    triggerMutation({
+      endPoint: `/upload`,
+      body: formData,
+      method: "post",
     });
-    setPublicProfile(data.privacy_settings?.public_profile)
-    setShowEmailPublic(data.privacy_settings?.public_email)
-    setNotifyByEmail(data.privacy_settings?.email_notify)
-    setPreview(data?.profile_img)
-    setPreviewCover(data?.cover_img)
-  }
-}, [data, ]);
+  };
 
-
-
-
-
-
-
-const { triggerMutation, loading } = useActionMutation({
+  const { triggerMutation, loading } = useActionMutation({
     onSuccessCallback: (data) => {
-        localStorage.setItem("userData", JSON.stringify(data?.user));
+      if(data?.url){
+        setValue('profilePhoto', data?.url);
+        setPreview(data?.url);
+        return
+      }
+      localStorage.setItem("userData", JSON.stringify(data?.user));
 
-       showSuccess("Profile updated successfully");
+      showSuccess("Profile updated successfully");
     },
     onErrorCallback: (errmsg) => {
       console.log(errmsg);
@@ -138,46 +144,45 @@ const { triggerMutation, loading } = useActionMutation({
     },
   });
 
+  const onSubmit = (data) => {
+    
+    const formData = new FormData();
 
- const onSubmit = (data) => {
-  const formData = new FormData();
+    // Append normal text fields
+    formData.append("name", data.name);
+    formData.append("bio", data.bio);
+    formData.append("location", data.location);
+    formData.append("website", data.website);
+    formData.append("email", data.email);
+    formData.append("phone", data.phone);
+    formData.append("password", data.password);
+    formData.append("currentPass", data.currentPass);
 
-  // Append normal text fields
-  formData.append("name", data.name);
-  formData.append("bio", data.bio);
-  formData.append("location", data.location);
-  formData.append("website", data.website);
-  formData.append("email", data.email);
-  formData.append("phone", data.phone);
-  formData.append("password", data.password);
-  formData.append("currentPass", data.currentPass);
+    // Append boolean values (must convert to string)
+    formData.append("publicProfile", publicProfile ? "true" : "false");
+    formData.append("showEmailPublic", showEmailPublic ? "true" : "false");
+    formData.append("notifyByEmail", notifyByEmail ? "true" : "false");
 
-  // Append boolean values (must convert to string)
-  formData.append("publicProfile", publicProfile ? "true" : "false");
-  formData.append("showEmailPublic", showEmailPublic ? "true" : "false");
-  formData.append("notifyByEmail", notifyByEmail ? "true" : "false");
+    // // Append files only if selected
+    // if (data.coverPhoto instanceof File) {
+    //   formData.append("coverPhoto", data.coverPhoto);
+    // }
 
-  // Append files only if selected
-  if (data.coverPhoto instanceof File) {
-    formData.append("coverPhoto", data.coverPhoto);
-  }
+    // if (data.profilePhoto instanceof File) {
+      formData.append("profile_img", preview);
+    // }
 
-  if (data.profilePhoto instanceof File) {
-    formData.append("profilePhoto", data.profilePhoto);
-  }
+    // Debug: show all values
+    for (let pair of formData.entries()) {
+      console.log(pair[0], pair[1]);
+    }
 
-  // Debug: show all values
-  for (let pair of formData.entries()) {
-    console.log(pair[0], pair[1]);
-  }
-
- triggerMutation({
+    triggerMutation({
       endPoint: `/auth/update-profile`,
       body: formData,
       method: "patch",
     });
-};
-
+  };
 
   const triggerFileInput = (ref) => ref.current.click();
 
@@ -354,15 +359,7 @@ const { triggerMutation, loading } = useActionMutation({
                       ref={profilePhotoRef}
                       className="smitchell-edit-hidden-input"
                       accept="image/*"
-                      onChange={(e) => {
-                        const file = e.target.files[0];
-                        field.onChange(file);
-
-                        if (file) {
-                          const url = URL.createObjectURL(file);
-                          setPreview(url); // UPDATE PREVIEW
-                        }
-                      }}
+                      onChange={(e) => handleUpload(e)}
                     />
                   </div>
                 )}
@@ -546,7 +543,7 @@ const { triggerMutation, loading } = useActionMutation({
             <h2 className="basic-info-form-title custom-section-title">
               Password
             </h2>
-<div className="form-field-group">
+            <div className="form-field-group">
               <input
                 type="password"
                 id="password"
@@ -588,12 +585,15 @@ const { triggerMutation, loading } = useActionMutation({
           </div>
 
           <div className="actions-button-pro">
-            <button onClick={()=>navigate("/profile")} type="button" className="close">
+            <button
+              onClick={() => navigate("/profile")}
+              type="button"
+              className="close"
+            >
               Close
             </button>
             <button disabled={loading} type="submit" className="save">
-             
-              {loading ?  "Saving...":"Save Changes"}
+              {loading ? "Saving..." : "Save Changes"}
             </button>
           </div>
         </form>

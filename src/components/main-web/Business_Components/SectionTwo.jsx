@@ -8,7 +8,10 @@ import {
 import photo from "../../../assets/Images/photo.png";
 import Sponser from "../Sponser";
 import { useNavigate } from "react-router-dom";
-import { openGoogleMaps, PropertyMapPreview } from "../Features/PropertyAddressInput";
+import {
+  openGoogleMaps,
+  PropertyMapPreview,
+} from "../Features/PropertyAddressInput";
 
 export default function SectionTwo({ rental_data, otherProperties }) {
   const navigate = useNavigate();
@@ -18,7 +21,7 @@ export default function SectionTwo({ rental_data, otherProperties }) {
     { name: "The Purple Garden", rating: 5, reviews: 285 },
   ];
 
-  console.log('rental_data', rental_data);
+  console.log("rental_data", rental_data);
 
   return (
     <>
@@ -31,9 +34,7 @@ export default function SectionTwo({ rental_data, otherProperties }) {
               <Location_Svg />
 
               <div className="info-content">
-                <p className="info-text">
-                  {rental_data?.fullAddress || ""}
-                </p>
+                <p className="info-text">{rental_data?.fullAddress || ""}</p>
                 <p
                   className="info-label"
                   style={{ cursor: "pointer" }}
@@ -57,7 +58,6 @@ export default function SectionTwo({ rental_data, otherProperties }) {
           )}
 
           {rental_data?.user?.basic_info?.website && (
-
             <div className="info-item">
               <Webiste_SVg />
 
@@ -68,7 +68,6 @@ export default function SectionTwo({ rental_data, otherProperties }) {
               </div>
             </div>
           )}
-
 
           {/* <div className="info-item">
             <Clock_Svg />
@@ -86,8 +85,17 @@ export default function SectionTwo({ rental_data, otherProperties }) {
               <span>Map View</span>
             </button> */}
           {/* </div> */}
-          <PropertyMapPreview lat={Array.isArray(rental_data?.property_location?.coordinates) ? rental_data.property_location.coordinates[1] : ""}
-            lng={Array.isArray(rental_data?.property_location?.coordinates) ? rental_data.property_location.coordinates[0] : ""}
+          <PropertyMapPreview
+            lat={
+              Array.isArray(rental_data?.property_location?.coordinates)
+                ? rental_data.property_location.coordinates[1]
+                : ""
+            }
+            lng={
+              Array.isArray(rental_data?.property_location?.coordinates)
+                ? rental_data.property_location.coordinates[0]
+                : ""
+            }
           />
         </div>
 

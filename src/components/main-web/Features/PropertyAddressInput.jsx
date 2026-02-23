@@ -18,8 +18,6 @@ const containerStyleSearch = {
   borderRadius: "12px",
 };
 
-
-
 function useUserCountry() {
   const [country, setCountry] = useState(null);
 
@@ -35,7 +33,7 @@ function useUserCountry() {
         geocoder.geocode({ location: latlng }, (results, status) => {
           if (status === "OK" && results[0]) {
             const countryComp = results[0].address_components.find((c) =>
-              c.types.includes("country")
+              c.types.includes("country"),
             );
             if (countryComp) {
               setCountry(countryComp.short_name); // e.g. "US", "PK"
@@ -83,52 +81,53 @@ export function PropertyAddressInput({ setValue, address }) {
     debounce: 300,
   });
 
- useEffect(() => {
-  if (address) {
-    setAutoValue(address, false);
+  useEffect(() => {
+    if (address) {
+      setAutoValue(address, false);
 
-    (async () => {
-      try {
-        const results = await getGeocode({ address });
-        const { lat, lng } = await getLatLng(results[0]);
+      (async () => {
+        try {
+          const results = await getGeocode({ address });
+          const { lat, lng } = await getLatLng(results[0]);
 
-        setValue("latitude", lat);
-        setValue("longitude", lng);
-      } catch (err) {
-        console.error("Failed to get lat/lng from address", err);
-      }
-    })();
-  }
-}, [address]);
-
+          setValue("latitude", lat);
+          setValue("longitude", lng);
+        } catch (err) {
+          console.error("Failed to get lat/lng from address", err);
+        }
+      })();
+    }
+  }, [address]);
 
   const handleInputChange = (e) => {
     setAutoValue(e.target.value);
     setValue("fullAddress", e.target.value, { shouldValidate: true });
   };
 
-  const handleSelect = ({ description }) => async () => {
-    setAutoValue(description, false);
-    clearSuggestions();
+  const handleSelect =
+    ({ description }) =>
+    async () => {
+      setAutoValue(description, false);
+      clearSuggestions();
 
-    setValue("fullAddress", description, { shouldValidate: true });
+      setValue("fullAddress", description, { shouldValidate: true });
 
-    const results = await getGeocode({ address: description });
-    const { lat, lng } = await getLatLng(results[0]);
+      const results = await getGeocode({ address: description });
+      const { lat, lng } = await getLatLng(results[0]);
 
-    setValue("latitude", lat);
-    setValue("longitude", lng);
+      setValue("latitude", lat);
+      setValue("longitude", lng);
 
-    const postalCodeComp = results[0].address_components.find((comp) =>
-      comp.types.includes("postal_code")
-    );
+      const postalCodeComp = results[0].address_components.find((comp) =>
+        comp.types.includes("postal_code"),
+      );
 
-    const postalCode = postalCodeComp?.long_name || "";
+      const postalCode = postalCodeComp?.long_name || "";
 
-    setValue("zipcode", postalCode, { shouldValidate: true });
+      setValue("zipcode", postalCode, { shouldValidate: true });
 
-    console.log("Coords:", { lat, lng });
-  };
+      console.log("Coords:", { lat, lng });
+    };
 
   return (
     <div className="coolinput">
@@ -152,8 +151,7 @@ export function PropertyAddressInput({ setValue, address }) {
       )}
     </div>
   );
-};
-
+}
 
 export function PropertyMapPreview({ lat, lng }) {
   if (!lat || !lng) {
@@ -162,9 +160,7 @@ export function PropertyMapPreview({ lat, lng }) {
         <div className="map-icon-container">
           <Location_Svg />
         </div>
-        <p className="map-placeholder-text">
-          Map preview will appear here
-        </p>
+        <p className="map-placeholder-text">Map preview will appear here</p>
       </div>
     );
   }
@@ -183,8 +179,7 @@ export function PropertyMapPreview({ lat, lng }) {
   );
 }
 
-
-export const openGoogleMaps = ({rental_data}) => {
+export const openGoogleMaps = ({ rental_data }) => {
   if (!rental_data) return;
 
   let url = "https://www.google.com/maps/search/?api=1";
@@ -205,8 +200,6 @@ export const openGoogleMaps = ({rental_data}) => {
 
   window.open(url, "_blank"); // opens in new tab
 };
-
-
 
 export function LocationSearchBar({ searchQuery, setSearchQuery }) {
   const {
@@ -281,7 +274,6 @@ export function LocationSearchBar({ searchQuery, setSearchQuery }) {
   );
 }
 
-
 export function MapView({ properties }) {
   const mapRef = useRef(null);
 
@@ -308,7 +300,7 @@ export function MapView({ properties }) {
 
     const bounds = new window.google.maps.LatLngBounds();
     markers.forEach((marker) =>
-      bounds.extend(new window.google.maps.LatLng(marker.lat, marker.lng))
+      bounds.extend(new window.google.maps.LatLng(marker.lat, marker.lng)),
     );
     mapRef.current.fitBounds(bounds);
   }, [markers]);
@@ -316,9 +308,13 @@ export function MapView({ properties }) {
   return (
     <GoogleMap
       mapContainerStyle={containerStyleSearch}
-      center={defaultCenter}
-      zoom={14} // initial zoom, will auto-fit anyway
-      onLoad={(map) => (mapRef.current = map)}
+      onLoad={(map) => {
+        mapRef.current = map;
+
+        setTimeout(() => {
+          window.google.maps.event.trigger(map, "resize");
+        }, 300);
+      }}
       options={{ disableDefaultUI: true }}
     >
       {markers.map((marker, idx) => (
