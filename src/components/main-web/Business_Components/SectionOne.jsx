@@ -21,7 +21,7 @@ export default function SectionOne({
   rental_data,
   otherProperties,
   alreadySaved,
-  refetch
+  refetch,
 }) {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [isSaved, setIsSaved] = useState(alreadySaved);
@@ -88,7 +88,6 @@ export default function SectionOne({
       return;
     }
 
-
     navigate("/chat", {
       state: {
         userId: rental_data?.user?._id,
@@ -123,34 +122,58 @@ export default function SectionOne({
 
         <div className="hero-section">
           <div className="hero-image">
-            <img src={rental_data?.photos[0] ? rental_data?.photos[0] : "https://forum-backend-production-47c5.up.railway.app/uploads/1764087857600-download%20(43).png"} alt="Restaurant interior" />
+            <img
+              src={
+                rental_data?.photos[0]
+                  ? rental_data?.photos[0]
+                  : "https://forum-backend-production-47c5.up.railway.app/uploads/1764087857600-download%20(43).png"
+              }
+              alt="Restaurant interior"
+            />
           </div>
 
           <div className="restaurant-info1">
             <h1 className="restaurant-name1">{rental_data?.listingTitle}</h1>
 
-            <div className="rating-section" onClick={gotoReview} style={{cursor: 'pointer'}}>
+            <div
+              className="rating-section"
+              onClick={gotoReview}
+              style={{ cursor: "pointer" }}
+            >
               <div className="stars0">
                 {Array.from({ length: 5 }, (_, index) => {
                   const rating = rental_data?.rating || 0;
                   if (index + 1 <= Math.floor(rating)) {
                     // full star
-                    return <span key={index} className="star1 filled">★</span>;
+                    return (
+                      <span key={index} className="star1 filled">
+                        ★
+                      </span>
+                    );
                   } else if (index < rating) {
                     // half star
-                    return <span key={index} className="star1 half">★</span>;
+                    return (
+                      <span key={index} className="star1 half">
+                        ★
+                      </span>
+                    );
                   } else {
                     // empty star
-                    return <span key={index} className="star1">★</span>;
+                    return (
+                      <span key={index} className="star1">
+                        ★
+                      </span>
+                    );
                   }
                 })}
               </div>
-              <span className="rating-text">{rental_data?.rating || "N/A"}</span>
+              <span className="rating-text">
+                {rental_data?.rating || "N/A"}
+              </span>
               <span className="reviews-count">
                 ({rental_data?.total_review || "N/A"} reviews)
               </span>
             </div>
-
 
             <div className="restaurant-type">
               <span className="type-text">{rental_data?.category}</span>
@@ -205,7 +228,11 @@ export default function SectionOne({
             </button>
             <div className="photo-container">
               <img
-                src={photos.length !== 0 ? photos[currentPhotoIndex] : "https://forum-backend-production-47c5.up.railway.app/uploads/1764087857600-download%20(43).png"}
+                src={
+                  photos.length !== 0
+                    ? photos[currentPhotoIndex]
+                    : "https://forum-backend-production-47c5.up.railway.app/uploads/1764087857600-download%20(43).png"
+                }
                 alt="Food"
                 className="carousel-image"
               />
@@ -228,7 +255,14 @@ export default function SectionOne({
                   className="dish-card"
                 >
                   <div className="dish-image">
-                    <img src={data?.photos.length !== 0 ?data?.photos[0] : "https://forum-backend-production-47c5.up.railway.app/uploads/1764087857600-download%20(43).png"} alt={data.listingTitle} />
+                    <img
+                      src={
+                        data?.photos.length !== 0
+                          ? data?.photos[0]
+                          : "https://forum-backend-production-47c5.up.railway.app/uploads/1764087857600-download%20(43).png"
+                      }
+                      alt={data.listingTitle}
+                    />
                   </div>
                   <div className="dish-info">
                     <h3 className="dish-name">{data.listingTitle}</h3>
@@ -241,23 +275,28 @@ export default function SectionOne({
             </div>
           </div>
         )}
-
-        <div className="dishes-section ameinities-section">
-          <h2 className="section-title">Amenties</h2>
-          <div className="amenities-grid">
-            {rental_data?.amenities.map((item, index) => (
-              <div key={index} className="amenities-card">
-                <div className="amenities-info">
-                  <h3 className="amenities-name">
-                    <Green_Check /> {item}
-                  </h3>
+        {rental_data?.amenities?.length > 0 && (
+          <div className="dishes-section ameinities-section">
+            <h2 className="section-title">Amenties</h2>
+            <div className="amenities-grid">
+              {rental_data?.amenities.map((item, index) => (
+                <div key={index} className="amenities-card">
+                  <div className="amenities-info">
+                    <h3 className="amenities-name">
+                      <Green_Check /> {item}
+                    </h3>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
-        <CommentsSection sectionTwoRef={sectionTwoRef} property={rental_data} refetchProp={refetch} />
+        <CommentsSection
+          sectionTwoRef={sectionTwoRef}
+          property={rental_data}
+          refetchProp={refetch}
+        />
       </div>
     </>
   );
