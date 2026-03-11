@@ -49,7 +49,7 @@ const profileSchema = yup.object({
 
   // twofactor: yup.string(),
   coverPhoto: yup.mixed().optional().nullable(),
-  profilePhoto: yup.string(),
+  profilePhoto: yup.string().optional().nullable(),
 });
 
 export default function EditProfile() {
@@ -109,7 +109,7 @@ export default function EditProfile() {
       setPublicProfile(data.privacy_settings?.public_profile);
       setShowEmailPublic(data.privacy_settings?.public_email);
       setNotifyByEmail(data.privacy_settings?.email_notify);
-      setPreview(data?.profile_img);
+      setPreview(userData?.profile_img);
       setPreviewCover(data?.cover_img);
     }
   }, [data]);
@@ -129,12 +129,13 @@ export default function EditProfile() {
 
   const { triggerMutation, loading } = useActionMutation({
     onSuccessCallback: (data) => {
-      if(data?.url){
-        setValue('profilePhoto', data?.url);
+      if (data?.url) {
+        setValue("profilePhoto", data?.url);
         setPreview(data?.url);
-        return
+        return;
       }
       localStorage.setItem("userData", JSON.stringify(data?.user));
+      navigate("/profile");
 
       showSuccess("Profile updated successfully");
     },
@@ -145,7 +146,6 @@ export default function EditProfile() {
   });
 
   const onSubmit = (data) => {
-    
     const formData = new FormData();
 
     // Append normal text fields
@@ -169,7 +169,7 @@ export default function EditProfile() {
     // }
 
     // if (data.profilePhoto instanceof File) {
-      formData.append("profile_img", preview);
+    formData.append("profile_img", preview);
     // }
 
     // Debug: show all values

@@ -12,8 +12,13 @@ import { Skeleton } from "antd";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { set } from "react-hook-form";
+import ThreadedDiscussion from "./ThreadedDiscussion";
 
-export default function CommentsSection({ sectionTwoRef, property,refetchProp }) {
+export default function CommentsSection({
+  sectionTwoRef,
+  property,
+  refetchProp,
+}) {
   const [commentText, setCommentText] = useState("");
   const [rating, setRating] = useState(0);
   const [comment_id, setComment_id] = useState(null);
@@ -33,7 +38,7 @@ export default function CommentsSection({ sectionTwoRef, property,refetchProp })
     queryKey: ["property-reviews", property?._id, reviews_limit],
     queryFn: () =>
       fetchData(
-        `/review/${property?._id}?limit=${reviews_limit}&userId=${userData?._id}`
+        `/review/${property?._id}?limit=${reviews_limit}&userId=${userData?._id}`,
       ),
     keepPreviousData: true,
   });
@@ -41,7 +46,7 @@ export default function CommentsSection({ sectionTwoRef, property,refetchProp })
     queryKey: ["property-comment", comment_id, reply_reviews_limit],
     queryFn: () =>
       fetchData(
-        `/review/reply-review?property=${property?._id}&review_id=${comment_id}&limit=${reply_reviews_limit}`
+        `/review/reply-review?property=${property?._id}&review_id=${comment_id}&limit=${reply_reviews_limit}`,
       ),
     keepPreviousData: true,
     enabled: !!comment_id,
@@ -64,8 +69,6 @@ export default function CommentsSection({ sectionTwoRef, property,refetchProp })
     }
   }, [commentData, comment_id]);
 
-   
-
   const handleLike = (key) => {
     if (!token) {
       navigate("/register");
@@ -73,36 +76,35 @@ export default function CommentsSection({ sectionTwoRef, property,refetchProp })
     }
     triggerMutation({
       endPoint: `/review/post-like`,
-      body: {reviewId: key},
+      body: { reviewId: key },
       method: "post",
     });
   };
 
   const ratingChanged = (newRating) => {
-    
     console.log(newRating, "newRating");
     setRating(newRating);
   };
 
   const { triggerMutation, loading } = useActionMutation({
     onSuccessCallback: (data) => {
-      if(data?.postLike){
+      if (data?.postLike) {
         refetch();
-        return ;
+        return;
       }
       if (data?.flag) {
         setComments((prevComments) =>
           prevComments.map((comment) =>
             comment._id === data?.review_id
               ? { ...comment, isFlag: data.flagStatus }
-              : comment
-          )
+              : comment,
+          ),
         );
         showSuccess(data?.message);
         return;
       }
       if (data?.reply) {
-        refetch()
+        refetch();
         setReply_review("");
         setRating(0);
         setReply_reviews(data?.reply_reviews);
@@ -116,15 +118,14 @@ export default function CommentsSection({ sectionTwoRef, property,refetchProp })
         setRating(0);
 
         setCommentText("");
-        setPostCmtLoading(false)
+        setPostCmtLoading(false);
         showSuccess("Action submitted successfully");
       }
     },
     onErrorCallback: (errmsg) => {
       console.log(errmsg);
       showError(errmsg);
-        setPostCmtLoading(false)
-
+      setPostCmtLoading(false);
     },
   });
 
@@ -189,11 +190,6 @@ export default function CommentsSection({ sectionTwoRef, property,refetchProp })
     // Here you can also add logic to send the flag action to the server if needed
   };
 
-  console.log(
-    comments?.map((item) => item?.isFlag),
-    "cdddddddomments"
-  );
-
   return (
     <>
       <div className="reviews-container" ref={sectionTwoRef}>
@@ -210,7 +206,14 @@ export default function CommentsSection({ sectionTwoRef, property,refetchProp })
           </div>
         )}
 
-        {/* Review Card */}
+        {/* <div ref={discussionRef}> */}
+        <ThreadedDiscussion
+          discussionId={property?._id}
+          userData={userData}
+          type="Property"
+        />
+
+        {/* Review Card
       {comments?.length > 0
   ? comments.map((item, index) => {
       const is_like_by = item?.likedBy?.includes(userData?._id);
@@ -348,7 +351,7 @@ export default function CommentsSection({ sectionTwoRef, property,refetchProp })
           </div>
         )}
 
-        {/* Comments Section */}
+        Comments Section
         <div className="comments-section">
           <h3 className="comments-title">Comments</h3>
           <div style={{ marginBottom: "20px" }}>
@@ -377,7 +380,7 @@ export default function CommentsSection({ sectionTwoRef, property,refetchProp })
               {postCmtLoading ? "Posting..." : "Post Comment"}
             </button>
           </div>
-          {/* Owner Response
+         this will be coment  Owner Response
         
           User Comment
           <div className="comment-card">
@@ -403,8 +406,8 @@ export default function CommentsSection({ sectionTwoRef, property,refetchProp })
               Great review! I completely agree about the ambiance. Have you
               tried their weekend brunch?
             </p>
-          </div> */}
-        </div>
+          </div> 
+        </div> */}
       </div>
     </>
   );

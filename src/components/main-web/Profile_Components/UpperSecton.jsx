@@ -13,6 +13,8 @@ import { useNavigate } from "react-router-dom";
 import { fetchData } from "../../../queryFunctions/queryFunctions";
 import { Skeleton } from "antd";
 export default function UpperSecton() {
+  const userData = JSON.parse(localStorage.getItem("userData") || "null");
+
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["user-profile"],
     queryFn: () => fetchData(`/auth/my-detail`),
@@ -48,11 +50,11 @@ export default function UpperSecton() {
           <div class="smitchell-profile-info-container">
             <div class="smitchell-profile-avatar-wrapper">
               <img
-                src={data?.profile_img || <i class="fa-solid fa-user"></i>}
+                src={userData?.profile_img || <i class="fa-solid fa-user"></i>}
                 alt="Sarah Mitchell"
                 class="smitchell-profile-avatar"
               />
-              <span class="smitchell-profile-online-indicator"></span>
+              {/* <span class="smitchell-profile-online-indicator"></span> */}
             </div>
 
             <div class="smitchell-profile-name-section">

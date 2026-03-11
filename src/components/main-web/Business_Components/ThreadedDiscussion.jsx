@@ -1,13 +1,18 @@
 // components/ThreadedDiscussion.jsx
-import React, { useState, useEffect, useRef } from 'react';
-import { FiMessageCircle as MessageCircle, FiThumbsUp as ThumbsUp, FiMoreVertical as MoreVertical } from 'react-icons/fi';
-import { Link, useNavigate } from 'react-router-dom';
-import { baseurl } from '../../../BaseUrl';
-import axios from 'axios';
-import { showSuccess } from '../../Toaster';
-import { fetchData } from '../../../queryFunctions/queryFunctions';
-import { useQuery } from '@tanstack/react-query';
-import MentionModal from '../../Modals/UserList';
+import React, { useState, useEffect, useRef } from "react";
+import {
+  FiMessageCircle as MessageCircle,
+  FiThumbsUp as ThumbsUp,
+  FiMoreVertical as MoreVertical,
+} from "react-icons/fi";
+import { Link, useNavigate } from "react-router-dom";
+import { baseurl } from "../../../BaseUrl";
+import axios from "axios";
+import { showSuccess } from "../../Toaster";
+import { fetchData } from "../../../queryFunctions/queryFunctions";
+import { useQuery } from "@tanstack/react-query";
+import MentionModal from "../../Modals/UserList";
+import ReactStars from "react-rating-stars-component";
 
 const API_BASE_URL = baseurl;
 
@@ -15,7 +20,9 @@ const commentApi = {
   // Get all comments for a discussion
   getComments: async (discussionId) => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/discussion/discussion/${discussionId}`);
+      const response = await axios.get(
+        `${API_BASE_URL}/discussion/discussion/${discussionId}`,
+      );
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -23,12 +30,14 @@ const commentApi = {
   },
 
   // Create a new comment
-  createComment: async (discussionId, message, mentions = []) => {
+  createComment: async (discussionId, message, mentions = [], type, rating) => {
     try {
       const response = await axios.post(
         `${API_BASE_URL}/discussion/${discussionId}/comment`,
-        { discussionId, message, mentions },
-        { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+        { discussionId, message, mentions, type, rating },
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        },
       );
       return response.data;
     } catch (error) {
@@ -37,12 +46,14 @@ const commentApi = {
   },
 
   // Reply to a comment
-  replyToComment: async (commentId, message, mentions = []) => {
+  replyToComment: async (commentId, message, mentions = [], type) => {
     try {
       const response = await axios.post(
         `${API_BASE_URL}/discussion/${commentId}/reply`,
-        { message, mentions },
-        { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+        { message, mentions, type },
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        },
       );
       return response.data;
     } catch (error) {
@@ -55,7 +66,9 @@ const commentApi = {
       const response = await axios.post(
         `${API_BASE_URL}/discussion/flag-review`,
         { reviewId: commentId },
-        { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        },
       );
       return response.data;
     } catch (error) {
@@ -69,16 +82,22 @@ const commentApi = {
       const response = await axios.post(
         `${API_BASE_URL}/discussion/post-like-child`,
         { reviewId: commentId },
-        { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        },
       );
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
     }
-  }
+  },
 };
 
-const ThreadedDiscussion = ({ discussionId, userData }) => {
+const ThreadedDiscussion = ({
+  discussionId,
+  userData,
+  type = "Discussion",
+}) => {
   const [comments, setComments] = useState([]);
   const [replyingTo, setReplyingTo] = useState(null);
   const [replyText, setReplyText] = useState("");
@@ -104,22 +123,26 @@ const ThreadedDiscussion = ({ discussionId, userData }) => {
     keepPreviousData: true,
   });
 
-
-
   const [loading, setLoading] = useState(true);
   const [likedComments, setLikedComments] = useState(new Set());
 
   // New state for optimistic updates
   const [optimisticComments, setOptimisticComments] = useState([]);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [rating, setRating] = useState(0);
   const commentsRef = useRef([]);
 
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log(discussionId, "discussionId");
+
     fetchComments();
   }, [discussionId]);
-
+  const ratingChanged = (newRating) => {
+    console.log(newRating, "newRating");
+    setRating(newRating);
+  };
   // Keep commentsRef in sync with comments
   useEffect(() => {
     commentsRef.current = comments;
@@ -133,7 +156,7 @@ const ThreadedDiscussion = ({ discussionId, userData }) => {
       setComments(nestedComments);
       setOptimisticComments(nestedComments); // Initialize optimistic comments
     } catch (error) {
-      console.error('Error fetching comments:', error);
+      console.error("Error fetching comments:", error);
     }
     setLoading(false);
   };
@@ -174,8 +197,6 @@ const ThreadedDiscussion = ({ discussionId, userData }) => {
     });
   };
 
-
-
   const formatDate = (date) => {
     const d = new Date(date);
     const now = new Date();
@@ -184,7 +205,7 @@ const ThreadedDiscussion = ({ discussionId, userData }) => {
     const diffHours = Math.floor(diffMs / 3600000);
     const diffDays = Math.floor(diffMs / 86400000);
 
-    if (diffMins < 1) return 'just now';
+    if (diffMins < 1) return "just now";
     if (diffMins < 60) return `${diffMins}m ago`;
     if (diffHours < 24) return `${diffHours}h ago`;
     if (diffDays < 7) return `${diffDays}d ago`;
@@ -217,26 +238,26 @@ const ThreadedDiscussion = ({ discussionId, userData }) => {
       userId: {
         _id: userData._id,
         name: userData.name,
-        profile_img: userData.profile_img
+        profile_img: userData.profile_img,
       },
       createdAt: new Date().toISOString(),
       likesCount: 0,
       replies: [],
-      isOptimistic: true
+      isOptimistic: true,
     };
 
     const addReplyToComments = (commentList) => {
-      return commentList.map(comment => {
+      return commentList.map((comment) => {
         if (comment._id === parentId) {
           return {
             ...comment,
-            replies: [...comment.replies, newReply]
+            replies: [...comment.replies, newReply],
           };
         }
         if (comment.replies && comment.replies.length > 0) {
           return {
             ...comment,
-            replies: addReplyToComments(comment.replies)
+            replies: addReplyToComments(comment.replies),
           };
         }
         return comment;
@@ -265,12 +286,12 @@ const ThreadedDiscussion = ({ discussionId, userData }) => {
       setReplyText("");
 
       // API call
-      await commentApi.replyToComment(parentId, replyText);
+      await commentApi.replyToComment(parentId, replyText,[],type);
 
       // Refresh comments to get actual data
       await fetchComments();
     } catch (error) {
-      console.error('Error submitting reply:', error);
+      console.error("Error submitting reply:", error);
       // Revert optimistic update on error
       setOptimisticComments(previousComments);
     } finally {
@@ -285,12 +306,12 @@ const ThreadedDiscussion = ({ discussionId, userData }) => {
       userId: {
         _id: userData._id,
         name: userData.name,
-        profile_img: userData.profile_img
+        profile_img: userData.profile_img,
       },
       createdAt: new Date().toISOString(),
       likesCount: 0,
       replies: [],
-      isOptimistic: true
+      isOptimistic: true,
     };
 
     const updatedComments = [newComment, ...optimisticComments];
@@ -313,12 +334,19 @@ const ThreadedDiscussion = ({ discussionId, userData }) => {
       setNewComment("");
 
       // API call
-      await commentApi.createComment(discussionId, newComment);
+      await commentApi.createComment(
+        discussionId,
+        newComment,
+        [],
+        type,
+        parseInt(rating),
+      );
       showSuccess("Comment submitted successfully");
       // Refresh comments to get actual data
+      setRating(0);
       await fetchComments();
     } catch (error) {
-      console.error('Error submitting comment:', error);
+      console.error("Error submitting comment:", error);
       // Revert optimistic update on error
       setOptimisticComments(previousComments);
     } finally {
@@ -328,7 +356,7 @@ const ThreadedDiscussion = ({ discussionId, userData }) => {
 
   const updateOptimisticLike = (commentId) => {
     const updateLikesInComments = (commentList) => {
-      return commentList.map(comment => {
+      return commentList.map((comment) => {
         if (comment._id === commentId) {
           const isCurrentlyLiked = likedComments.has(commentId);
           const newLikesCount = isCurrentlyLiked
@@ -337,13 +365,13 @@ const ThreadedDiscussion = ({ discussionId, userData }) => {
 
           return {
             ...comment,
-            likesCount: newLikesCount
+            likesCount: newLikesCount,
           };
         }
         if (comment.replies && comment.replies.length > 0) {
           return {
             ...comment,
-            replies: updateLikesInComments(comment.replies)
+            replies: updateLikesInComments(comment.replies),
           };
         }
         return comment;
@@ -378,7 +406,7 @@ const ThreadedDiscussion = ({ discussionId, userData }) => {
       // Refresh comments to get actual data
       await fetchComments();
     } catch (error) {
-      console.error('Error toggling like:', error);
+      console.error("Error toggling like:", error);
       // Revert optimistic update on error
       setOptimisticComments(previousComments);
       setLikedComments(previousLikes);
@@ -395,12 +423,11 @@ const ThreadedDiscussion = ({ discussionId, userData }) => {
       showSuccess("Updated");
       await fetchComments();
     } catch (error) {
-      console.error('Error toggling like:', error);
+      console.error("Error toggling like:", error);
     } finally {
       setIsUpdating(false);
     }
   };
-
 
   const CommentItem = ({ comment, depth = 0 }) => {
     const hasReplies = comment.replies?.length > 0;
@@ -416,44 +443,52 @@ const ThreadedDiscussion = ({ discussionId, userData }) => {
         {comment?.userId?._id !== userData?._id && (
           <button
             onClick={() => handleFlag(comment?._id)}
-            className={`flag-button discussions ${comment?.flaggedBy?.some(
-              (id) => id?.toString() === userData?._id
-            )
+            className={`flag-button discussions ${
+              comment?.flaggedBy?.some((id) => id?.toString() === userData?._id)
                 ? "activeFlag"
                 : ""
-              }`}
-
+            }`}
           >
             ⚑
           </button>
         )}
         <div
-          className={`comment-item ${showConnector ? 'nested' : ''} ${comment.isOptimistic ? 'optimistic' : ''}`}
+          className={`comment-item ${showConnector ? "nested" : ""} ${comment.isOptimistic ? "optimistic" : ""}`}
           style={{ paddingLeft: `${visualDepth * 28}px` }}
         >
           {showConnector && <div className="connector-line" />}
 
           <div className="comment-content">
             <img
-              src={comment.userId?.profile_img || "https://forum-backend-production-47c5.up.railway.app/uploads/1763980553327-download.png"}
+              src={
+                comment.userId?.profile_img ||
+                "https://forum-backend-production-47c5.up.railway.app/uploads/1763980553327-download.png"
+              }
               alt={comment.userId?.name || "User"}
               className="avatar"
             />
 
             <div className="content">
-
-
-              <div className="header">
+              <div style={{marginBottom: comment?.rating === 0 ? 6 : 0}} className="header">
                 <strong>{comment.userId?.name || "Anonymous"}</strong>
                 <span className="time">· {formatDate(comment.createdAt)}</span>
-                {comment.isOptimistic && <span className="optimistic-badge">Posting...</span>}
+                {comment.isOptimistic && (
+                  <span className="optimistic-badge">Posting...</span>
+                )}
               </div>
 
+              <div className="stars">
+                    {comment?.rating === 0
+                      ? ""
+                      : Array.from({ length: comment?.rating }, (_, i) => (
+                          <span key={i} className="star">★</span>
+                        ))}
+                  </div>
               <div className="text">{comment.message}</div>
 
               <div className="actions">
                 <button
-                  className={`action-btn ${isLiked ? 'liked' : ''}`}
+                  className={`action-btn ${isLiked ? "liked" : ""}`}
                   onClick={() => handleLike(comment._id)}
                   disabled={isUpdating || comment.isOptimistic}
                 >
@@ -474,7 +509,8 @@ const ThreadedDiscussion = ({ discussionId, userData }) => {
                     onClick={() => toggleReplies(comment._id)}
                     disabled={isUpdating}
                   >
-                    {isOpen ? '▼' : '▶'} {comment.replies.length} {comment.replies.length === 1 ? 'reply' : 'replies'}
+                    {isOpen ? "▼" : "▶"} {comment.replies.length}{" "}
+                    {comment.replies.length === 1 ? "reply" : "replies"}
                   </button>
                 )}
               </div>
@@ -482,7 +518,10 @@ const ThreadedDiscussion = ({ discussionId, userData }) => {
               {replyingTo === comment._id && (
                 <div className="reply-box">
                   <img
-                    src={userData?.profile_img || "https://forum-backend-production-47c5.up.railway.app/uploads/1763980553327-download.png"}
+                    src={
+                      userData?.profile_img ||
+                      "https://forum-backend-production-47c5.up.railway.app/uploads/1763980553327-download.png"
+                    }
                     alt="You"
                     className="reply-avatar"
                   />
@@ -493,7 +532,7 @@ const ThreadedDiscussion = ({ discussionId, userData }) => {
                       placeholder="Write your reply..."
                       autoFocus
                       onKeyPress={(e) => {
-                        if (e.key === 'Enter' && !e.shiftKey) {
+                        if (e.key === "Enter" && !e.shiftKey) {
                           e.preventDefault();
                           submitReply(comment._id);
                         }
@@ -513,7 +552,7 @@ const ThreadedDiscussion = ({ discussionId, userData }) => {
                         onClick={() => submitReply(comment._id)}
                         disabled={!replyText.trim() || isUpdating}
                       >
-                        {isUpdating ? 'Posting...' : 'Reply'}
+                        {isUpdating ? "Posting..." : "Reply"}
                       </button>
                     </div>
                   </div>
@@ -535,11 +574,16 @@ const ThreadedDiscussion = ({ discussionId, userData }) => {
   };
 
   if (loading && optimisticComments.length === 0) {
-    return <p style={{ textAlign: 'center', padding: '20px' }}>Loading comments...</p>;
+    return (
+      <p style={{ textAlign: "center", padding: "20px" }}>
+        Loading comments...
+      </p>
+    );
   }
 
   // Use optimisticComments for display, fallback to actual comments
-  const displayComments = optimisticComments.length > 0 ? optimisticComments : comments;
+  const displayComments =
+    optimisticComments.length > 0 ? optimisticComments : comments;
 
   return (
     <div className="thread">
@@ -574,7 +618,8 @@ const ThreadedDiscussion = ({ discussionId, userData }) => {
           gap: 12px;
           margin-bottom: 16px;
         }
-
+        .cmt-star-section{
+        width:100%}
         .user-comment img {
           width: 42px;
           height: 42px;
@@ -898,7 +943,6 @@ const ThreadedDiscussion = ({ discussionId, userData }) => {
         }
       `}</style>
 
-
       <>
         <div className="post-comment">
           <p>Add your Comment</p>
@@ -916,12 +960,32 @@ const ThreadedDiscussion = ({ discussionId, userData }) => {
         onSelect={insertMention}
       />
     )} */}
-            <textarea
-              value={newComment}
-              placeholder="Share your thoughts..."
-              onChange={handleChange}
-              disabled={isUpdating}
-            />
+
+            {type === "Property" ? (
+              <div className={type === "Property" ? "cmt-star-section" : ""}>
+                <div style={{ marginBottom: "15px" }}>
+                  <ReactStars
+                    count={5}
+                    onChange={ratingChanged}
+                    size={24}
+                    activeColor="#E66448"
+                  />
+                </div>
+                <textarea
+                  value={newComment}
+                  placeholder="Share your thoughts..."
+                  onChange={handleChange}
+                  disabled={isUpdating}
+                />
+              </div>
+            ) : (
+              <textarea
+                value={newComment}
+                placeholder="Share your thoughts..."
+                onChange={handleChange}
+                disabled={isUpdating}
+              />
+            )}
           </div>
           <div className="user-cmt-btn">
             <button
@@ -931,29 +995,24 @@ const ThreadedDiscussion = ({ discussionId, userData }) => {
               {isUpdating ? "Posting..." : "Post Comment"}
             </button>
           </div>
-          {
-            !userData && (
-
-
-              <p className="msg-to-login">
-                ⚠️ Please <Link to="/register">sign in</Link> to post a comment.
-              </p>
-            )
-          }
+          {!userData && (
+            <p className="msg-to-login">
+              ⚠️ Please <Link to="/register">sign in</Link> to post a comment.
+            </p>
+          )}
         </div>
       </>
 
-
       <div className="all-boss">
         {displayComments.length === 0 ? (
-          <p style={{ textAlign: 'center', color: '#999', padding: '20px' }}>
+          <p style={{ textAlign: "center", color: "#999", padding: "20px" }}>
             No comments yet. Be the first to comment!
           </p>
         ) : (
           displayComments.map((c) => <CommentItem key={c._id} comment={c} />)
         )}
         {loading && optimisticComments.length > 0 && (
-          <p style={{ textAlign: 'center', color: '#999', padding: '10px' }}>
+          <p style={{ textAlign: "center", color: "#999", padding: "10px" }}>
             Updating...
           </p>
         )}
