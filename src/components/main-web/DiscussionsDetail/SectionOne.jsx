@@ -25,7 +25,6 @@ export default function SectionOne({ data, refetch }) {
     data?.discussion || null
   );
 
-  console.log('dataDiscussion', discussion_data);
   const navigate = useNavigate();
   const discussionRef = useRef(null);
 
@@ -73,8 +72,6 @@ export default function SectionOne({ data, refetch }) {
   ];
 
   const handleReplyClick = (commentId) => {
-    console.log(commentId);
-    console.log(activeReplyId);
 
     if (activeReplyId === commentId) {
       setActiveReplyId(null); // toggle off

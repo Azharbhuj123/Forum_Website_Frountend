@@ -22,7 +22,11 @@ export default function MiddleSection() {
   const userData = JSON.parse(localStorage.getItem("userData"));
   const [limit, setLimit] = useState(5);
 
-  const { data: reviewsData, isLoading: reviewsLoading ,refetch:reviewre } = useQuery({
+  const {
+    data: reviewsData,
+    isLoading: reviewsLoading,
+    refetch: reviewre,
+  } = useQuery({
     queryKey: ["my-reviews", limit],
     queryFn: () =>
       fetchData(`/review/${userData?._id}?forme=true&limit=${limit}`),
@@ -48,24 +52,22 @@ export default function MiddleSection() {
     setActiveTab(tabId);
   }, []);
 
-    const { triggerMutation, loading } = useActionMutation({
-      onSuccessCallback: (res) => {
-        reviewre()
-        showSuccess("Deleted successfully")
-      },
-      onErrorCallback: (errmsg) => {
-        showError(errmsg);
-      },
-    });
+  const { triggerMutation, loading } = useActionMutation({
+    onSuccessCallback: (res) => {
+      reviewre();
+      showSuccess("Deleted successfully");
+    },
+    onErrorCallback: (errmsg) => {
+      showError(errmsg);
+    },
+  });
 
-
-  const handleDelete = (id)=>{
+  const handleDelete = (id) => {
     triggerMutation({
-      endPoint:`/review/delete/${id}`,
-      method:"delete",
-     
+      endPoint: `/review/delete/${id}`,
+      method: "delete",
     });
-  }
+  };
 
   return (
     <div className="smitchell-review-component">
@@ -81,11 +83,15 @@ export default function MiddleSection() {
             <div key={review._id} className="smitchell-review-item">
               {/* Place / Property Name */}
               <div className="styling-new">
-              <h3 className="smitchell-review-place-name">
-                {review?.property?.listingTitle || "Property Name"}{" "}
-                {/* you may need to fetch or map propertyName */}
-              </h3>
-              <FaTrashAlt style={{cursor:"pointer"}} onClick={()=>handleDelete(review._id)}/>
+                <h3 className="smitchell-review-place-name">
+                  {review?.discussionId?.title ||
+                    review?.discussionId?.listingTitle}{" "}
+                  {/* you may need to fetch or map propertyName */}
+                </h3>
+                <FaTrashAlt
+                  style={{ cursor: "pointer" }}
+                  onClick={() => handleDelete(review._id)}
+                />
               </div>
 
               {/* Rating & Date */}
@@ -99,7 +105,7 @@ export default function MiddleSection() {
               </div>
 
               {/* Review Body */}
-              <p className="smitchell-review-body">{review.review}</p>
+              <p className="smitchell-review-body">{review?.message}</p>
 
               {/* Actions: Likes & Replies */}
               <div className="smitchell-review-actions">
@@ -107,7 +113,7 @@ export default function MiddleSection() {
                   <Thumb_Svg /> {review.likesCount || 0}
                 </span>
                 <span className="smitchell-review-stat">
-                  <Reply_Svg /> {review.reply_reviews?.length || 0}
+                  <Reply_Svg /> {review.replies?.length || 0}
                 </span>
               </div>
             </div>
@@ -144,7 +150,7 @@ export default function MiddleSection() {
             </>
           )}
 
-          {!photosLoading && photosData?.data?.length === 0 && (
+          {!photosLoading && photosData?.photos?.length === 0 && (
             <div className="no-property">
               <p>No Photos Found!</p>
             </div>
@@ -197,7 +203,7 @@ export default function MiddleSection() {
 
       {activeTab === "listing" && (
         <div>
-          <Listings forme={userData?._id}/>
+          <Listings forme={userData?._id} />
         </div>
       )}
     </div>

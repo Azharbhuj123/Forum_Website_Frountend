@@ -156,6 +156,17 @@ h3.ant-skeleton-title {
     transform: rotate(360deg);
   }
 }
+.img-logo {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    cursor: pointer !important;
+    z-index: 100;
+}
+
+.img-logo img {
+    width: 100%;
+}
 .auth-page-container {
   min-height: 100vh;
   display: flex;
@@ -965,7 +976,7 @@ nav.footer-nav a {
 }
 
 .search-area input {
-  width: 41%;
+  width: 43%;
   border: none;
   outline: none;
   border-radius: 16.4px;
@@ -978,6 +989,7 @@ nav.footer-nav a {
 .search-btns {
   display: flex;
   gap: 20px;
+
 }
 
 .search-btns button:first-child {
@@ -990,13 +1002,14 @@ nav.footer-nav a {
   line-height: 20px; /* 142.857% */
   background: none;
   border: none;
+
 }
 
 .search-btns button:last-child {
   display: flex;
   font-family: Montserrat;
   color: #fff;
-
+  width: 100%;
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
@@ -1916,8 +1929,18 @@ h3.amenities-name {
   color: #1a1a1a;
   margin: 0 0 2px 0;
   line-height: 1.5;
+  transition: 0.3s ease;
+  text-decoration: none !important;
+  
 }
-
+.info-text a{
+  transition: 0.3s ease;
+  color: #000;
+  text-decoration: none !important;
+}
+.info-text a:hover{
+  color: #ff4757;
+}
 .info-label {
   font-size: 12px;
   color: #999;

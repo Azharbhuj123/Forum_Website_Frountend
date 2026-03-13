@@ -72,7 +72,7 @@ export default function SectionOne({
 
   const handleSaved = () => {
     if (!userData) {
-      navigate("/register");
+      showError(login_required);
       return;
     }
 
@@ -177,7 +177,7 @@ export default function SectionOne({
 
             <div className="restaurant-type">
               <span className="type-text">{rental_data?.category}</span>
-              <span className="badge-claimed">Claimed</span>
+              {/* <span className="badge-claimed">Claimed</span> */}
             </div>
 
             <div className="action-buttons">
@@ -220,28 +220,38 @@ export default function SectionOne({
           <SectionTwo />
         </div>
         {/* Photos Section */}
-        <div className="photos-section">
-          <h2 className="section-title">Photos</h2>
-          <div className="photo-carousel">
-            <button className="carousel-btn prev-btn" onClick={prevPhoto}>
-              ‹
-            </button>
-            <div className="photo-container">
-              <img
-                src={
-                  photos.length !== 0
-                    ? photos[currentPhotoIndex]
-                    : "https://forum-backend-production-47c5.up.railway.app/uploads/1764087857600-download%20(43).png"
-                }
-                alt="Food"
-                className="carousel-image"
-              />
-            </div>
-            <button className="carousel-btn next-btn" onClick={nextPhoto}>
-              ›
-            </button>
-          </div>
-        </div>
+       <div className="photos-section">
+  <h2 className="section-title">Photos</h2>
+  <div className="photo-carousel">
+    
+    {/* Show Back button only if there's more than 1 photo AND we aren't at the first one */}
+    {photos.length > 1 && currentPhotoIndex > 0 && (
+      <button className="carousel-btn prev-btn" onClick={prevPhoto}>
+        ‹
+      </button>
+    )}
+
+    <div className="photo-container">
+      <img
+        src={
+          photos.length > 0
+            ? photos[currentPhotoIndex]
+            : "https://forum-backend-production-47c5.up.railway.app/uploads/1764087857600-download%20(43).png"
+        }
+        alt="Food"
+        className="carousel-image"
+      />
+    </div>
+
+    {/* Show Next button only if there's more than 1 photo AND we aren't at the last one */}
+    {photos.length > 1 && currentPhotoIndex < photos.length - 1 && (
+      <button className="carousel-btn next-btn" onClick={nextPhoto}>
+        ›
+      </button>
+    )}
+    
+  </div>
+</div>
 
         {/* Popular Dishes Section */}
         {otherProperties?.length > 0 && (

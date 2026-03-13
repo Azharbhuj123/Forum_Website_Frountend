@@ -18,29 +18,7 @@ import { fetchData } from "../../queryFunctions/queryFunctions";
 
  
 
-// Yup validation schema
-const schema = yup.object({
-  lastName: yup.string().required("Last name is required"),
-  firstName: yup.string().required("First name is required"),
-  username: yup.string().required("Username is required"),
-  email: yup.string().email("Invalid email").required("Email is required"),
-  password: yup
-    .string()
-    .min(8, "Password must be at least 8 characters")
-    .required("Password is required"),
-  confirmPassword: yup
-    .string()
-    .oneOf([yup.ref("password"), null], "Passwords must match")
-    .required("Confirm password is required"),
-  userRole: yup.string().required("User role is required").default("User"),
-  profilePicture: yup
-    .mixed()
-    .test(
-      "required",
-      "Profile picture is required",
-      (value) => value && value.length > 0
-    ),
-});
+ 
 
 const AddNewUserpopup = ({ closePopup, refetch, edit_id }) => {
   const schema = yup.object({
@@ -51,9 +29,9 @@ const AddNewUserpopup = ({ closePopup, refetch, edit_id }) => {
     password: edit_id 
       ? yup.string().min(8, "Password must be at least 8 characters").optional()
       : yup.string().min(8, "Password must be at least 8 characters").required("Password is required"),
-    confirmPassword: edit_id
-      ? yup.string().oneOf([yup.ref("password"), null], "Passwords must match").optional()
-      : yup.string().oneOf([yup.ref("password"), null], "Passwords must match").required("Confirm password is required"),
+    // confirmPassword: edit_id
+    //   ? yup.string().oneOf([yup.ref("password"), null], "Passwords must match").optional()
+    //   : yup.string().oneOf([yup.ref("password"), null], "Passwords must match").required("Confirm password is required"),
     userRole: yup.string().required("User role is required").default("User"),
     profilePicture: edit_id
       ? yup.mixed().optional()
@@ -107,6 +85,9 @@ const AddNewUserpopup = ({ closePopup, refetch, edit_id }) => {
     defaultValues: getDefaultValues(),
   });
 
+
+  console.log(errors);
+  
   const { data, isLoading } = useQuery({
     queryKey: ["admin-user-view", edit_id],
     queryFn: () => fetchData(`/admin/view-user/${edit_id}`),
@@ -175,7 +156,6 @@ const AddNewUserpopup = ({ closePopup, refetch, edit_id }) => {
       // Only append password if provided
       if (formData.password) {
         formDataToSend.append("password", formData.password);
-        formDataToSend.append("confirmPassword", formData.confirmPassword);
       }
       
       formDataToSend.append("phoneNumber", formData.phoneNumber || "");
@@ -226,23 +206,24 @@ const AddNewUserpopup = ({ closePopup, refetch, edit_id }) => {
     );
   }
 
+  // ... inside AddNewUserpopup component ...
+
   return (
     <div className="popup-overly-box">
       <div className="popup-box">
         <div className="popup-heading">
           <span>
-            <h2>{edit_id ? "Edit User" : "Add New User"}</h2>
+            {/* 1. Updated title to reflect "View" mode */}
+            <h2>{edit_id ? "User Details" : "Add New User"}</h2>
             <p>
               {edit_id 
-                ? "Update user account information" 
+                ? "Viewing user account information" 
                 : "Create a new user account with administrative controls"
               }
             </p>
           </span>
           <div className="close-btn" onClick={closePopup}>
-            <span>
-              <Close_svg />
-            </span>
+            <span><Close_svg /></span>
           </div>
         </div>
 
@@ -253,174 +234,106 @@ const AddNewUserpopup = ({ closePopup, refetch, edit_id }) => {
               <div className="Profile-Photo-dp-box">
                 <div
                   className="Profile-Photo-img"
-                  onClick={() => fileInputRef.current?.click()}
-                  style={{ cursor: "pointer" }}
+                  onClick={() => !edit_id && fileInputRef.current?.click()}
+                  style={{ cursor: edit_id ? "default" : "pointer" }}
                 >
                   <img src={preview} alt="Profile Preview" />
                 </div>
 
-                <div className="Profile-Photo-icon-uplode">
-                  <Controller
-                    name="profilePicture"
-                    control={control}
-                    render={({ field }) => (
-                      <input
-                        type="file"
-                        accept="image/*"
-                        style={{ display: "none" }}
-                        ref={fileInputRef}
-                        onChange={(e) => handleFileChange(e, field)}
-                      />
-                    )}
-                  />
-                  <Uplode_svg />
-                </div>
+                {!edit_id && (
+                  <div className="Profile-Photo-icon-uplode">
+                    <Controller
+                      name="profilePicture"
+                      control={control}
+                      render={({ field }) => (
+                        <input
+                          type="file"
+                          accept="image/*"
+                          style={{ display: "none" }}
+                          ref={fileInputRef}
+                          onChange={(e) => handleFileChange(e, field)}
+                        />
+                      )}
+                    />
+                    <Uplode_svg />
+                  </div>
+                )}
               </div>
-              {errors.profilePicture && (
+ {errors.profilePicture && (
+
                 <p className="error-text">{errors.profilePicture.message}</p>
+
               )}
 
+
+
               <span>
+
                 <h2>Profile Photo</h2>
-                <p>Upload a profile picture for the user</p>
-              </span>
-            </div>
+
+                <p>{edit_id? "Profile picture for the user" : "Upload a profile picture for the user"}</p>
+
+              </span>            </div>
 
             {/* User Info */}
             <div className="Add-New-User-group-box">
               <div className="Add-New-User-group Haf-width">
-                <span>
-                  <FirstName_svg />
-                  <label>Last Name *</label>
-                </span>
-                <input type="text" {...register("lastName")} />
-                {errors.lastName && (
-                  <p className="error-text">{errors.lastName.message}</p>
-                )}
+                <span><FirstName_svg /><label>Last Name *</label></span>
+                {/* 3. Added disabled attribute */}
+                <input type="text" {...register("lastName")} disabled={!!edit_id} />
+                {errors.lastName && <p className="error-text">{errors.lastName.message}</p>}
               </div>
 
               <div className="Add-New-User-group Haf-width">
-                <span>
-                  <FirstName_svg />
-                  <label>First Name *</label>
-                </span>
-                <input type="text" {...register("firstName")} />
-                {errors.firstName && (
-                  <p className="error-text">{errors.firstName.message}</p>
-                )}
+                <span><FirstName_svg /><label>First Name *</label></span>
+                <input type="text" {...register("firstName")} disabled={!!edit_id} />
+                {errors.firstName && <p className="error-text">{errors.firstName.message}</p>}
               </div>
 
               <div className="Add-New-User-group">
-                <span>
-                  <FirstName_svg />
-                  <label>Username *</label>
-                </span>
-                <input type="text" {...register("username")} />
-                {errors.username && (
-                  <p className="error-text">{errors.username.message}</p>
-                )}
-                <p>This will be displayed publicly</p>
+                <span><FirstName_svg /><label>Username *</label></span>
+                <input type="text" {...register("username")} disabled={!!edit_id} />
+                {errors.username && <p className="error-text">{errors.username.message}</p>}
               </div>
 
               <div className="Add-New-User-group">
-                <span>
-                  <MailAddress_svg />
-                  <label>Email Address *</label>
-                </span>
-                <input type="email" {...register("email")} />
-                {errors.email && (
-                  <p className="error-text">{errors.email.message}</p>
-                )}
+                <span><MailAddress_svg /><label>Email Address *</label></span>
+                <input type="email" {...register("email")} disabled={!!edit_id} />
+                {errors.email && <p className="error-text">{errors.email.message}</p>}
               </div>
 
+              {/* Password fields are already hidden/handled by your logic, but we can ensure they are disabled if shown */}
               {!edit_id && (
                 <>
                   <div className="Add-New-User-group Haf-width">
-                    <span>
-                      <Password_svg />
-                      <label>Password *</label>
-                    </span>
+                    <span><Password_svg /><label>Password *</label></span>
                     <input type="password" {...register("password")} />
-                    {errors.password && (
-                      <p className="error-text">{errors.password.message}</p>
-                    )}
-                    <p>Minimum 8 characters</p>
                   </div>
-
-                  <div className="Add-New-User-group Haf-width">
-                    <span>
-                      <Password_svg />
-                      <label>Confirm Password *</label>
-                    </span>
-                    <input type="password" {...register("confirmPassword")} />
-                    {errors.confirmPassword && (
-                      <p className="error-text">{errors.confirmPassword.message}</p>
-                    )}
-                  </div>
-                </>
-              )}
-
-              {edit_id && (
-                <>
-                  <div className="Add-New-User-group Haf-width">
-                    <span>
-                      <Password_svg />
-                      <label>New Password</label>
-                    </span>
-                    <input type="password" {...register("password")}  />
-                    {errors.password && (
-                      <p className="error-text">{errors.password.message}</p>
-                    )}
-                  </div>
-
-                  <div className="Add-New-User-group Haf-width">
-                    <span>
-                      <Password_svg />
-                      <label>Confirm New Password</label>
-                    </span>
-                    <input type="password" {...register("confirmPassword")}  />
-                    {errors.confirmPassword && (
-                      <p className="error-text">{errors.confirmPassword.message}</p>
-                    )}
-                  </div>
+                  {/* ... confirm password ... */}
                 </>
               )}
 
               <div className="Add-New-User-group">
-                <span>
-                  <UserRole_svg />
-                  <label>User Role *</label>
-                </span>
+                <span><UserRole_svg /><label>User Role *</label></span>
                 <input disabled type="text" {...register("userRole")} />
-                {errors.userRole && (
-                  <p className="error-text">{errors.userRole.message}</p>
-                )}
-                <p>Standard user privileges</p>
               </div>
 
               <div className="Add-New-User-group Haf-width">
-                <span>
-                  <PhoneNumber_svg />
-                  <label>Phone Number</label>
-                </span>
-                <input type="number" {...register("phoneNumber")} />
+                <span><PhoneNumber_svg /><label>Phone Number</label></span>
+                <input type="number" {...register("phoneNumber")} disabled={!!edit_id} />
               </div>
 
               <div className="Add-New-User-group Haf-width">
-                <span>
-                  <Location_svg />
-                  <label>Location</label>
-                </span>
-                <input type="text" {...register("location")} />
+                <span><Location_svg /><label>Location</label></span>
+                <input type="text" {...register("location")} disabled={!!edit_id} />
               </div>
 
               <div className="Add-New-User-group">
-                <span>
-                  <label>Bio</label>
-                </span>
+                <span><label>Bio</label></span>
                 <textarea
                   placeholder="Tell us about this user..."
                   {...register("bio")}
+                  disabled={!!edit_id}
                 />
               </div>
             </div>
@@ -430,16 +343,13 @@ const AddNewUserpopup = ({ closePopup, refetch, edit_id }) => {
             <button type="button" className="no-bg" onClick={closePopup}>
               {edit_id ? "Close" : "Cancel"} 
             </button>
-            {!edit_id &&(
-
-            <button type="submit" disabled={loading}>
-              {loading 
-                ? (edit_id ? "Updating..." : "Creating...") 
-                : (edit_id ? "Update User" : "Create User")
-              }
-            </button>
+            
+            {/* Your existing logic already hides the Create button when edit_id exists */}
+            {!edit_id && (
+              <button type="submit" disabled={loading}>
+                {loading ? "Creating..." : "Create User"}
+              </button>
             )}
-
           </div>
         </form>
       </div>

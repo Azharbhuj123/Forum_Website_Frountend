@@ -134,7 +134,7 @@ const Users = () => {
                       setOpenMenu(openMenu === index ? null : index)
                     }
                   >
-                    Actions <Actions_svg />
+                    Actions 
                   </button>
 
                   {openMenu === index && (

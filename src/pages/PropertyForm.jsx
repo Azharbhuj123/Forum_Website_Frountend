@@ -124,7 +124,6 @@ export default function PropertyForm() {
 
   useEffect(() => {
     if (property_id && data?.data) {
-      console.log("API Data received:", data.data);
 
       // Reset form with API data
       reset({

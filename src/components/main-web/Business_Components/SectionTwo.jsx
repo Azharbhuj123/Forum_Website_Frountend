@@ -21,8 +21,6 @@ export default function SectionTwo({ rental_data, otherProperties }) {
     { name: "The Purple Garden", rating: 5, reviews: 285 },
   ];
 
-  console.log("rental_data", rental_data);
-
   return (
     <>
       <div className="business-info-container">
@@ -62,8 +60,17 @@ export default function SectionTwo({ rental_data, otherProperties }) {
               <Webiste_SVg />
 
               <div className="info-content">
-                <p className="info-text">
+                <p className="info-text" style={{ cursor: "pointer" }}>
+                  <a
+                    href={
+                      rental_data?.user?.basic_info?.website
+                        ? rental_data?.user?.basic_info?.website
+                        : "#"
+                    }
+                    target="_blank"
+                  >
                   {rental_data?.user?.basic_info?.website || ""}
+                  </a>
                 </p>
               </div>
             </div>

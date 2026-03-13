@@ -5,6 +5,7 @@ import * as yup from "yup";
 import { MdEmail } from "react-icons/md";
 import { IoMdLock, IoMdPerson } from "react-icons/io";
 import { SiFacebook } from "react-icons/si";
+import logo from "../assets/Images/logo.png";
 
 import useActionMutation from "../queryFunctions/useActionMutation";
 import { Link, useNavigate } from "react-router-dom";
@@ -23,6 +24,7 @@ import {
   FacebookLoginButton,
   GoogleLoginButton,
 } from "react-social-login-buttons";
+import AdminDashboardheader from "../components/AdminDashboard_components/AdminDashboardheader";
 
 // ==================== Schemas ==================== //
 const signInSchema = yup.object().shape({
@@ -688,7 +690,7 @@ const AuthPages = () => {
     try {
       const result = await signInWithPopup(auth, facebookProvider);
       const user = result.user;
-
+      
       const data = {
         name: user.displayName,
         email: user.email,
@@ -696,7 +698,6 @@ const AuthPages = () => {
       };
 
       
-      console.log('user', data);
       // Hit your backend
       triggerMutation({
         endPoint: "/auth/login-google",
@@ -734,6 +735,10 @@ const AuthPages = () => {
 
   return (
     <>
+      <div onClick={()=>navigate("/")} className="img-logo">
+        <img src={logo} alt="" />
+      </div>
+
       {currentPage === "signin" && (
         <SignInPage
           signInForm={signInForm}

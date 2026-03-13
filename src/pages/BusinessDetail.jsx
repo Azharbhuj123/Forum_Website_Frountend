@@ -28,7 +28,6 @@ const userData = JSON.parse(localStorage.getItem("userData") || "null");
     queryFn: () => fetchData(`/property/popular/${params.id}`),
     keepPreviousData: true,
   });
-  console.log(otherProperties);
 
   if (isLoading) {
     return <Loader />;

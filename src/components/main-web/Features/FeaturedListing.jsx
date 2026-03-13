@@ -14,7 +14,6 @@ const { data, isLoading } = useQuery({
   });
 
 
-  console.log(data?.data,"data");
 
 
   const navigate = useNavigate();

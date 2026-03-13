@@ -2,8 +2,6 @@ import axios from "axios";
 import { baseurl } from "../BaseUrl";
 import { showError } from "../components/Toaster";
 
-
-
 const api = axios.create({
   baseURL: baseurl,
 });
@@ -16,27 +14,27 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
-  
+  (error) => Promise.reject(error),
 );
 
 api.interceptors.response.use(
   (response) => {
-return response
+    // This runs for SUCCESSFUL POST, GET, etc.
+    console.log(`Success [${response.config.method.toUpperCase()}]:`, response.config.url);
+    return response;
   },
   (error) => {
+    // This runs for FAILED POST, GET, etc.
+    console.log(`Error [${error.config?.method?.toUpperCase()}]:`, error.response?.data);
     
-     if (error?.response.data?.is_suspend) {
-      localStorage.removeItem("token");
-        localStorage.removeItem("userData");
-      window.location.href = "/register"; // redirect to register page
+    if (error?.response?.data?.is_suspend) {
+      //  localStorage.clear();
       
-      showError(error?.response.data?.message)
+       window.location.href = "/register";
     }
     return Promise.reject(error);
   }
 );
-
 
 // api.interceptors.response.use(
 //   (response) => response,
@@ -51,7 +49,7 @@ return response
 //     return Promise.reject(error);
 //   }
 // );
-       
+
 // GET
 export const fetchData = async (endPoint) => {
   const response = await api.get(endPoint);
@@ -62,7 +60,7 @@ export const fetchData = async (endPoint) => {
 export const actionData = async (endPoint, method, body) => {
   let headers = {};
   console.log(endPoint, method, body);
-  
+
   const isFormData = body instanceof FormData;
   if (!isFormData && body) {
     headers["Content-Type"] = "application/json";

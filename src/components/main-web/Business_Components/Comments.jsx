@@ -82,7 +82,6 @@ export default function CommentsSection({
   };
 
   const ratingChanged = (newRating) => {
-    console.log(newRating, "newRating");
     setRating(newRating);
   };
 
@@ -107,7 +106,7 @@ export default function CommentsSection({
         refetch();
         setReply_review("");
         setRating(0);
-        setReply_reviews(data?.reply_reviews);
+        setReply_reviews(data?.replies);
         setCommentText("");
 
         return;
@@ -152,7 +151,6 @@ export default function CommentsSection({
       method: "post",
     });
 
-    console.log(reviewData);
   };
 
   const handleReply = () => {
@@ -275,7 +273,7 @@ export default function CommentsSection({
               className="action-button"
             >
               <White_Chat_Svg />
-              <span>Comment ({item?.reply_reviews?.length})</span>
+              <span>Comment ({item?.replies?.length})</span>
             </button>
           </div>
 

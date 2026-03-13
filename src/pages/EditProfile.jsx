@@ -172,10 +172,7 @@ export default function EditProfile() {
     formData.append("profile_img", preview);
     // }
 
-    // Debug: show all values
-    for (let pair of formData.entries()) {
-      console.log(pair[0], pair[1]);
-    }
+     
 
     triggerMutation({
       endPoint: `/auth/update-profile`,

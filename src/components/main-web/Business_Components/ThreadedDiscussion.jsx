@@ -8,7 +8,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { baseurl } from "../../../BaseUrl";
 import axios from "axios";
-import { showSuccess } from "../../Toaster";
+import { showError, showSuccess } from "../../Toaster";
 import { fetchData } from "../../../queryFunctions/queryFunctions";
 import { useQuery } from "@tanstack/react-query";
 import MentionModal from "../../Modals/UserList";
@@ -135,12 +135,10 @@ const ThreadedDiscussion = ({
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(discussionId, "discussionId");
 
     fetchComments();
   }, [discussionId]);
   const ratingChanged = (newRating) => {
-    console.log(newRating, "newRating");
     setRating(newRating);
   };
   // Keep commentsRef in sync with comments
@@ -286,11 +284,21 @@ const ThreadedDiscussion = ({
       setReplyText("");
 
       // API call
-      await commentApi.replyToComment(parentId, replyText,[],type);
+      await commentApi.replyToComment(parentId, replyText, [], type);
 
       // Refresh comments to get actual data
       await fetchComments();
     } catch (error) {
+      if (error?.is_suspend) {
+        console.error("Error submitting comment:", error);
+        // Revert optimistic update on error
+
+        // localStorage.clear();
+        showError(error?.message);
+        // setTimeout(() => {
+        //   window.location.href = "/register";
+        // }, 1000);
+      }
       console.error("Error submitting reply:", error);
       // Revert optimistic update on error
       setOptimisticComments(previousComments);
@@ -345,8 +353,18 @@ const ThreadedDiscussion = ({
       // Refresh comments to get actual data
       setRating(0);
       await fetchComments();
-    } catch (error) {
-      console.error("Error submitting comment:", error);
+    } catch (err) {
+      console.error("Error submitting comment:", err);
+      if (err?.is_suspend) {
+        console.error("Error submitting comment:", err);
+        // Revert optimistic update on error
+
+        // localStorage.clear();
+        showError(err?.message);
+        // setTimeout(() => {
+        //   window.location.href = "/register";
+        // }, 1000);
+      }
       // Revert optimistic update on error
       setOptimisticComments(previousComments);
     } finally {
@@ -406,6 +424,16 @@ const ThreadedDiscussion = ({
       // Refresh comments to get actual data
       await fetchComments();
     } catch (error) {
+      if (error?.is_suspend) {
+        console.error("Error submitting comment:", error);
+        // Revert optimistic update on error
+
+        // localStorage.clear();
+        showError(error?.message);
+        // setTimeout(() => {
+        //   window.location.href = "/register";
+        // }, 1000);
+      }
       console.error("Error toggling like:", error);
       // Revert optimistic update on error
       setOptimisticComments(previousComments);
@@ -423,6 +451,16 @@ const ThreadedDiscussion = ({
       showSuccess("Updated");
       await fetchComments();
     } catch (error) {
+      if (error?.is_suspend) {
+        console.error("Error submitting comment:", error);
+        // Revert optimistic update on error
+
+        // localStorage.clear();
+        showError(error?.message);
+        // setTimeout(() => {
+        //   window.location.href = "/register";
+        // }, 1000);
+      }
       console.error("Error toggling like:", error);
     } finally {
       setIsUpdating(false);
@@ -469,7 +507,10 @@ const ThreadedDiscussion = ({
             />
 
             <div className="content">
-              <div style={{marginBottom: comment?.rating === 0 ? 6 : 0}} className="header">
+              <div
+                style={{ marginBottom: comment?.rating === 0 ? 6 : 0 }}
+                className="header"
+              >
                 <strong>{comment.userId?.name || "Anonymous"}</strong>
                 <span className="time">· {formatDate(comment.createdAt)}</span>
                 {comment.isOptimistic && (
@@ -478,12 +519,14 @@ const ThreadedDiscussion = ({
               </div>
 
               <div className="stars">
-                    {comment?.rating === 0
-                      ? ""
-                      : Array.from({ length: comment?.rating }, (_, i) => (
-                          <span key={i} className="star">★</span>
-                        ))}
-                  </div>
+                {comment?.rating === 0
+                  ? ""
+                  : Array.from({ length: comment?.rating }, (_, i) => (
+                      <span key={i} className="star">
+                        ★
+                      </span>
+                    ))}
+              </div>
               <div className="text">{comment.message}</div>
 
               <div className="actions">

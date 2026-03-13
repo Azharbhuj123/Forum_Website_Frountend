@@ -13,7 +13,13 @@ import useActionMutation from "../../queryFunctions/useActionMutation";
 import { showError } from "../Toaster";
 import DeleteSure from "../Modals/DeleteSure";
 
-const ReportDetailspopup = ({ closePopup, openDetailsPopup,onDismiss,onTakeAction, discussionFlag }) => {
+const ReportDetailspopup = ({
+  closePopup,
+  openDetailsPopup,
+  onDismiss,
+  onTakeAction,
+  discussionFlag,
+}) => {
   const [api_data, set_Api_data] = useState(null);
   const [delete_id, setDelete_id] = useState(null);
   const [diss_miss_id, setDiss_miss_id] = useState(null);
@@ -21,7 +27,10 @@ const ReportDetailspopup = ({ closePopup, openDetailsPopup,onDismiss,onTakeActio
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["admin-detail", openDetailsPopup],
-    queryFn: () => fetchData(`/review/get-id/${openDetailsPopup}/?discussionFlag=${discussionFlag}`),
+    queryFn: () =>
+      fetchData(
+        `/review/get-id/${openDetailsPopup}/?discussionFlag=${discussionFlag}`,
+      ),
     keepPreviousData: true,
     enabled: openDetailsPopup !== null,
   });
@@ -34,7 +43,6 @@ const ReportDetailspopup = ({ closePopup, openDetailsPopup,onDismiss,onTakeActio
     }
   }, [data]);
 
-   
   if (isLoading) {
     return (
       <div className="popup-overly-box">
@@ -164,29 +172,27 @@ const ReportDetailspopup = ({ closePopup, openDetailsPopup,onDismiss,onTakeActio
                   </div>
                   <div className="Content-title">
                     <span>
-                      <h3>{api_data?.user?.name}</h3>
+                      <h3>{api_data?.userId?.name}</h3>
                       <p>reviewed</p>
                       <h4>{api_data?.property?.listingTitle}</h4>
                     </span>
                     <div className="Content-star">
-                      {api_data?.rating > 0 ? (
-                        Array.from({ length: api_data.rating }, (_, i) => (
-                          <span key={i} className="filled">
-                            ★
-                          </span>
-                        ))
-                      ) : (
-                        null
-                      )}
+                      {api_data?.rating > 0
+                        ? Array.from({ length: api_data.rating }, (_, i) => (
+                            <span key={i} className="filled">
+                              ★
+                            </span>
+                          ))
+                        : null}
                     </div>
                   </div>
                 </div>
 
-                <p>{api_data?.review}</p>
+                <p className="flag-message">{api_data?.message}</p>
                 <ul>
                   <li>{api_data?.createdAt?.split("T")[0]}</li>
 
-                  <li>{api_data?.reply_reviews?.length} comments</li>
+                  <li>{api_data?.replies?.length} comments</li>
                 </ul>
               </div>
             </div>
@@ -258,15 +264,11 @@ const ReportDetailspopup = ({ closePopup, openDetailsPopup,onDismiss,onTakeActio
             Dismiss Report
           </button>
 
-          <button
-            onClick={() => onTakeAction(api_data?._id)}
-          >
+          <button onClick={() => onTakeAction(api_data?._id)}>
             Take Action
           </button>
         </div>
       </div>
-
-      
     </div>
   );
 };

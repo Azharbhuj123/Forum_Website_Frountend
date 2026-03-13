@@ -94,7 +94,7 @@ const AdminDashboardheader = () => {
             >
               <Chart_svg />
             </div>
-            <div
+            {/* <div
               className="AdminDashboardheader-icon"
               onClick={() => {
                 navigate("/chat");
@@ -102,7 +102,7 @@ const AdminDashboardheader = () => {
               }}
             >
               <Message_svg />
-            </div>
+            </div> */}
             </>
             }
             {/* <div className="AdminDashboardheader-icon">

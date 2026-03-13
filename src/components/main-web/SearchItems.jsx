@@ -9,7 +9,6 @@ export default function SearchItems({ data, isLoading , setPage ,setFinalQuery,f
   const start = (data?.currentPage - 1) * 3 + 1;
   const end = Math.min(data?.currentPage * 3, data?.totalItems);
 
-  console.log('data', data);
 
  
   

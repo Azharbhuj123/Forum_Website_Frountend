@@ -58,31 +58,31 @@ const Overview = () => {
     {
       title: "Total Users",
       value: data?.totalUsers,
-      change: ` ${data?.userIncreasePercent}% from last month`,
+      change: data?.userIncreasePercent > 0 ? " "+` ${data?.userIncreasePercent}% from last month`:"",
       icon: <TotalUsers_svg />,
-      changeIcon: <Total_svg />,
+      changeIcon: data?.userIncreasePercent > 0 ? <Total_svg />:"",
       red: false,
     },
     {
       title: "Total Reviews",
       value: `${data?.totalReviews}`,
-      change: `+${data?.reviewIncreasePercent}%% from last month`,
-      icon: <TotalReviews_svg />,
-      changeIcon: <Total_svg />,
+      change: data?.reviewIncreasePercent > 0 ?`+${data?.reviewIncreasePercent}% from last month`:"",
+      icon:<TotalReviews_svg /> ,
+      changeIcon: data?.reviewIncreasePercent > 0 ? <Total_svg />:"",
       red: false,
     },
     {
       title: `Active Users`,
       value: `${data?.activeUsersCount}`,
-      change: `+${data?.activeUsersIncreasePercent}% from last month`,
+      change: data?.activeUsersIncreasePercent > 0 ?`+${data?.activeUsersIncreasePercent}% from last month`:"",
       icon: <ActiveUsers_svg />,
-      changeIcon: <Total_svg />,
+      changeIcon: data?.activeUsersIncreasePercent > 0 ? <Total_svg />:"",
       red: false,
     },
     {
       title: `Pending Reports`,
       value: data?.total_report || 0,
-      change: `Requires attention`,
+      change: ` Requires attention`,
       icon: <PendingReports_svg />,
       changeIcon: <Attention_svg />,
       red: true,
@@ -123,20 +123,21 @@ const Overview = () => {
               <p>No Activity Found!</p>
             </div>
           )}
-          {data?.recentActivityList?.length > 0 && data?.recentActivityList?.map((item, index) => (
-            <div key={index} className="Recent-Activity-list">
-              <div className="Recent-Activity-title">
-                <div className="Recent-Activity-icon">
-                  <TotalReviews_svg />
+          {data?.recentActivityList?.length > 0 &&
+            data?.recentActivityList?.map((item, index) => (
+              <div key={index} className="Recent-Activity-list">
+                <div className="Recent-Activity-title">
+                  <div className="Recent-Activity-icon">
+                    <TotalReviews_svg />
+                  </div>
+                  <span>
+                    <h2>{item?.title}</h2>
+                    <p>{formatDate(item?.createdAt)}</p>
+                  </span>
                 </div>
-                <span>
-                  <h2>{item?.title}</h2>
-                  <p>{formatDate(item?.createdAt)}</p>
-                </span>
+                <h4>New</h4>
               </div>
-              <h4>New</h4>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
 
@@ -144,31 +145,28 @@ const Overview = () => {
         <h1>Top Reviewers This Month</h1>
 
         <div className="Reviewers-Month-box">
-           {data?.topReviewers?.length === 0 && (
+          {data?.topReviewers?.length === 0 && (
             <div className="no-property">
               <p>No Top Reviewers This Month!</p>
             </div>
           )}
-          {data?.topReviewers?.length > 0 && data?.topReviewers?.map((item, index) => (
+          {data?.topReviewers?.length > 0 &&
+            data?.topReviewers?.map((item, index) => (
+              <div className="Reviewers-Month-list">
+                <div className="Reviewers-Month-title">
+                  <h4>#{index + 1}</h4>
+                  <div className="Reviewers-Month-icon">
+                    <img src={item?.profile_img} alt="" />
+                  </div>
 
-          <div className="Reviewers-Month-list">
-            <div className="Reviewers-Month-title">
-              <h4>#{index + 1}</h4>
-              <div className="Reviewers-Month-icon">
-                <img src={item?.profile_img} alt="" />
+                  <span>
+                    <h2>{item?.name}</h2>
+                    <p>{item?.reviewCount} reviews</p>
+                  </span>
+                </div>
+                <Like_svg />
               </div>
-
-              <span>
-                <h2>{item?.name}</h2>
-                <p>{item?.reviewCount} reviews</p>
-              </span>
-            </div>
-            <Like_svg />
-          </div>
-
-          ))}
-
-           
+            ))}
         </div>
       </div>
     </div>

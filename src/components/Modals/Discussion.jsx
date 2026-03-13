@@ -98,7 +98,6 @@ const {login_required,triggerDiscussionRefetch} =useStore()
       });
     }
 
-    console.log("FINAL FORMDATA:", [...formData]);
 
     triggerMutation({
       endPoint: `/discussion/`,

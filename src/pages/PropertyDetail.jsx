@@ -215,6 +215,8 @@ const PropertyDetail = () => {
         </div>
 
         {/* AMENITIES */}
+        {property?.amenities?.length > 0 && (
+          <>
         <h2 className="section-title">Features & Amenities</h2>
 
         <div className="amenities-grid">
@@ -227,6 +229,9 @@ const PropertyDetail = () => {
             </div>
           ))}
         </div>
+        </>
+        )}
+
 
         {/* PRICING */}
         <h2 className="section-title">Pricing</h2>

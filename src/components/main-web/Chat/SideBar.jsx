@@ -37,7 +37,6 @@ export default function ChatSideBar({
               activeConversation === conv.userId ? "active" : ""
             }`}
             onClick={() => {
-              console.log(conv, "activeConversation");
 
               onSelectConversation(conv.userId);
             }}

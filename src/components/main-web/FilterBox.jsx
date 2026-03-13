@@ -2,7 +2,6 @@ import React from "react";
 import Star_Svg from "../Svg_components/Star_Svg";
 
 export default function FilterBox({ setFinalQuery, final_query }) {
-  console.log(final_query, "final_query");
 
   const handleClear = () => {
     setFinalQuery({

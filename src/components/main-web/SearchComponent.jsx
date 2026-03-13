@@ -29,7 +29,7 @@ export default function SearchComponent({ data, final_query, setFinalQuery }) {
           onChange={(e) => setSearch(e.target.value)}
         />
         <div className="search-btns">
-          <button>Change</button>
+          {/* <button>Change</button> */}
           <button onClick={handleClick}>Search</button>
         </div>
       </div>
