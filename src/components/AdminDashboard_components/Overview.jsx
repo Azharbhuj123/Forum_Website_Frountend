@@ -164,7 +164,7 @@ const Overview = () => {
                     <p>{item?.reviewCount} reviews</p>
                   </span>
                 </div>
-                <Like_svg />
+                {/* <Like_svg /> */}
               </div>
             ))}
         </div>

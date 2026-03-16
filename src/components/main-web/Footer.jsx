@@ -19,7 +19,7 @@ export default function Footer() {
             <Link to="/">Home</Link>
             <Link to="/search-rental">Featured Listings</Link>
             <Link to="/discussions">Discussions</Link>
-            <Link to="/chat">Chats</Link>
+            {/* <Link to="/chat">Chats</Link> */}
             {userData ? (
               <Link to="/profile">Profile</Link>
             ) : (
